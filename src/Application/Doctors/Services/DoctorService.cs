@@ -9,6 +9,7 @@ public class DoctorService(IDoctorRepository repository) : IDoctorService
 {
     public async Task<CreateDoctorResponse> CreateDoctorAsync(CreateDoctorRequest request)
     {
+        //Teste Commit
         var doctor = new Doctor(request.Name);
         var createdDoctor = await repository.CreateAsync(doctor);
         return new CreateDoctorResponse(createdDoctor);
