@@ -1,4 +1,6 @@
-﻿namespace Api.Configurations;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Api.Configurations;
 
 public static class ApiServiceCollectionsExtensions
 {

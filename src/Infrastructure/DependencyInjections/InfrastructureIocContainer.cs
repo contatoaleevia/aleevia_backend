@@ -1,7 +1,6 @@
 ﻿using CrossCutting.DependencyInjections;
-using Domain.Doctors.Contracts;
 using Infrastructure.Contexts;
-using Infrastructure.Doctors.Repositories;
+using Infrastructure.Initialize;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +12,7 @@ public static class InfrastructureIocContainer
     {
         RegisterApiDbContext(services, configuration);
         RegisterRepositories(services);
+        services.AddIdentityConfiguration(configuration);
     }
     
     private static void RegisterApiDbContext(IServiceCollection services, IConfiguration configuration)
@@ -22,6 +22,5 @@ public static class InfrastructureIocContainer
     
     private static void RegisterRepositories(IServiceCollection services)
     {
-        services.AddScoped<IDoctorRepository, DoctorRepository>();
     }
 }

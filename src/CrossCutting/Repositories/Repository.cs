@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CrossCutting.Repositories;
 
-public class Repository<T, TKey> : IRepository<T, TKey> 
-    where T : AggregateRoot<TKey> where TKey : notnull
+public class Repository<T> : IRepository<T> 
+    where T : AggregateRoot
 {
     private readonly DbContext _context;
     protected readonly DbSet<T> DbSet;

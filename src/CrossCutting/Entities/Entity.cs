@@ -2,8 +2,8 @@
 
 namespace CrossCutting.Entities;
 
-public abstract class Entity<TKey> where TKey : notnull
+public abstract class Entity
 {
     [Key]
-    public TKey Id { get; protected set; } = default!;
+    public Guid Id { get; protected set; } = Guid.NewGuid();
 }

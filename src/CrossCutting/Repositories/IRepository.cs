@@ -2,7 +2,7 @@
 
 namespace CrossCutting.Repositories;
 
-public interface IRepository<T, TKey> where T : AggregateRoot<TKey> where TKey : notnull
+public interface IRepository<T> where T : AggregateRoot
 {
     Task<T> CreateAsync(T entity, bool saveChanges = true);
     Task<List<T>> CreateRangeAsync(List<T> entities, bool saveChanges = true);
