@@ -15,10 +15,10 @@ public sealed class User : IdentityUser<Guid>
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
     public bool Active { get; private set; }
+    public ICollection<IdentityUserRole<Guid>> UserRoles { get; private set; } = new List<IdentityUserRole<Guid>>();
 
-    private User(Document document)
+    private User()
     {
-        Document = document;
     }
 
     public User(
