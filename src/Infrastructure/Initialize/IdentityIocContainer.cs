@@ -23,11 +23,11 @@ public static class IdentityIocContainer
             {
                 options.Password = new PasswordOptions
                 {
-                    RequireDigit = false,
+                    RequireDigit = true,
                     RequiredLength = 8,
-                    RequireLowercase = false,
-                    RequireUppercase = false,
-                    RequireNonAlphanumeric = false
+                    RequireLowercase = true,
+                    RequireUppercase = true,
+                    RequireNonAlphanumeric = true
                 };
 
                 options.SignIn.RequireConfirmedEmail = true;

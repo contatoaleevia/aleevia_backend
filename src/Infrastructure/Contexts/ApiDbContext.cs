@@ -4,7 +4,6 @@ namespace Infrastructure.Contexts;
 
 public class ApiDbContext(DbContextOptions<ApiDbContext> options) : DbContext(options)
 {
-    
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

@@ -16,7 +16,7 @@ public class IdentityApiDbContext(DbContextOptions<IdentityApiDbContext> options
     {
         base.OnModelCreating(builder);
 
-        builder.HasDefaultSchema("identity");
+        builder.HasDefaultSchema("public");
         
         builder.Entity<IdentityRole<Guid>>().ToTable("identity_role");
         builder.Entity<IdentityUserRole<Guid>>().ToTable("identity_user_role");
