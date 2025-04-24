@@ -2,11 +2,11 @@
 
 namespace Domain.Entities.Identities;
 
-public enum UserTypeEnum
+public enum UserTypeEnum : ushort
 {
     [Description("Profissional de saúde")]
-    HealthcareProfessional = 1,
+    HealthcareProfessional = 0,
     
     [Description("Paciente")]
-    Patient = 2
+    Patient = 1
 }

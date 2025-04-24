@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Api.Filters;
+using Application;
+using Microsoft.AspNetCore.Identity;
 
 namespace Api.Configurations;
 
@@ -6,7 +8,11 @@ public static class ApiServiceCollectionsExtensions
 {
     public static void AddApiServices(this IServiceCollection services)
     {
-        services.AddControllers();
+        services
+            .AddControllers(opt => 
+                opt.Filters.Add(typeof(NotificationFilter)))
+            .AddApplicationPart(ApplicationAssemblyRef.Assembly);
+        
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddCors(options =>

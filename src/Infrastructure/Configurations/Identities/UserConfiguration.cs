@@ -74,10 +74,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 .HasColumnName("document");
         });
         
-        builder.Property(x => x.UserType)
-            .IsRequired()
-            .HasColumnName("type");
-        
         builder.Property(x => x.CreatedAt)
             .IsRequired()
             .HasColumnName("created_at");
@@ -117,5 +113,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         
         builder.Property(x => x.PasswordHash)
             .HasColumnName("password_hash");
+
+        builder.HasMany(x => x.UserRoles)
+            .WithOne()
+            .HasForeignKey(x => x.UserId);
     }
 }

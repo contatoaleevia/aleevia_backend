@@ -10,7 +10,7 @@ public sealed class User : IdentityUser<Guid>
     public string PreferredName { get; private set; }
     public string Gender { get; private set; }
     public Document Document { get; private set; }
-    public UserTypeEnum UserType { get; private set; }
+    public UserType UserType { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
@@ -25,12 +25,12 @@ public sealed class User : IdentityUser<Guid>
         string userName,
         string email,
         string? phoneNumber,
-        string gender,
         string firstName,
         string lastName,
         string preferredName,
-        bool active, 
-        string document)
+        string gender,
+        string document,
+        ushort userType)
     {
         UserName = userName;
         Email = email;
@@ -41,9 +41,12 @@ public sealed class User : IdentityUser<Guid>
         FirstName = firstName;
         LastName = lastName;
         PreferredName = preferredName;
-        Active = active;
         Document = new Document(document);
-
+        UserType = new UserType(userType);
+        Active = true;
+        CreatedAt = DateTime.UtcNow;
+        UpdatedAt = null;
+        DeletedAt = null;
         TwoFactorEnabled = false;
         LockoutEnabled = false;
         LockoutEnd = null;
