@@ -3,20 +3,17 @@ using System;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Infrastructure.Migrations.Identity
+namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(IdentityApiDbContext))]
-    [Migration("20250424121853_Initial")]
-    partial class Initial
+    [DbContext(typeof(ApiDbContext))]
+    partial class ApiDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,6 +135,9 @@ namespace Infrastructure.Migrations.Identity
                         .HasColumnType("character varying(100)")
                         .HasColumnName("user_name");
 
+                    b.Property<int>("UserTypeId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -150,7 +150,19 @@ namespace Infrastructure.Migrations.Identity
                     b.HasIndex("UserName")
                         .IsUnique();
 
+                    b.HasIndex("UserTypeId");
+
                     b.ToTable("user", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identities.UserType", b =>
+                {
+                    b.Property<int>("UserTypeId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserTypeId");
+
+                    b.ToTable("UserType", "public");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -259,14 +271,9 @@ namespace Infrastructure.Migrations.Identity
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("UserId1")
-                        .HasColumnType("uuid");
-
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("identity_user_role", "public");
                 });
@@ -294,22 +301,10 @@ namespace Infrastructure.Migrations.Identity
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
-                    b.OwnsOne("Domain.Entities.Identities.UserType", "UserType", b1 =>
-                        {
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int>("UserTypeId")
-                                .HasColumnType("integer")
-                                .HasColumnName("type");
-
-                            b1.HasKey("UserId");
-
-                            b1.ToTable("user", "public");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
+                    b.HasOne("Domain.Entities.Identities.UserType", "UserType")
+                        .WithMany()
+                        .HasForeignKey("UserTypeId")
+                        .IsRequired();
 
                     b.OwnsOne("Domain.Utils.Document", "Document", b1 =>
                         {
@@ -333,8 +328,7 @@ namespace Infrastructure.Migrations.Identity
                     b.Navigation("Document")
                         .IsRequired();
 
-                    b.Navigation("UserType")
-                        .IsRequired();
+                    b.Navigation("UserType");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -369,13 +363,9 @@ namespace Infrastructure.Migrations.Identity
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Identities.User", null)
-                        .WithMany()
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .IsRequired();
-
-                    b.HasOne("Domain.Entities.Identities.User", null)
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>

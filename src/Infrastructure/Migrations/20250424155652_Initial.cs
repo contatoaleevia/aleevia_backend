@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Infrastructure.Migrations.Identity
+namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -31,39 +31,15 @@ namespace Infrastructure.Migrations.Identity
                 });
 
             migrationBuilder.CreateTable(
-                name: "user",
+                name: "UserType",
                 schema: "public",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    first_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    last_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    preferred_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    gender = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    document = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
-                    type = table.Column<int>(type: "integer", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    active = table.Column<bool>(type: "boolean", nullable: false),
-                    user_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    normalized_user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    normalized_email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    email_confirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    password_hash = table.Column<string>(type: "text", nullable: true),
-                    security_stamp = table.Column<string>(type: "text", nullable: true),
-                    concurrency_stamp = table.Column<string>(type: "text", nullable: true),
-                    phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    phone_number_confirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    two_factor_enabled = table.Column<bool>(type: "boolean", nullable: false),
-                    lockout_end = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    lockout_enabled = table.Column<bool>(type: "boolean", nullable: false),
-                    access_failed_count = table.Column<int>(type: "integer", nullable: false)
+                    UserTypeId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_user", x => x.id);
+                    table.PrimaryKey("PK_UserType", x => x.UserTypeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,6 +62,48 @@ namespace Infrastructure.Migrations.Identity
                         principalSchema: "public",
                         principalTable: "identity_role",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "user",
+                schema: "public",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    first_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    last_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    preferred_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    gender = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    document = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
+                    UserTypeId = table.Column<int>(type: "integer", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    active = table.Column<bool>(type: "boolean", nullable: false),
+                    user_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    normalized_user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    normalized_email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    email_confirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    password_hash = table.Column<string>(type: "text", nullable: true),
+                    security_stamp = table.Column<string>(type: "text", nullable: true),
+                    concurrency_stamp = table.Column<string>(type: "text", nullable: true),
+                    phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    phone_number_confirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    two_factor_enabled = table.Column<bool>(type: "boolean", nullable: false),
+                    lockout_end = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    lockout_enabled = table.Column<bool>(type: "boolean", nullable: false),
+                    access_failed_count = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_user", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_user_UserType_UserTypeId",
+                        column: x => x.UserTypeId,
+                        principalSchema: "public",
+                        principalTable: "UserType",
+                        principalColumn: "UserTypeId");
                 });
 
             migrationBuilder.CreateTable(
@@ -137,8 +155,7 @@ namespace Infrastructure.Migrations.Identity
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    RoleId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -152,12 +169,6 @@ namespace Infrastructure.Migrations.Identity
                     table.ForeignKey(
                         name: "FK_identity_user_role_user_UserId",
                         column: x => x.UserId,
-                        principalSchema: "public",
-                        principalTable: "user",
-                        principalColumn: "id");
-                    table.ForeignKey(
-                        name: "FK_identity_user_role_user_UserId1",
-                        column: x => x.UserId1,
                         principalSchema: "public",
                         principalTable: "user",
                         principalColumn: "id");
@@ -216,12 +227,6 @@ namespace Infrastructure.Migrations.Identity
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_identity_user_role_UserId1",
-                schema: "public",
-                table: "identity_user_role",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 schema: "public",
                 table: "user",
@@ -233,6 +238,12 @@ namespace Infrastructure.Migrations.Identity
                 table: "user",
                 column: "user_name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_user_UserTypeId",
+                schema: "public",
+                table: "user",
+                column: "UserTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -271,6 +282,10 @@ namespace Infrastructure.Migrations.Identity
 
             migrationBuilder.DropTable(
                 name: "user",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "UserType",
                 schema: "public");
         }
     }
