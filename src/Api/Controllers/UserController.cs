@@ -4,7 +4,6 @@ using Application.DTOs.Users.LoginDTOs;
 using Application.DTOs.Users.UpdateUserDTOs;
 using Application.Services.Users;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
