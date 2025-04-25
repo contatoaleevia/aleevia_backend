@@ -1,4 +1,4 @@
-﻿using Application.DTOs.Users.CreateUserDTOs;
+﻿using Application.DTOs.Users.CreateHealthcareUserDTOs;
 using Application.DTOs.Users.DeleteUserDTOs;
 using Application.DTOs.Users.GetUserById;
 using Application.DTOs.Users.LoginDTOs;
@@ -54,25 +54,48 @@ public class UserService(
         );
     }
 
-    public async Task<CreateUserResponseDto> CreateUserAsync(CreateUserRequestDto requestDto)
+    public async Task<CreateHealthcareUserResponse> CreateHealthcareProfessionalUserAsync(CreateHealthcareUserRequest request)
     {
         var user = new User(
-            userName: requestDto.UserName,
-            email: requestDto.Email,
-            phoneNumber: requestDto.PhoneNumber,
-            firstName: requestDto.FirstName,
-            lastName: requestDto.LastName,
-            preferredName: requestDto.PreferredName,
-            gender: requestDto.Gender,
-            document: requestDto.Document,
-            userType: requestDto.UserType);
+            userName: request.UserName,
+            email: request.Email,
+            phoneNumber: request.PhoneNumber,
+            firstName: request.FirstName,
+            lastName: request.LastName,
+            preferredName: request.PreferredName,
+            gender: request.Gender,
+            document: request.Document,
+            userType: request.UserType);
 
-        var response = await userManager.CreateAsync(user, requestDto.Password);
+        var response = await userManager.CreateAsync(user, request.Password);
         if (response.Succeeded)
-            return new CreateUserResponseDto(user.Id, user.UserName!, user.Email!);
+            return new CreateHealthcareUserResponse(user.Id, user.UserName!, user.Email!);
 
         identityNotificationHandler.AddNotifications(response.Errors);
-        return new CreateUserResponseDto();
+        return new CreateHealthcareUserResponse();
+    }
+    
+    public async Task<CreateHealthcareUserResponse> CreateUserAsAdminAsync(CreateHealthcareUserRequest request)
+    {
+        var user = new User(
+            userName: request.UserName,
+            email: request.Email,
+            phoneNumber: request.PhoneNumber,
+            firstName: request.FirstName,
+            lastName: request.LastName,
+            preferredName: request.PreferredName,
+            gender: request.Gender,
+            document: request.Document,
+            userType: request.UserType);
+        
+        //TODO: ADicionar Role Admin
+
+        var response = await userManager.CreateAsync(user, request.Password);
+        if (response.Succeeded)
+            return new CreateHealthcareUserResponse(user.Id, user.UserName!, user.Email!);
+
+        identityNotificationHandler.AddNotifications(response.Errors);
+        return new CreateHealthcareUserResponse();
     }
 
     public async Task<UpdateUserResponseDto> UpdateUserAsync(UpdateUserRequestDto requestDto)

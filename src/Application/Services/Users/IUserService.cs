@@ -1,4 +1,4 @@
-﻿using Application.DTOs.Users.CreateUserDTOs;
+﻿using Application.DTOs.Users.CreateHealthcareUserDTOs;
 using Application.DTOs.Users.DeleteUserDTOs;
 using Application.DTOs.Users.GetUserById;
 using Application.DTOs.Users.LoginDTOs;
@@ -10,7 +10,7 @@ namespace Application.Services.Users
     {
         Task<GetUserByIdResponseDto> GetByGuidAsync(Guid guid);
         Task<LoginResponseDto> LoginAsync(LoginRequestDto requestDto);
-        Task<CreateUserResponseDto> CreateUserAsync(CreateUserRequestDto requestDto);
+        Task<CreateHealthcareUserResponse> CreateHealthcareProfessionalUserAsync(CreateHealthcareUserRequest request);
         Task<UpdateUserResponseDto> UpdateUserAsync(UpdateUserRequestDto requestDto);
         Task<DeleteUserResponseDto> DeleteUserAsync(DeleteUserRequestDto requestDto);
     }

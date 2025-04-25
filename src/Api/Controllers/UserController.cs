@@ -1,10 +1,10 @@
-﻿using Application.DTOs.Users.CreateUserDTOs;
+﻿using Api.Attributes;
+using Application.DTOs.Users.CreateHealthcareUserDTOs;
 using Application.DTOs.Users.DeleteUserDTOs;
 using Application.DTOs.Users.LoginDTOs;
 using Application.DTOs.Users.UpdateUserDTOs;
 using Application.Services.Users;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -33,10 +33,19 @@ public class UserController(IUserService userService) : ControllerBase
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDto requestDto)
+    public async Task<IActionResult> CreateHealthcareProfessionalUser([FromBody] CreateHealthcareUserRequest request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        var response = await userService.CreateUserAsync(requestDto);
+        var response = await userService.CreateHealthcareProfessionalUserAsync(request);
+        return Ok(response);
+    }
+    
+    [HttpPost("admin")]
+    [ApiKey]
+    public async Task<IActionResult> CreateAdminUser([FromBody] CreateHealthcareUserRequest request)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var response = await userService.CreateHealthcareProfessionalUserAsync(request);
         return Ok(response);
     }
 
