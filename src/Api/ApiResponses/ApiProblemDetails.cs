@@ -8,19 +8,19 @@ public class ApiProblemDetails
 {
     public string Type { get; private set; }
     public string Title { get; private set; }
-    public int Status { get; private set; }
+    public int StatusCode { get; private set; }
     public List<ApiError> Errors { get; private set; }
 
     private ApiProblemDetails(
         string type,
         string title,
         Exception error,
-        int httpStatusCode)
+        int httpStatusCodeCode)
     {
         Type = type;
         Title = title;
         Errors = CreateError(error);
-        Status = httpStatusCode;
+        StatusCode = httpStatusCodeCode;
     }
 
     private ApiProblemDetails(
@@ -29,7 +29,7 @@ public class ApiProblemDetails
     {
         Type = errors.First().Type;
         Title = title;
-        Status = (int)HttpStatusCode.BadRequest;
+        StatusCode = (int)HttpStatusCode.BadRequest;
         Errors = CreateNotifications(errors);
     }
 

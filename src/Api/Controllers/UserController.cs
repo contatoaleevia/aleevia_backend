@@ -1,4 +1,6 @@
-﻿using Api.Attributes;
+﻿using Api.ApiResponses;
+using Api.Attributes;
+using Application.DTOs.Users.CreateAdminUserDTOs;
 using Application.DTOs.Users.CreateHealthcareUserDTOs;
 using Application.DTOs.Users.DeleteUserDTOs;
 using Application.DTOs.Users.LoginDTOs;
@@ -36,17 +38,20 @@ public class UserController(IUserService userService) : ControllerBase
     public async Task<IActionResult> CreateHealthcareProfessionalUser([FromBody] CreateHealthcareUserRequest request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        var response = await userService.CreateHealthcareProfessionalUserAsync(request);
-        return Ok(response);
+        return Ok(await userService.CreateHealthcareProfessionalUserAsync(request));
     }
     
     [HttpPost("admin")]
     [ApiKey]
-    public async Task<IActionResult> CreateAdminUser([FromBody] CreateHealthcareUserRequest request)
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(CreateAdminUserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> CreateAdminUser([FromBody] CreateAdminUserRequest request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        var response = await userService.CreateHealthcareProfessionalUserAsync(request);
-        return Ok(response);
+        return Ok(await userService.CreateUserAsAdminAsync(request));
     }
 
     [HttpPut]
@@ -63,7 +68,6 @@ public class UserController(IUserService userService) : ControllerBase
     public async Task<IActionResult> DeleteUser([FromBody] DeleteUserRequestDto requestDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        var response = await userService.DeleteUserAsync(requestDto);
-        return Ok();
+        return Ok(await userService.DeleteUserAsync(requestDto));
     }
 }

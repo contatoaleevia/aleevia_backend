@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Users.CreateHealthcareUserDTOs;
+﻿using Application.DTOs.Users.CreateAdminUserDTOs;
+using Application.DTOs.Users.CreateHealthcareUserDTOs;
 using Application.DTOs.Users.DeleteUserDTOs;
 using Application.DTOs.Users.GetUserById;
 using Application.DTOs.Users.LoginDTOs;
@@ -57,7 +58,6 @@ public class UserService(
     public async Task<CreateHealthcareUserResponse> CreateHealthcareProfessionalUserAsync(CreateHealthcareUserRequest request)
     {
         var user = new User(
-            userName: request.UserName,
             email: request.Email,
             phoneNumber: request.PhoneNumber,
             firstName: request.FirstName,
@@ -75,10 +75,9 @@ public class UserService(
         return new CreateHealthcareUserResponse();
     }
     
-    public async Task<CreateHealthcareUserResponse> CreateUserAsAdminAsync(CreateHealthcareUserRequest request)
+    public async Task<CreateAdminUserResponse> CreateUserAsAdminAsync(CreateAdminUserRequest request)
     {
         var user = new User(
-            userName: request.UserName,
             email: request.Email,
             phoneNumber: request.PhoneNumber,
             firstName: request.FirstName,
@@ -88,20 +87,19 @@ public class UserService(
             document: request.Document,
             userType: request.UserType);
         
-        //TODO: ADicionar Role Admin
+        user.AddRoleAdmin();
 
         var response = await userManager.CreateAsync(user, request.Password);
         if (response.Succeeded)
-            return new CreateHealthcareUserResponse(user.Id, user.UserName!, user.Email!);
+            return new CreateAdminUserResponse(user.Id, user.UserName!, user.Email!);
 
         identityNotificationHandler.AddNotifications(response.Errors);
-        return new CreateHealthcareUserResponse();
+        return new CreateAdminUserResponse();
     }
 
     public async Task<UpdateUserResponseDto> UpdateUserAsync(UpdateUserRequestDto requestDto)
     {
         var user = new User(
-            userName: requestDto.UserName,
             email: requestDto.Email,
             phoneNumber: requestDto.PhoneNumber,
             firstName: requestDto.FirstName,

@@ -22,7 +22,6 @@ public sealed class User : IdentityUser<Guid>
     }
 
     public User(
-        string userName,
         string email,
         string? phoneNumber,
         string firstName,
@@ -32,7 +31,6 @@ public sealed class User : IdentityUser<Guid>
         string document,
         ushort userType)
     {
-        UserName = userName;
         Email = email;
         EmailConfirmed = true;
         PhoneNumber = phoneNumber;
@@ -51,5 +49,17 @@ public sealed class User : IdentityUser<Guid>
         LockoutEnabled = false;
         LockoutEnd = null;
         AccessFailedCount = 0;
+        UserName = Document.Value;
+    }
+
+    public void AddRoleAdmin() => AddRole(RoleUtils.Admin.Id);
+    
+    private void AddRole(Guid roleId)
+    {
+        UserRoles.Add(new IdentityUserRole<Guid>
+        {
+            UserId = Id,
+            RoleId = roleId
+        });
     }
 }

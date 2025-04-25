@@ -49,6 +49,8 @@ public static class InfrastructureIocContainer
                 };
 
                 options.SignIn.RequireConfirmedEmail = true;
+                
+                options.Lockout.AllowedForNewUsers = false;
             }).AddDefaultTokenProviders()
             .AddErrorDescriber<IdentityErrorExtension>()
             .AddEntityFrameworkStores<ApiDbContext>();
