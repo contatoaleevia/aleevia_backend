@@ -1,6 +1,6 @@
 ﻿namespace Application.DTOs.Users.GetUserById;
 
-public class GetUserByIdResponse
+public class GetUserByIdResponseDto
 {
     
 }

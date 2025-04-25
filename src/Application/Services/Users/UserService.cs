@@ -9,7 +9,7 @@ using Domain.Entities.Identities;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Services;
+namespace Application.Services.Users;
 
 public class UserService(
     UserManager<User> userManager,
@@ -18,12 +18,12 @@ public class UserService(
     IIdentityNotificationHandler identityNotificationHandler
 ) : IUserService
 {
-    public async Task<GetUserByIdResponse> GetByGuidAsync(Guid guid)
+    public async Task<GetUserByIdResponseDto> GetByGuidAsync(Guid guid)
     {
         var user = await userManager.FindByIdAsync(guid.ToString());
         if (user is null) throw new UserNotFoundException(guid);
         //TODO: Preencher response com os dados do usuário
-        return new GetUserByIdResponse();
+        return new GetUserByIdResponseDto();
     }
 
     public async Task<LoginResponseDto> LoginAsync(LoginRequestDto requestDto)
@@ -36,8 +36,7 @@ public class UserService(
 
         if (!result.Succeeded)
         {
-            identityNotificationHandler.AddNotifications(new[]
-            { new IdentityError { Description = "Credenciais inválidas." }});
+            identityNotificationHandler.AddNotifications([new IdentityError { Description = "Credenciais inválidas." }]);
             return new LoginResponseDto();
         }
 
@@ -50,8 +49,8 @@ public class UserService(
         return new LoginResponseDto
         (
             token,
-            user.UserName,
-            user.Email
+            user.UserName!,
+            user.Email!
         );
     }
 
