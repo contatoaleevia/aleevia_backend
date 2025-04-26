@@ -1,5 +1,6 @@
 ﻿using Application.Helpers;
 using Application.Services;
+using Application.Services.Users;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.DependencyInjections;
