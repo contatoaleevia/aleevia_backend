@@ -3,8 +3,6 @@ using Application.DTOs.ServiceTypes.DeactivateServiceTypeDTOs;
 using Application.DTOs.ServiceTypes.GetServiceTypeDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.ServiceTypes;
-using Infrastructure.Contexts;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.ServiceTypes;
 
@@ -50,7 +48,7 @@ public class ServiceTypeService(
         var serviceType = await repository.GetByIdAsync(requestDto.Id);
         
         if (serviceType is null)
-            throw new KeyNotFoundException($"Service type with ID {requestDto.Id} not found");
+            throw new KeyNotFoundException($"Tipo de serviço com ID {requestDto.Id} não encontrado");
 
         serviceType.Deactivate();
         await repository.UpdateAsync(serviceType);

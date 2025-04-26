@@ -4,10 +4,10 @@ namespace Application.DTOs.ServiceTypes.CreateServiceTypeDTOs;
 
 public class CreateServiceTypeRequestDto
 {
-    [Required(ErrorMessage = "Name is required")]
-    [StringLength(100, ErrorMessage = "Name must be between 3 and 100 characters", MinimumLength = 3)]
+    [Required(ErrorMessage = "Nome é obrigatório")]
+    [StringLength(100, ErrorMessage = "Nome deve conter entre 3 e 100 caracteres", MinimumLength = 3)]
     public string Name { get; set; } = null!;
     
-    [StringLength(500, ErrorMessage = "Description must not exceed 500 characters")]
+    [StringLength(500, ErrorMessage = "Descrição não deve conter mais de 500 caracteres")]
     public string? Description { get; set; }
 } 

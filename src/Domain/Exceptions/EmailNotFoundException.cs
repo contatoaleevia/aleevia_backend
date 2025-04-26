@@ -1,4 +1,4 @@
 ﻿namespace Domain.Exceptions;
 
 public class EmailNotFoundException(string email)
-    : ApiException($"User with email: {email} not found", 404);
+    : ApiException($"Usuário com email: {email} não encontrado", 404);
