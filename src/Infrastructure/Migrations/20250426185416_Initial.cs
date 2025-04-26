@@ -87,6 +87,38 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "addresses",
+                schema: "public",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    SourceId = table.Column<Guid>(type: "uuid", nullable: true),
+                    source_type = table.Column<int>(type: "integer", maxLength: 50, nullable: true),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    street = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    neighborhood = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    number = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    city = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    state = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    zip_code = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    complement = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    location = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_addresses", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_addresses_user_SourceId",
+                        column: x => x.SourceId,
+                        principalSchema: "public",
+                        principalTable: "user",
+                        principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "identity_user_claim",
                 schema: "public",
                 columns: table => new
@@ -197,6 +229,12 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_addresses_SourceId",
+                schema: "public",
+                table: "addresses",
+                column: "SourceId");
+
+            migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 schema: "public",
                 table: "identity_role",
@@ -251,6 +289,10 @@ namespace Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "addresses",
+                schema: "public");
+
             migrationBuilder.DropTable(
                 name: "identity_role_claim",
                 schema: "public");
