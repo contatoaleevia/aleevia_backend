@@ -25,6 +25,7 @@
       <Folder Include="Helpers\TokenObtainer\" />
       <Folder Include="Migrations\Identity\" />
       <Folder Include="Repositories\" />
+      <Folder Include="Repositories\" />
     </ItemGroup>
 
 </Project>
