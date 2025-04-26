@@ -1,14 +1,14 @@
 ﻿namespace Application.DTOs.Users.LoginDTOs;
 public class LoginRequestDto
 {
-    public LoginRequestDto(string email, string password, bool rememberMe)
+    public LoginRequestDto(string userName, string password, bool rememberMe)
     {
-        Email = email;
+        UserName = userName;
         Password = password;
         RememberMe = rememberMe;
     }
 
-    public string Email { get; set; }
+    public string UserName { get; set; }
 
     public string Password { get; set; }
     public bool RememberMe { get; set; } = false;

@@ -1,4 +1,5 @@
 ﻿using Application.Helpers;
+using Application.Services;
 using Application.Services.Users;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,7 @@ public static class ApplicationIocContainer
     public static void AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<IUserService, UserService>();
-        services.AddScoped<GenerateJwtTokenHelper>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IGenerateJwtTokenHelper, GenerateJwtTokenHelper>();
     }
 }
