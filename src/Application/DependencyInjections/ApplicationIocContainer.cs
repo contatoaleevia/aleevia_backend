@@ -3,6 +3,7 @@ using Application.Services;
 using Application.Services.Managers;
 using Application.Services.Users;
 using Microsoft.Extensions.DependencyInjection;
+using Application.Services.HealthcareProfessionals;
 
 namespace Application.DependencyInjections;
 
@@ -14,5 +15,6 @@ public static class ApplicationIocContainer
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IGenerateJwtTokenHelper, GenerateJwtTokenHelper>();
         services.AddScoped<IManagerService, ManagerService>();
+        services.AddScoped<IProfessionalProfessionService, ProfessionalProfessionService>();
     }
 }
