@@ -1,25 +1,57 @@
 ﻿using Application.DTOs.Users.CreateUserDTOs;
 using Application.DTOs.Users.DeleteUserDTOs;
 using Application.DTOs.Users.GetUserById;
+using Application.DTOs.Users.LoginDTOs;
 using Application.DTOs.Users.UpdateUserDTOs;
+using Application.Helpers;
 using CrossCutting.Identities;
 using Domain.Entities.Identities;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Services;
+namespace Application.Services.Users;
 
 public class UserService(
     UserManager<User> userManager,
+    SignInManager<User> signInManager,
+    GenerateJwtTokenHelper generateJwtTokenHelper,
     IIdentityNotificationHandler identityNotificationHandler
 ) : IUserService
 {
-    public async Task<GetUserByIdResponse> GetByGuidAsync(Guid guid)
+    public async Task<GetUserByIdResponseDto> GetByGuidAsync(Guid guid)
     {
         var user = await userManager.FindByIdAsync(guid.ToString());
         if (user is null) throw new UserNotFoundException(guid);
         //TODO: Preencher response com os dados do usuário
-        return new GetUserByIdResponse();
+        return new GetUserByIdResponseDto();
+    }
+
+    public async Task<LoginResponseDto> LoginAsync(LoginRequestDto requestDto)
+    {
+        var result = await signInManager.PasswordSignInAsync(
+        requestDto.Email,
+        requestDto.Password,
+        requestDto.RememberMe,
+        lockoutOnFailure: true);
+
+        if (!result.Succeeded)
+        {
+            identityNotificationHandler.AddNotifications([new IdentityError { Description = "Credenciais inválidas." }]);
+            return new LoginResponseDto();
+        }
+
+        var user = await userManager.FindByEmailAsync(requestDto.Email);
+        if (user is null)
+            throw new EmailNotFoundException(requestDto.Email);
+
+        var token = generateJwtTokenHelper.GenerateJwtToken(user);
+
+        return new LoginResponseDto
+        (
+            token,
+            user.UserName!,
+            user.Email!
+        );
     }
 
     public async Task<CreateUserResponseDto> CreateUserAsync(CreateUserRequestDto requestDto)
@@ -76,4 +108,6 @@ public class UserService(
         identityNotificationHandler.AddNotifications(response.Errors);
         return new DeleteUserResponseDto(requestDto.Guid);
     }
+
+    
 }

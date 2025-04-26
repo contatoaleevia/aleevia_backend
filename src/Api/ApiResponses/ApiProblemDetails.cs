@@ -36,7 +36,7 @@ public class ApiProblemDetails
     public static ApiProblemDetails CreateApiProblemDetails(ApiException error)
         => new(
             error.GetType().Name,
-            "An error occurred.",
+            "An error occurred",
             error,
             error.StatusCode);
     

@@ -1,16 +1,16 @@
 ﻿using Application.DTOs.Users.CreateUserDTOs;
 using Application.DTOs.Users.DeleteUserDTOs;
 using Application.DTOs.Users.UpdateUserDTOs;
-using Application.Services;
+using Application.Services.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-public class UserController(IUserService userService) : ApiController
+[Route("api/user")]
+public class UserController(IUserService userService) : ControllerBase
 {
     [HttpGet("{id:guid}")]
-    [AllowAnonymous]
     public async Task<IActionResult> GetUserById(Guid id)
     {
         return Ok(await userService.GetByGuidAsync(id));

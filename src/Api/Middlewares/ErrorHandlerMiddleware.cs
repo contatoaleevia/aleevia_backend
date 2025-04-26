@@ -37,7 +37,7 @@ public class ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMi
         };
     }
 
-    private int DetermineStatusCode(Exception exception)
+    private static int DetermineStatusCode(Exception exception)
     {
         return exception switch
         {

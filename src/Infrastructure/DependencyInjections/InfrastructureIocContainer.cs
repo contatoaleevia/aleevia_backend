@@ -41,11 +41,11 @@ public static class InfrastructureIocContainer
             {
                 options.Password = new PasswordOptions
                 {
-                    RequireDigit = true,
-                    RequiredLength = 8,
-                    RequireLowercase = true,
-                    RequireUppercase = true,
-                    RequireNonAlphanumeric = true
+                    RequireDigit = false,
+                    RequiredLength = 6,
+                    RequireLowercase = false,
+                    RequireUppercase = false,
+                    RequireNonAlphanumeric = false
                 };
 
                 options.SignIn.RequireConfirmedEmail = true;

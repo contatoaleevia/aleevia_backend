@@ -73,6 +73,13 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 .HasMaxLength(14)
                 .HasColumnName("document");
         });
+
+        builder.OwnsOne(x => x.UserType, userType =>
+        {
+            userType.Property(x => x.UserTypeId)
+                .IsRequired()
+                .HasColumnName("type");
+        });
         
         builder.Property(x => x.CreatedAt)
             .IsRequired()
