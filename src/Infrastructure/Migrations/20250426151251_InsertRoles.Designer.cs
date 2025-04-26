@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20250425131451_ConfigureUserTypeValueObject")]
-    partial class ConfigureUserTypeValueObject
+    [Migration("20250426151251_InsertRoles")]
+    partial class InsertRoles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,30 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CorporateName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("corporate_name");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("manager", "public");
+                });
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
@@ -64,24 +88,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("email_confirmed");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("first_name");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("gender");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("last_name");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean")
                         .HasColumnName("lockout_enabled");
@@ -89,6 +95,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("lockout_end");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -114,12 +126,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("phone_number_confirmed");
 
-                    b.Property<string>("PreferredName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("preferred_name");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text")
                         .HasColumnName("security_stamp");
@@ -133,7 +139,6 @@ namespace Infrastructure.Migrations
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("user_name");
@@ -146,9 +151,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("UserName")
-                        .IsUnique();
 
                     b.ToTable("user", "public");
                 });
@@ -287,8 +289,75 @@ namespace Infrastructure.Migrations
                     b.ToTable("identity_user_token", "public");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
+                {
+                    b.HasOne("Domain.Entities.Identities.User", "User")
+                        .WithOne("Manager")
+                        .HasForeignKey("Domain.Entities.Identities.Manager", "UserId")
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Entities.Identities.ManagerType", "ManagerType", b1 =>
+                        {
+                            b1.Property<Guid>("ManagerId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("TypeId")
+                                .HasColumnType("integer")
+                                .HasColumnName("type");
+
+                            b1.HasKey("ManagerId");
+
+                            b1.ToTable("manager", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ManagerId");
+                        });
+
+                    b.Navigation("ManagerType")
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
+                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cnpj", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .HasMaxLength(14)
+                                .HasColumnType("character varying(14)")
+                                .HasColumnName("cnpj");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("user", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cpf", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(11)
+                                .HasColumnType("character varying(11)")
+                                .HasColumnName("cpf");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("user", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
                     b.OwnsOne("Domain.Entities.Identities.UserType", "UserType", b1 =>
                         {
                             b1.Property<Guid>("UserId")
@@ -306,26 +375,9 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Domain.Utils.Document", "Document", b1 =>
-                        {
-                            b1.Property<Guid>("UserId")
-                                .HasColumnType("uuid");
+                    b.Navigation("Cnpj");
 
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(14)
-                                .HasColumnType("character varying(14)")
-                                .HasColumnName("document");
-
-                            b1.HasKey("UserId");
-
-                            b1.ToTable("user", "public");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId");
-                        });
-
-                    b.Navigation("Document")
+                    b.Navigation("Cpf")
                         .IsRequired();
 
                     b.Navigation("UserType")
@@ -379,6 +431,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
+                    b.Navigation("Manager");
+
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

@@ -1,16 +1,16 @@
 ﻿namespace Application.DTOs.Users.CreateAdminUserDTOs;
 
-public class CreateAdminUserResponse
+public class CreateManagerUserResponse
 {
     public Guid Id { get; set; }
     public string UserName { get; set; } = null!;
     public string Email { get; set; } = null!;
 
-    public CreateAdminUserResponse()
+    public CreateManagerUserResponse()
     {
     }
     
-    public CreateAdminUserResponse(Guid id, string userName, string email)
+    public CreateManagerUserResponse(Guid id, string userName, string email)
     {
         Id = id;
         UserName = userName;

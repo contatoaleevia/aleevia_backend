@@ -10,6 +10,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
 {
     public override DbSet<User> Users { get; set; }
+    public DbSet<Manager> Managers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -25,6 +26,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.Entity<IdentityUserToken<Guid>>().ToTable("identity_user_token");
 
         builder.ApplyConfiguration(new UserConfiguration());
+        builder.ApplyConfiguration(new ManagerConfiguration());
     
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {

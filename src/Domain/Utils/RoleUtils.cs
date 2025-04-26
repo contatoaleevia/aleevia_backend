@@ -10,8 +10,8 @@ public static class RoleUtils
     public static IdentityRole<Guid> Patient 
         = CreateRole(Guid.Parse("710483d0-680c-4273-99d6-3c0be1940df8"), "Patient");
     
-    public static IdentityRole<Guid> Employer 
-        = CreateRole(Guid.Parse("4fa64c52-e389-4bbc-be5f-8565081eb393"), "Employer");
+    public static IdentityRole<Guid> Employee 
+        = CreateRole(Guid.Parse("4fa64c52-e389-4bbc-be5f-8565081eb393"), "Employee");
 
     private static IdentityRole<Guid> CreateRole(Guid roleId, string name)
         => new()

@@ -13,7 +13,7 @@ namespace Infrastructure.Migrations
         {
             var adminRole = RoleUtils.Admin;
             var patientRole = RoleUtils.Patient;
-            var employerRole = RoleUtils.Employer;
+            var employeeRole = RoleUtils.Employee;
             
             var sql = @$"
 INSERT INTO public.identity_role (""Id"", ""Name"", ""NormalizedName"", ""ConcurrencyStamp"")
@@ -23,7 +23,7 @@ INSERT INTO public.identity_role (""Id"", ""Name"", ""NormalizedName"", ""Concur
 VALUES ('{patientRole.Id}', '{patientRole.Name}', '{patientRole.NormalizedName}', {patientRole.ConcurrencyStamp ?? "null"});
 
 INSERT INTO public.identity_role (""Id"", ""Name"", ""NormalizedName"", ""ConcurrencyStamp"")
-VALUES ('{employerRole.Id}', '{employerRole.Name}', '{employerRole.NormalizedName}', {employerRole.ConcurrencyStamp ?? "null"});";
+VALUES ('{employeeRole.Id}', '{employeeRole.Name}', '{employeeRole.NormalizedName}', {employeeRole.ConcurrencyStamp ?? "null"});";
             
             migrationBuilder.Sql(sql);
         }
@@ -33,7 +33,7 @@ VALUES ('{employerRole.Id}', '{employerRole.Name}', '{employerRole.NormalizedNam
         {
             var adminRole = RoleUtils.Admin;
             var patientRole = RoleUtils.Patient;
-            var employerRole = RoleUtils.Employer;
+            var employerRole = RoleUtils.Employee;
             
             var sql = @$"
 DELETE

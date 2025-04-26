@@ -1,4 +1,5 @@
 ﻿using CrossCutting.Extensions;
+using Domain.Entities.Identities.Enums;
 
 namespace Domain.Entities.Identities;
 
@@ -11,8 +12,10 @@ public class UserType
     {
     }
 
-    public UserType(ushort userTypeId)
+    private UserType(UserTypeEnum userTypeId)
     {
-        UserTypeId = (UserTypeEnum) userTypeId;
+        UserTypeId = userTypeId;
     }
+    
+    public static UserType CreateAsManager () => new(UserTypeEnum.Manager);
 }

@@ -31,15 +31,37 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserType",
+                name: "user",
                 schema: "public",
                 columns: table => new
                 {
-                    UserTypeId = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    cpf = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
+                    cnpj = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: true),
+                    type = table.Column<int>(type: "integer", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    active = table.Column<bool>(type: "boolean", nullable: false),
+                    user_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    normalized_user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    normalized_email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    email_confirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    password_hash = table.Column<string>(type: "text", nullable: true),
+                    security_stamp = table.Column<string>(type: "text", nullable: true),
+                    concurrency_stamp = table.Column<string>(type: "text", nullable: true),
+                    phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    phone_number_confirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    two_factor_enabled = table.Column<bool>(type: "boolean", nullable: false),
+                    lockout_end = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    lockout_enabled = table.Column<bool>(type: "boolean", nullable: false),
+                    access_failed_count = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserType", x => x.UserTypeId);
+                    table.PrimaryKey("PK_user", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,48 +84,6 @@ namespace Infrastructure.Migrations
                         principalSchema: "public",
                         principalTable: "identity_role",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "user",
-                schema: "public",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    first_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    last_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    preferred_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    gender = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    document = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
-                    UserTypeId = table.Column<int>(type: "integer", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    active = table.Column<bool>(type: "boolean", nullable: false),
-                    user_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    normalized_user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    normalized_email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    email_confirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    password_hash = table.Column<string>(type: "text", nullable: true),
-                    security_stamp = table.Column<string>(type: "text", nullable: true),
-                    concurrency_stamp = table.Column<string>(type: "text", nullable: true),
-                    phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    phone_number_confirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    two_factor_enabled = table.Column<bool>(type: "boolean", nullable: false),
-                    lockout_end = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    lockout_enabled = table.Column<bool>(type: "boolean", nullable: false),
-                    access_failed_count = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_user", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_user_UserType_UserTypeId",
-                        column: x => x.UserTypeId,
-                        principalSchema: "public",
-                        principalTable: "UserType",
-                        principalColumn: "UserTypeId");
                 });
 
             migrationBuilder.CreateTable(
@@ -195,6 +175,27 @@ namespace Infrastructure.Migrations
                         principalColumn: "id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "manager",
+                schema: "public",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    type = table.Column<int>(type: "integer", nullable: false),
+                    corporate_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_manager", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_manager_user_user_id",
+                        column: x => x.user_id,
+                        principalSchema: "public",
+                        principalTable: "user",
+                        principalColumn: "id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 schema: "public",
@@ -227,23 +228,17 @@ namespace Infrastructure.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_manager_user_id",
+                schema: "public",
+                table: "manager",
+                column: "user_id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 schema: "public",
                 table: "user",
                 column: "normalized_email");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_user_user_name",
-                schema: "public",
-                table: "user",
-                column: "user_name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_user_UserTypeId",
-                schema: "public",
-                table: "user",
-                column: "UserTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -277,15 +272,15 @@ namespace Infrastructure.Migrations
                 schema: "public");
 
             migrationBuilder.DropTable(
+                name: "manager",
+                schema: "public");
+
+            migrationBuilder.DropTable(
                 name: "identity_role",
                 schema: "public");
 
             migrationBuilder.DropTable(
                 name: "user",
-                schema: "public");
-
-            migrationBuilder.DropTable(
-                name: "UserType",
                 schema: "public");
         }
     }

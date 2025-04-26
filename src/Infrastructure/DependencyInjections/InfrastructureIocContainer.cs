@@ -2,10 +2,12 @@
 using CrossCutting.Databases;
 using CrossCutting.DependencyInjections;
 using CrossCutting.Identities;
+using Domain.Contracts.Repositories;
 using Domain.Entities.Identities;
 using Infrastructure.Contexts;
 using Infrastructure.Helpers.ApiSettings.Settings;
 using Infrastructure.Helpers.TokenObtainer.Settings;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +35,7 @@ public static class InfrastructureIocContainer
     
     private static void RegisterRepositories(IServiceCollection services)
     {
+        services.AddScoped<IManagerRepository, ManagerRepository>();
     }
     
     private static void RegisterIdentityConfiguration(IServiceCollection services, IConfiguration configuration)
@@ -51,6 +54,9 @@ public static class InfrastructureIocContainer
                 options.SignIn.RequireConfirmedEmail = true;
                 
                 options.Lockout.AllowedForNewUsers = false;
+                
+                options.User.AllowedUserNameCharacters =
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             }).AddDefaultTokenProviders()
             .AddErrorDescriber<IdentityErrorExtension>()
             .AddEntityFrameworkStores<ApiDbContext>();

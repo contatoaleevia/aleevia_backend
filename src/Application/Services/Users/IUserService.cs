@@ -11,9 +11,9 @@ namespace Application.Services.Users
     {
         Task<GetUserByIdResponseDto> GetByGuidAsync(Guid guid);
         Task<LoginResponseDto> LoginAsync(LoginRequestDto requestDto);
-        Task<CreateHealthcareUserResponse> CreateHealthcareProfessionalUserAsync(CreateHealthcareUserRequest request);
-        Task<CreateAdminUserResponse> CreateUserAsAdminAsync(CreateAdminUserRequest request);
-        Task<UpdateUserResponseDto> UpdateUserAsync(UpdateUserRequestDto requestDto);
-        Task<DeleteUserResponseDto> DeleteUserAsync(DeleteUserRequestDto requestDto);
+        // Task<CreateHealthcareUserResponse> CreateHealthcareProfessionalUserAsync(CreateHealthcareUserRequest request);
+        Task<CreateManagerUserResponse> CreateManagerUserAsync(CreateManagerUserRequest request);
+        // Task<UpdateUserResponseDto> UpdateUserAsync(UpdateUserRequestDto requestDto);
+        // Task<DeleteUserResponseDto> DeleteUserAsync(DeleteUserRequestDto requestDto);
     }
 }

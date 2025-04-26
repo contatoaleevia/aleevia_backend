@@ -33,41 +33,41 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost]
-    [AllowAnonymous]
-    public async Task<IActionResult> CreateHealthcareProfessionalUser([FromBody] CreateHealthcareUserRequest request)
-    {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-        return Ok(await userService.CreateHealthcareProfessionalUserAsync(request));
-    }
+    // [HttpPost]
+    // [AllowAnonymous]
+    // public async Task<IActionResult> CreateHealthcareProfessionalUser([FromBody] CreateHealthcareUserRequest request)
+    // {
+    //     if (!ModelState.IsValid) return BadRequest(ModelState);
+    //     return Ok(await userService.CreateHealthcareProfessionalUserAsync(request));
+    // }
     
     [HttpPost("admin")]
     [ApiKey]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(CreateAdminUserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CreateManagerUserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAdminUser([FromBody] CreateAdminUserRequest request)
+    public async Task<IActionResult> CreateAdminUser([FromBody] CreateManagerUserRequest request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        return Ok(await userService.CreateUserAsAdminAsync(request));
+        return Ok(await userService.CreateManagerUserAsync(request));
     }
 
-    [HttpPut]
-    [AllowAnonymous]
-    public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequestDto requestDto)
-    {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-        var response = await userService.UpdateUserAsync(requestDto);
-        return Ok(response);
-    }
-
-    [HttpDelete]
-    [AllowAnonymous]
-    public async Task<IActionResult> DeleteUser([FromBody] DeleteUserRequestDto requestDto)
-    {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-        return Ok(await userService.DeleteUserAsync(requestDto));
-    }
+    // [HttpPut]
+    // [AllowAnonymous]
+    // public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequestDto requestDto)
+    // {
+    //     if (!ModelState.IsValid) return BadRequest(ModelState);
+    //     var response = await userService.UpdateUserAsync(requestDto);
+    //     return Ok(response);
+    // }
+    //
+    // [HttpDelete]
+    // [AllowAnonymous]
+    // public async Task<IActionResult> DeleteUser([FromBody] DeleteUserRequestDto requestDto)
+    // {
+    //     if (!ModelState.IsValid) return BadRequest(ModelState);
+    //     return Ok(await userService.DeleteUserAsync(requestDto));
+    // }
 }
