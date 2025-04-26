@@ -28,14 +28,14 @@ public class UserController(IUserService userService) : ControllerBase
     //     return Ok(await userService.CreateHealthcareProfessionalUserAsync(request));
     // }
     
-    [HttpPost("admin")]
+    [HttpPost("manager")]
     [ApiKey]
     [Produces("application/json")]
     [ProducesResponseType(typeof(CreateManagerUserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAdminUser([FromBody] CreateManagerUserRequest request)
+    public async Task<IActionResult> CreateManagerUser([FromBody] CreateManagerUserRequest request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         return Ok(await userService.CreateManagerUserAsync(request));

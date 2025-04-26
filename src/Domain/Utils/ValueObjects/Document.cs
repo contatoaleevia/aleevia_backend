@@ -1,4 +1,5 @@
 ﻿using CrossCutting.Utils;
+using Domain.Exceptions;
 
 namespace Domain.Utils.ValueObjects;
 
@@ -34,9 +35,11 @@ public class Document
         switch (Type)
         {
             case DocumentType.Cpf when !CpfValidator.IsValid(Value):
-                throw new ArgumentException("Document cannot be valid.");
+                throw new CpfNotValidException(Value);
             case DocumentType.Cnpj when !CnpjValidator.IsValid(Value):
-                throw new ArgumentException("Document cannot be valid.");
+                throw new CnpjNotValidException(Value);
+            default:
+                throw new ArgumentException("Document type is not valid.");
         }
     }
 
