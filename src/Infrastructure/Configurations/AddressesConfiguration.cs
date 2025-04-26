@@ -19,10 +19,13 @@ public class AddressesConfiguration : IEntityTypeConfiguration<Address>
             .WithMany()
             .HasForeignKey(x => x.SourceId);
 
-        builder.Property(x => x.SourceType)
-            .IsRequired()
-            .HasMaxLength(3)
-            .HasColumnName("source_type");
+        builder.OwnsOne(x => x.SourceType, sourceType =>
+        {
+            sourceType.Property(x => x.UserTypeId)
+                .HasColumnName("source_type")
+                .HasMaxLength(50)
+                .IsRequired();
+        });
 
         builder.Property(x => x.Name)
             .HasMaxLength(100)

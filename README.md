@@ -44,7 +44,8 @@ A aplicação usa o `appsettings.json` para configuração. Abaixo está um exem
   "ApiSettings": {
     "ExpireHour": 720,
     "Issuer": "Aleevia",
-    "ValidIn": "https://localhost:7086"
+    "ValidIn": "https://localhost:7086",
+    "ApiKey": "6a5e7add-7e24-48e0-90aa-79486597f1d3"
   }
 }
 ```
