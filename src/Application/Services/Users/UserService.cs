@@ -1,16 +1,10 @@
 ﻿using Application.DTOs.Users.CreateAdminUserDTOs;
-using Application.DTOs.Users.DeleteUserDTOs;
 using Application.DTOs.Users.GetUserById;
-using Application.DTOs.Users.LoginDTOs;
-using Application.DTOs.Users.UpdateUserDTOs;
-using Application.Helpers;
 using Application.Services.Managers;
 using CrossCutting.Databases;
 using CrossCutting.Identities;
 using Domain.Entities.Identities;
-using Domain.Entities.Identities.Enums;
 using Domain.Exceptions;
-using Domain.Utils;
 using Domain.Utils.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 
@@ -18,8 +12,6 @@ namespace Application.Services.Users;
 
 public class UserService(
     UserManager<User> userManager,
-    SignInManager<User> signInManager,
-    GenerateJwtTokenHelper generateJwtTokenHelper,
     IIdentityNotificationHandler identityNotificationHandler,
     IManagerService managerService
 ) : IUserService
@@ -30,36 +22,6 @@ public class UserService(
         if (user is null) throw new UserNotFoundException(guid);
         //TODO: Preencher response com os dados do usuário
         return new GetUserByIdResponseDto();
-    }
-
-    public async Task<LoginResponseDto> LoginAsync(LoginRequestDto requestDto)
-    {
-        var result = await signInManager.PasswordSignInAsync(
-            requestDto.Email,
-            requestDto.Password,
-            requestDto.RememberMe,
-            lockoutOnFailure: true);
-
-        if (!result.Succeeded)
-        {
-            identityNotificationHandler.AddNotifications([
-                new IdentityError { Description = "Credenciais inválidas." }
-            ]);
-            return new LoginResponseDto();
-        }
-
-        var user = await userManager.FindByEmailAsync(requestDto.Email);
-        if (user is null)
-            throw new EmailNotFoundException(requestDto.Email);
-
-        var token = generateJwtTokenHelper.GenerateJwtToken(user);
-
-        return new LoginResponseDto
-        (
-            token,
-            user.UserName!,
-            user.Email!
-        );
     }
 
     public async Task<CreateManagerUserResponse> CreateManagerUserAsync(CreateManagerUserRequest request)
