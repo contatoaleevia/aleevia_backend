@@ -14,30 +14,29 @@ public class Document
     {
         Type = type;
         Value = SetValue(value);
-        IsValid();
     }
     
-    public static Document? CreateDocumentAsCnpj(string? cnpj)
-        => cnpj is null ? null : new Document(cnpj, DocumentType.Cnpj);
-    
+    public static Document CreateDocumentAsCnpj(string cnpj) => new(cnpj, DocumentType.Cnpj);
     public static Document CreateDocumentAsCpf(string cpf) => new(cpf, DocumentType.Cpf);
     
     private string SetValue(string value)
     {
-        return RemoveSpecialCharacters(value);
+        value = RemoveSpecialCharacters(value);
+        IsValid(value);
+        return value;
     }   
     
-    private void IsValid()
+    private void IsValid(string value)
     {
-        if (string.IsNullOrEmpty(Value))
+        if (string.IsNullOrEmpty(value))
             throw new ArgumentException("Document cannot be null or empty.");
 
         switch (Type)
         {
-            case DocumentType.Cpf when !CpfValidator.IsValid(Value):
-                throw new CpfNotValidException(Value);
-            case DocumentType.Cnpj when !CnpjValidator.IsValid(Value):
-                throw new CnpjNotValidException(Value);
+            case DocumentType.Cpf when !CpfValidator.IsValid(value):
+                throw new CpfNotValidException(value);
+            case DocumentType.Cnpj when !CnpjValidator.IsValid(value):
+                throw new CnpjNotValidException(value);
             default:
                 throw new ArgumentException("Document type is not valid.");
         }
