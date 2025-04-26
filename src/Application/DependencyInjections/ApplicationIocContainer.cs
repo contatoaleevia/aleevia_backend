@@ -10,8 +10,8 @@ public static class ApplicationIocContainer
     public static void AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IGenerateJwtTokenHelper, GenerateJwtTokenHelper>();
         services.AddScoped<IManagerService, ManagerService>();
-        
-        services.AddScoped<GenerateJwtTokenHelper>();
     }
 }

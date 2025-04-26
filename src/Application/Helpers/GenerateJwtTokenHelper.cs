@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Helpers;
-public class GenerateJwtTokenHelper
+public class GenerateJwtTokenHelper : IGenerateJwtTokenHelper
 {
     private readonly IConfiguration _configuration;
 
