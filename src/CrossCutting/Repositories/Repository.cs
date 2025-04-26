@@ -15,6 +15,11 @@ public class Repository<T> : IRepository<T>
         DbSet = context.Set<T>();
     }
 
+    public async Task<T> GetByIdAsync(Guid id)
+    {
+        return await DbSet.FindAsync(id);
+    }
+
     public async Task<T> CreateAsync(T entity, bool saveChanges = true)
     {
         await DbSet.AddAsync(entity);

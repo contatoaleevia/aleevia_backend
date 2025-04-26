@@ -1,4 +1,6 @@
-﻿namespace Api.Configurations;
+﻿using Api.Middlewares;
+
+namespace Api.Configurations;
 
 public static class ApiConfiguration
 {
@@ -20,6 +22,8 @@ public static class ApiConfiguration
         app.UseAuthentication();
 
         app.UseAuthorization(); 
+        
+        app.UseMiddleware(typeof(ErrorHandlerMiddleware));
         
         app.MapControllers();
     }

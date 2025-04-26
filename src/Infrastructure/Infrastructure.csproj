@@ -2,8 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<FileScopedNamespace>true</FileScopedNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,6 +23,8 @@
     <ItemGroup>
       <Folder Include="Helpers\ApiSettings\" />
       <Folder Include="Helpers\TokenObtainer\" />
+      <Folder Include="Migrations\" />
+      <Folder Include="Repositories\" />
     </ItemGroup>
 
 </Project>

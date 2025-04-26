@@ -15,14 +15,55 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Id)
             .IsRequired()
             .HasColumnName("id");
+        
+        builder.Property(x => x.Name)
+            .IsRequired()
+            .HasMaxLength(50)
+            .HasColumnName("name");
+     
+        builder.OwnsOne(x => x.Cpf, document =>
+        {
+            document.Property(x => x.Value)
+                .IsRequired()
+                .HasMaxLength(11)
+                .HasColumnName("cpf");
+        });
+        
+        builder.OwnsOne(x => x.Cnpj, document =>
+        {
+            document.Property(x => x.Value)
+                .IsRequired(false)
+                .HasMaxLength(14)
+                .HasColumnName("cnpj");
+        }).Navigation(x => x.Cnpj).IsRequired(false);
+
+        builder.OwnsOne(x => x.UserType, userType =>
+        {
+            userType.Property(x => x.UserTypeId)
+                .IsRequired()
+                .HasColumnName("type");
+        });
+        
+        builder.Property(x => x.CreatedAt)
+            .IsRequired()
+            .HasColumnName("created_at");
+        
+        builder.Property(x => x.UpdatedAt)
+            .IsRequired(false)
+            .HasColumnName("updated_at");
+        
+        builder.Property(x => x.DeletedAt)
+            .IsRequired(false)
+            .HasColumnName("deleted_at");
+        
+        builder.Property(x => x.Active)
+            .IsRequired()
+            .HasColumnName("active");
 
         builder.Property(x => x.UserName)
             .HasMaxLength(100)
-            .IsRequired()
+            .IsRequired(false)
             .HasColumnName("user_name");
-        
-        builder.HasIndex(x => x.UserName)
-            .IsUnique();
         
         builder.Property(x => x.Email)
             .HasMaxLength(100)
@@ -42,54 +83,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasColumnName("phone_number_confirmed");
 
-        builder.Property(x => x.Gender)
-            .IsRequired()
-            .HasMaxLength(20)
-            .HasColumnName("gender");
-        
-        builder.Property(x => x.FirstName)
-            .IsRequired()
-            .HasMaxLength(50)
-            .HasColumnName("first_name");
-        
-        builder.Property(x => x.LastName)
-            .IsRequired()
-            .HasMaxLength(50)
-            .HasColumnName("last_name");
-        
-        builder.Property(x => x.PreferredName)
-            .IsRequired()
-            .HasMaxLength(50)
-            .HasColumnName("preferred_name");
-        
-        builder.Property(x => x.Active)
-            .IsRequired()
-            .HasColumnName("active");
-
-        builder.OwnsOne(x => x.Document, document =>
-        {
-            document.Property(x => x.Value)
-                .IsRequired()
-                .HasMaxLength(14)
-                .HasColumnName("document");
-        });
-        
-        builder.Property(x => x.UserType)
-            .IsRequired()
-            .HasColumnName("type");
-        
-        builder.Property(x => x.CreatedAt)
-            .IsRequired()
-            .HasColumnName("created_at");
-        
-        builder.Property(x => x.UpdatedAt)
-            .IsRequired(false)
-            .HasColumnName("updated_at");
-        
-        builder.Property(x => x.DeletedAt)
-            .IsRequired(false)
-            .HasColumnName("deleted_at");
-        
         builder.Property(x => x.TwoFactorEnabled)
             .HasColumnName("two_factor_enabled");
         
@@ -117,5 +110,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         
         builder.Property(x => x.PasswordHash)
             .HasColumnName("password_hash");
+
+        builder.HasMany(x => x.UserRoles)
+            .WithOne()
+            .HasForeignKey(x => x.UserId);
     }
 }
