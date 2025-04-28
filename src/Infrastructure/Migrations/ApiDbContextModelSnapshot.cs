@@ -129,6 +129,47 @@ namespace Infrastructure.Migrations
                     b.ToTable("manager", "public");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Faqs.Faq", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("answer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("question");
+
+                    b.Property<Guid>("SourceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SourceId");
+
+                    b.ToTable("faq", "public");
+                });
+
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -455,6 +496,57 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("SourceType");
                 });
+            
+            
+            modelBuilder.Entity("Domain.Entities.Faqs.Faq", b =>
+            {
+                b.HasOne("Domain.Entities.Identities.User", "Source")
+                    .WithMany()
+                    .HasForeignKey("SourceId")
+                    .IsRequired();
+
+                b.OwnsOne("Domain.Entities.Faqs.FaqCategoryType", "FaqCategory", b1 =>
+                {
+                    b1.Property<Guid>("FaqId")
+                        .HasColumnType("uuid");
+
+                    b1.Property<int>("CategoryType")
+                        .HasColumnType("integer")
+                        .HasColumnName("faq_category");
+
+                    b1.HasKey("FaqId");
+
+                    b1.ToTable("faq", "public");
+
+                    b1.WithOwner()
+                        .HasForeignKey("FaqId");
+                });
+
+                b.OwnsOne("Domain.Entities.Faqs.FaqSourceType", "SourceType", b1 =>
+                {
+                    b1.Property<Guid>("FaqId")
+                        .HasColumnType("uuid");
+
+                    b1.Property<int>("SourceType")
+                        .HasColumnType("integer")
+                        .HasColumnName("source_type");
+
+                    b1.HasKey("FaqId");
+
+                    b1.ToTable("faq", "public");
+
+                    b1.WithOwner()
+                        .HasForeignKey("FaqId");
+                });
+
+                b.Navigation("FaqCategory")
+                    .IsRequired();
+
+                b.Navigation("Source");
+
+                b.Navigation("SourceType")
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
                 {
