@@ -28,9 +28,6 @@ public class Document
     
     private void IsValid(string value)
     {
-        if (string.IsNullOrEmpty(value))
-            throw new ArgumentException("Document cannot be null or empty.");
-
         switch (Type)
         {
             case DocumentType.Cpf when !CpfValidator.IsValid(value):

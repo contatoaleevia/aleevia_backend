@@ -36,6 +36,7 @@ public static class InfrastructureIocContainer
     private static void RegisterRepositories(IServiceCollection services)
     {
         services.AddScoped<IManagerRepository, ManagerRepository>();
+        services.AddScoped<IOfficeRepository, OfficeRepository>();
     }
     
     private static void RegisterIdentityConfiguration(IServiceCollection services, IConfiguration configuration)
