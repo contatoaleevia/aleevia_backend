@@ -1,6 +1,7 @@
 ﻿using Application.Helpers;
 using Application.Services;
 using Application.Services.Managers;
+using Application.Services.Offices;
 using Application.Services.Users;
 using Application.Services.ServiceTypes;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ public static class ApplicationIocContainer
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IGenerateJwtTokenHelper, GenerateJwtTokenHelper>();
         services.AddScoped<IManagerService, ManagerService>();
+        services.AddScoped<IOfficeService, OfficeService>();
         services.AddScoped<IServiceTypeService, ServiceTypeService>();
     }
 }

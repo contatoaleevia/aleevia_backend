@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250428115210_CreateTableOfficeAndUpdateUserCnpj")]
+    partial class CreateTableOfficeAndUpdateUserCnpj
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -258,41 +261,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("office", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ServiceTypes.ServiceType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("description");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("active");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("service_type", "public");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("Id")
@@ -433,7 +401,7 @@ namespace Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("SourceId");
 
-                    b.OwnsOne("Domain.Entities.Address.SourceType#Domain.Entities.Identities.UserType", "SourceType", b1 =>
+                    b.OwnsOne("Domain.Entities.Identities.UserType", "SourceType", b1 =>
                         {
                             b1.Property<Guid>("AddressId")
                                 .HasColumnType("uuid");
@@ -463,7 +431,7 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("Domain.Entities.Identities.Manager", "UserId")
                         .IsRequired();
 
-                    b.OwnsOne("Domain.Entities.Identities.Manager.ManagerType#Domain.Entities.Identities.ManagerType", "ManagerType", b1 =>
+                    b.OwnsOne("Domain.Entities.Identities.ManagerType", "ManagerType", b1 =>
                         {
                             b1.Property<Guid>("ManagerId")
                                 .HasColumnType("uuid");
@@ -488,7 +456,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
-                    b.OwnsOne("Domain.Entities.Identities.User.Cnpj#Domain.Utils.ValueObjects.Document", "Cnpj", b1 =>
+                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cnpj", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -509,7 +477,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Domain.Entities.Identities.User.Cpf#Domain.Utils.ValueObjects.Document", "Cpf", b1 =>
+                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cpf", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -528,7 +496,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Domain.Entities.Identities.User.UserType#Domain.Entities.Identities.UserType", "UserType", b1 =>
+                    b.OwnsOne("Domain.Entities.Identities.UserType", "UserType", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -552,6 +520,184 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("UserType")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
+                {
+                    b.HasOne("Domain.Entities.Identities.Manager", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cnpj", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(14)
+                                .HasColumnType("character varying(14)")
+                                .HasDefaultValue("")
+                                .HasColumnName("cnpj");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Instagram", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasDefaultValue("")
+                                .HasColumnName("instagram");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Logo", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasDefaultValue("")
+                                .HasColumnName("logo");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.PhoneNumber", "Phone", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(15)
+                                .HasColumnType("character varying(15)")
+                                .HasDefaultValue("")
+                                .HasColumnName("phone");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Site", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasDefaultValue("")
+                                .HasColumnName("site");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.PhoneNumber", "Whatsapp", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(15)
+                                .HasColumnType("character varying(15)")
+                                .HasDefaultValue("")
+                                .HasColumnName("whatsapp");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasDefaultValue("")
+                                .HasColumnName("email");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.Navigation("Cnpj")
+                        .IsRequired();
+
+                    b.Navigation("Email")
+                        .IsRequired();
+
+                    b.Navigation("Instagram")
+                        .IsRequired();
+
+                    b.Navigation("Logo")
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Phone")
+                        .IsRequired();
+
+                    b.Navigation("Site")
+                        .IsRequired();
+
+                    b.Navigation("Whatsapp")
                         .IsRequired();
                 });
 
