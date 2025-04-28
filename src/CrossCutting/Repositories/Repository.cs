@@ -3,19 +3,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CrossCutting.Repositories;
 
-public class Repository<TUser> : IRepository<TUser> 
-    where TUser : AggregateRoot
+public class Repository<T> : IRepository<T> 
+    where T : AggregateRoot
 {
     private readonly DbContext _context;
-    protected readonly DbSet<TUser> DbSet;
+    protected readonly DbSet<T> DbSet;
 
     protected Repository(DbContext context)
     {
         _context = context;
-        DbSet = context.Set<TUser>();
+        DbSet = context.Set<T>();
     }
 
-    public async Task<TUser> CreateAsync(TUser entity, bool saveChanges = true)
+    public async Task<T> GetByIdAsync(Guid id)
+    {
+        return await DbSet.FindAsync(id);
+    }
+
+
+    public async Task<T> CreateAsync(T entity, bool saveChanges = true)
     {
         await DbSet.AddAsync(entity);
 
@@ -25,7 +31,7 @@ public class Repository<TUser> : IRepository<TUser>
         return entity;
     }
 
-    public async Task<List<TUser>> CreateRangeAsync(List<TUser> entities, bool saveChanges = true)
+    public async Task<List<T>> CreateRangeAsync(List<T> entities, bool saveChanges = true)
     {
         await DbSet.AddRangeAsync(entities);
         
@@ -35,7 +41,7 @@ public class Repository<TUser> : IRepository<TUser>
         return entities;
     }
 
-    public async Task UpdateAsync(TUser entity, bool saveChanges = true)
+    public async Task UpdateAsync(T entity, bool saveChanges = true)
     {
         DbSet.Update(entity);
         
@@ -43,7 +49,7 @@ public class Repository<TUser> : IRepository<TUser>
             await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateRangeAsync(IEnumerable<TUser> entities, bool saveChanges = true)
+    public async Task UpdateRangeAsync(IEnumerable<T> entities, bool saveChanges = true)
     {
         DbSet.UpdateRange(entities);
         
@@ -51,7 +57,7 @@ public class Repository<TUser> : IRepository<TUser>
             await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(TUser entity, bool saveChanges = true)
+    public async Task DeleteAsync(T entity, bool saveChanges = true)
     {
         DbSet.Remove(entity);
         
@@ -59,7 +65,7 @@ public class Repository<TUser> : IRepository<TUser>
             await _context.SaveChangesAsync();
     }
     
-    public async Task DeleteRangeAsync(IEnumerable<TUser> entities, bool saveChanges = true)
+    public async Task DeleteRangeAsync(IEnumerable<T> entities, bool saveChanges = true)
     {
         DbSet.RemoveRange(entities);
         
