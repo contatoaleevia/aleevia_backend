@@ -15,6 +15,6 @@ public static class ApplicationIocContainer
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IGenerateJwtTokenHelper, GenerateJwtTokenHelper>();
         services.AddScoped<IManagerService, ManagerService>();
-        services.AddScoped<IOfficeService, IOfficeService>();
+        services.AddScoped<IOfficeService, OfficeService>();
     }
 }

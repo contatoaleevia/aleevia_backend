@@ -3,9 +3,16 @@
 public class Url
 {
     public string Value { get; private set; }
-    
-    public Url(string value)
+
+    private Url()
+    {
+    }
+
+    private Url(string value)
     {
         Value = value;
     }
+    
+    public static Url Create(string url) => new(url);
+    public static Url CreateAsEmpty() => new() { Value = string.Empty };
 }

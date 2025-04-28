@@ -10,10 +10,11 @@ public class OfficeController(IOfficeService service) : ControllerBase
 {
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> CreateOffice(CreateOfficeRequest request)
+    [Consumes("application/json")]
+    public async Task<IActionResult> CreateOffice([FromBody] CreateOfficeRequest request, [FromHeader] Guid managerId)
     {
+        //TODO: Assinar metodo com Authorize(Roles = "Admin") e pegar o userId da UserSession
         if(!ModelState.IsValid) return BadRequest(ModelState);
-        var ownerId = Guid.Parse("32c9f130-43e1-4ee4-89e5-9dff5818da01"); // Replace with actual owner ID retrieval logic
-        return Ok(await service.CreateOffice(request, ownerId));
+        return Ok(await service.CreateOffice(request, managerId));
     }
 }

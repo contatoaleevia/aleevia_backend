@@ -29,7 +29,8 @@ public class OfficeConfiguration : IEntityTypeConfiguration<Office>
         builder.OwnsOne(x => x.Cnpj, cnpj => 
         {
             cnpj.Property(x => x.Value)
-                .IsRequired(false)
+                .IsRequired()
+                .HasDefaultValue(string.Empty)
                 .HasColumnName("cnpj")
                 .HasMaxLength(14);
         });
@@ -37,7 +38,8 @@ public class OfficeConfiguration : IEntityTypeConfiguration<Office>
         builder.OwnsOne(x => x.Phone, phone => 
         {
             phone.Property(x => x.Value)
-                .IsRequired(false)
+                .IsRequired()
+                .HasDefaultValue(string.Empty)
                 .HasColumnName("phone")
                 .HasMaxLength(15);
         });
@@ -45,7 +47,8 @@ public class OfficeConfiguration : IEntityTypeConfiguration<Office>
         builder.OwnsOne(x => x.Whatsapp, whatsapp => 
         {
             whatsapp.Property(x => x.Value)
-                .IsRequired(false)
+                .IsRequired()
+                .HasDefaultValue(string.Empty)
                 .HasColumnName("whatsapp")
                 .HasMaxLength(15);
         });
@@ -53,7 +56,8 @@ public class OfficeConfiguration : IEntityTypeConfiguration<Office>
         builder.OwnsOne(x => x.Email, email => 
         {
             email.Property(x => x.Value)
-                .IsRequired(false)
+                .IsRequired()
+                .HasDefaultValue(string.Empty)
                 .HasColumnName("email")
                 .HasMaxLength(100);
         });
@@ -61,7 +65,8 @@ public class OfficeConfiguration : IEntityTypeConfiguration<Office>
         builder.OwnsOne(x => x.Site, site => 
         {
             site.Property(x => x.Value)
-                .IsRequired(false)
+                .IsRequired()
+                .HasDefaultValue(string.Empty)
                 .HasColumnName("site")
                 .HasMaxLength(100);
         });
@@ -69,7 +74,8 @@ public class OfficeConfiguration : IEntityTypeConfiguration<Office>
         builder.OwnsOne(x => x.Instagram, instagram => 
         {
             instagram.Property(x => x.Value)
-                .IsRequired(false)
+                .IsRequired()
+                .HasDefaultValue(string.Empty)
                 .HasColumnName("instagram")
                 .HasMaxLength(100);
         });
@@ -77,7 +83,8 @@ public class OfficeConfiguration : IEntityTypeConfiguration<Office>
         builder.OwnsOne(x => x.Logo, logo => 
         {
             logo.Property(x => x.Value)
-                .IsRequired(false)
+                .IsRequired()
+                .HasDefaultValue(string.Empty)
                 .HasColumnName("logo")
                 .HasMaxLength(100);
         });

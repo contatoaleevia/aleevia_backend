@@ -1,16 +1,20 @@
 ﻿using Application.DTOs.Offices.CreateOfficeDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Offices;
+using Domain.Exceptions.Managers;
 using Domain.Exceptions.Offices;
 
 namespace Application.Services.Offices;
 
-public class OfficeService(IOfficeRepository repository) : IOfficeService
+public class OfficeService(IOfficeRepository repository, IManagerRepository managerRepository) : IOfficeService
 {
-    public async Task<Guid> CreateOffice(CreateOfficeRequest request, Guid ownerId)
+    public async Task<Guid> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
+        var manager = await managerRepository.GetManagerByUserId(userId)
+            ?? throw new ManagerUserNotFoundException(userId);
+        
         var office = new Office(
-            ownerId: ownerId,
+            owner: manager,
             name: request.Name,
             cnpj: request.Cnpj,
             phoneNumber: request.PhoneNumber,
