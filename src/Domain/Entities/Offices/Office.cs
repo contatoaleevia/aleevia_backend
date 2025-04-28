@@ -1,10 +1,12 @@
 ﻿using CrossCutting.Entities;
+using Domain.Entities.Identities;
 using Domain.Utils.ValueObjects;
 
 namespace Domain.Entities.Offices;
 
 public class Office : AggregateRoot
 {
+    public Guid OwnerId { get; private set; }
     public string Name { get; private set; }
     public Document? Cnpj { get; private set; }
     public PhoneNumber? Phone { get; private set; }
@@ -13,14 +15,17 @@ public class Office : AggregateRoot
     public Url? Site { get; private set; }
     public Url? Instagram { get; private set; }
     public Url? Logo { get; private set; }
+    
+    public Manager Owner { get; set; }
 
     private Office()
     {
     }
 
-    public Office(string name, string? cnpj, string? phoneNumber, string? whatsapp, string? email, string? site,
+    public Office(Guid ownerId, string name, string? cnpj, string? phoneNumber, string? whatsapp, string? email, string? site,
         string? instagram, string? logo)    
     {
+        OwnerId = ownerId;
         Name = name;
         Cnpj = SetDocument(cnpj);
         Phone = SetPhoneNumber(phoneNumber);
