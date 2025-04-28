@@ -7,6 +7,7 @@ public class ApiSettingsHelper : IApiSettingsHelper
     public int ExpireHour { get; set; }
     public string Issuer { get; set; } = null!;
     public string ValidIn { get; set; } = null!;
+    public string ApiKey { get; set; } = null!;
 
     public static IApiSettingsHelper GetInstance(IConfiguration configuration)
     {

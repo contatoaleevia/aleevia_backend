@@ -34,6 +34,9 @@ public static class InfrastructureIocContainer
     
     private static void RegisterRepositories(IServiceCollection services)
     {
+        services.AddScoped<IManagerRepository, ManagerRepository>();
+        services.AddScoped<IOfficeRepository, OfficeRepository>();
+        services.AddScoped<IServiceTypeRepository, ServiceTypeRepository>();
         services.AddScoped<IFaqRepository, FaqRepository>();
     }
     
@@ -51,6 +54,11 @@ public static class InfrastructureIocContainer
                 };
 
                 options.SignIn.RequireConfirmedEmail = true;
+                
+                options.Lockout.AllowedForNewUsers = false;
+                
+                options.User.AllowedUserNameCharacters =
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             }).AddDefaultTokenProviders()
             .AddErrorDescriber<IdentityErrorExtension>()
             .AddEntityFrameworkStores<ApiDbContext>();

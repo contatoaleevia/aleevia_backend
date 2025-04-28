@@ -1,10 +1,14 @@
 ﻿using Domain.Entities.Faqs;
 using Domain.Entities.Identities;
 using Infrastructure.Configurations.Faqs;
+using Infrastructure.Configurations;
 using Infrastructure.Configurations.Identities;
+using Infrastructure.Configurations.Offices;
+using Infrastructure.Configurations.ServiceTypes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Domain.Entities.ServiceTypes;
 
 namespace Infrastructure.Contexts;
 
@@ -13,6 +17,8 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
 {
     public override DbSet<User> Users { get; set; }
     public DbSet<Faq> Faqs { get; set; }
+    public DbSet<Manager> Managers { get; set; }
+    public DbSet<ServiceType> ServiceTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -30,6 +36,11 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new UserConfiguration());
         builder.ApplyConfiguration(new FaqConfiguration());
 
+        builder.ApplyConfiguration(new ManagerConfiguration());
+        builder.ApplyConfiguration(new AddressesConfiguration());
+        builder.ApplyConfiguration(new OfficeConfiguration());
+        builder.ApplyConfiguration(new ServiceTypeConfiguration());
+    
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
             relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;

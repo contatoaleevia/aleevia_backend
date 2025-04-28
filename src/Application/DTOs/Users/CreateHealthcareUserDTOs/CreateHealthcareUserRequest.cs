@@ -1,6 +1,6 @@
-﻿namespace Application.DTOs.Users.CreateUserDTOs;
+﻿namespace Application.DTOs.Users.CreateHealthcareUserDTOs;
 
-public class CreateUserRequestDto(
+public class CreateHealthcareUserRequest(
     string password,
     string userName,
     string firstName,

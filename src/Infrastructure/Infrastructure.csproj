@@ -23,7 +23,8 @@
     <ItemGroup>
       <Folder Include="Helpers\ApiSettings\" />
       <Folder Include="Helpers\TokenObtainer\" />
-      <Folder Include="Migrations\Identity\" />
+      <Folder Include="Migrations\" />
+      <Folder Include="Repositories\" />
     </ItemGroup>
 
 </Project>

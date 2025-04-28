@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20250424155652_Initial")]
+    [Migration("20250426185416_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,6 +25,112 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Domain.Entities.Address", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("city");
+
+                    b.Property<string>("Complement")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("complement");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("location");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Neighborhood")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("neighborhood");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("number");
+
+                    b.Property<Guid?>("SourceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("state");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("street");
+
+                    b.Property<string>("Type")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("type");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("zip_code");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SourceId");
+
+                    b.ToTable("addresses", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CorporateName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("corporate_name");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("manager", "public");
+                });
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
@@ -64,24 +170,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("email_confirmed");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("first_name");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("gender");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("last_name");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean")
                         .HasColumnName("lockout_enabled");
@@ -89,6 +177,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("lockout_end");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("name");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -114,12 +208,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("phone_number_confirmed");
 
-                    b.Property<string>("PreferredName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("preferred_name");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text")
                         .HasColumnName("security_stamp");
@@ -133,13 +221,9 @@ namespace Infrastructure.Migrations
                         .HasColumnName("updated_at");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("user_name");
-
-                    b.Property<int>("UserTypeId")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -150,22 +234,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.HasIndex("UserName")
-                        .IsUnique();
-
-                    b.HasIndex("UserTypeId");
-
                     b.ToTable("user", "public");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Identities.UserType", b =>
-                {
-                    b.Property<int>("UserTypeId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UserTypeId");
-
-                    b.ToTable("UserType", "public");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -302,23 +371,76 @@ namespace Infrastructure.Migrations
                     b.ToTable("identity_user_token", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Identities.User", b =>
+            modelBuilder.Entity("Domain.Entities.Address", b =>
                 {
-                    b.HasOne("Domain.Entities.Identities.UserType", "UserType")
+                    b.HasOne("Domain.Entities.Identities.User", "Source")
                         .WithMany()
-                        .HasForeignKey("UserTypeId")
+                        .HasForeignKey("SourceId");
+
+                    b.OwnsOne("Domain.Entities.Identities.UserType", "SourceType", b1 =>
+                        {
+                            b1.Property<Guid>("AddressId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("UserTypeId")
+                                .HasMaxLength(50)
+                                .HasColumnType("integer")
+                                .HasColumnName("source_type");
+
+                            b1.HasKey("AddressId");
+
+                            b1.ToTable("addresses", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AddressId");
+                        });
+
+                    b.Navigation("Source");
+
+                    b.Navigation("SourceType");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
+                {
+                    b.HasOne("Domain.Entities.Identities.User", "User")
+                        .WithOne("Manager")
+                        .HasForeignKey("Domain.Entities.Identities.Manager", "UserId")
                         .IsRequired();
 
-                    b.OwnsOne("Domain.Utils.Document", "Document", b1 =>
+                    b.OwnsOne("Domain.Entities.Identities.ManagerType", "ManagerType", b1 =>
+                        {
+                            b1.Property<Guid>("ManagerId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("TypeId")
+                                .HasColumnType("integer")
+                                .HasColumnName("type");
+
+                            b1.HasKey("ManagerId");
+
+                            b1.ToTable("manager", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ManagerId");
+                        });
+
+                    b.Navigation("ManagerType")
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identities.User", b =>
+                {
+                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cnpj", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
 
                             b1.Property<string>("Value")
-                                .IsRequired()
                                 .HasMaxLength(14)
                                 .HasColumnType("character varying(14)")
-                                .HasColumnName("document");
+                                .HasColumnName("cnpj");
 
                             b1.HasKey("UserId");
 
@@ -328,10 +450,49 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.Navigation("Document")
+                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cpf", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(11)
+                                .HasColumnType("character varying(11)")
+                                .HasColumnName("cpf");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("user", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.Identities.UserType", "UserType", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("UserTypeId")
+                                .HasColumnType("integer")
+                                .HasColumnName("type");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("user", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("Cnpj");
+
+                    b.Navigation("Cpf")
                         .IsRequired();
 
-                    b.Navigation("UserType");
+                    b.Navigation("UserType")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -381,6 +542,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
+                    b.Navigation("Manager");
+
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
