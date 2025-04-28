@@ -1,4 +1,5 @@
-﻿using Domain.Utils;
+﻿using CrossCutting.Utils;
+using Domain.Utils;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

@@ -52,6 +52,8 @@ public sealed class User : IdentityUser<Guid>
     }
 
     public void AddRoleAdmin() => AddRole(RoleUtils.Admin.Id);
+
+    public string GetUserTypeName() => UserType.UserTypeName;
     
     private void AddRole(Guid roleId)
     {
