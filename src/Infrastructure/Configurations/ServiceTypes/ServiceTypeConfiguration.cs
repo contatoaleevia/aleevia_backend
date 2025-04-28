@@ -29,7 +29,7 @@ public class ServiceTypeConfiguration : IEntityTypeConfiguration<ServiceType>
         builder.Property(st => st.UpdatedAt)
             .HasColumnName("updated_at");
 
-        builder.Property(st => st.IsActive)
+        builder.Property(st => st.Active)
             .HasColumnName("active")
             .IsRequired();
     }

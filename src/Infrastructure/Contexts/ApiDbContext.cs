@@ -14,7 +14,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
 {
     public override DbSet<User> Users { get; set; }
     public DbSet<Manager> Managers { get; set; }
-    public DbSet<ServiceType> ServiceTypes { get; set; } = null!;
+    public DbSet<ServiceType> ServiceTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -3,7 +3,7 @@ using Application.DTOs.ServiceTypes.DeactivateServiceTypeDTOs;
 using Application.DTOs.ServiceTypes.GetServiceTypeDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.ServiceTypes;
-
+using Domain.Exceptions;
 namespace Application.Services.ServiceTypes;
 
 public class ServiceTypeService(
@@ -19,7 +19,7 @@ public class ServiceTypeService(
             Id = st.Id,
             Name = st.Name,
             Description = st.Description,
-            IsActive = st.IsActive,
+            Active = st.Active,
             CreatedAt = st.CreatedAt,
             UpdatedAt = st.UpdatedAt
         })];
@@ -38,7 +38,7 @@ public class ServiceTypeService(
             Id = serviceType.Id,
             Name = serviceType.Name,
             Description = serviceType.Description,
-            IsActive = serviceType.IsActive,
+            Active = serviceType.Active,
             CreatedAt = serviceType.CreatedAt
         };
     }
@@ -48,7 +48,7 @@ public class ServiceTypeService(
         var serviceType = await repository.GetByIdAsync(requestDto.Id);
         
         if (serviceType is null)
-            throw new KeyNotFoundException($"Tipo de serviço com ID {requestDto.Id} não encontrado");
+            throw new ServiceTypeNotFoundException(requestDto.Id);
 
         serviceType.Deactivate();
         await repository.UpdateAsync(serviceType);
@@ -56,7 +56,7 @@ public class ServiceTypeService(
         return new DeactivateServiceTypeResponseDto
         {
             Id = serviceType.Id,
-            IsActive = serviceType.IsActive,
+            Active = serviceType.Active,
             UpdatedAt = serviceType.UpdatedAt
         };
     }
