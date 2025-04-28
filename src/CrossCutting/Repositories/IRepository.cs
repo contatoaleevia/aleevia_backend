@@ -4,7 +4,7 @@ namespace CrossCutting.Repositories;
 
 public interface IRepository<T> where T : AggregateRoot
 {
-    Task<T> GetByIdAsync(Guid id);
+    Task<T?> GetByIdAsync(Guid id);
     Task<T> CreateAsync(T entity, bool saveChanges = true);
     Task<List<T>> CreateRangeAsync(List<T> entities, bool saveChanges = true);
     Task UpdateAsync(T entity, bool saveChanges = true);

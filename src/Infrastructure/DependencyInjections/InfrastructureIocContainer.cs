@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using CrossCutting.Databases;
-using CrossCutting.DependencyInjections;
 using CrossCutting.Identities;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Identities;
@@ -36,6 +35,9 @@ public static class InfrastructureIocContainer
     private static void RegisterRepositories(IServiceCollection services)
     {
         services.AddScoped<IManagerRepository, ManagerRepository>();
+        services.AddScoped<IOfficeRepository, OfficeRepository>();
+        services.AddScoped<IServiceTypeRepository, ServiceTypeRepository>();
+        services.AddScoped<IFaqRepository, FaqRepository>();
     }
     
     private static void RegisterIdentityConfiguration(IServiceCollection services, IConfiguration configuration)

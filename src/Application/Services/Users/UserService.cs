@@ -5,7 +5,6 @@ using CrossCutting.Databases;
 using CrossCutting.Identities;
 using Domain.Entities.Identities;
 using Domain.Exceptions;
-using Domain.Utils.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services.Users;
@@ -30,8 +29,8 @@ public class UserService(
             email: request.Email,
             phoneNumber: request.PhoneNumber,
             name: request.Name,
-            cpf: Document.CreateDocumentAsCpf(request.Cpf),
-            cnpj: Document.CreateDocumentAsCnpj(request.Cnpj),
+            cpf: request.Cpf,
+            cnpj: request.Cnpj,
             userType: UserType.CreateAsManager()
         );
 
@@ -47,7 +46,7 @@ public class UserService(
             scope.Complete();
         }
         
-        return new CreateManagerUserResponse();
+        return new CreateManagerUserResponse(user.Id);
     }
 
     // public async Task<UpdateUserResponseDto> UpdateUserAsync(UpdateUserRequestDto requestDto)

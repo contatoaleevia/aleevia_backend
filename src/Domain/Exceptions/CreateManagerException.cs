@@ -1,4 +1,4 @@
 ﻿namespace Domain.Exceptions;
 
 public class CreateManagerException(Guid userId)
-    : ApiException($"An error occured when try create manager for user id: {userId}", 400);
+    : ApiException($"Ocorreu um erro ao criar o gerente para o usuário id: {userId}", 400);
