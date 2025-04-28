@@ -1,6 +1,7 @@
 ﻿using Domain.Entities.Identities;
 using Infrastructure.Configurations;
 using Infrastructure.Configurations.Identities;
+using Infrastructure.Configurations.Offices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new UserConfiguration());
         builder.ApplyConfiguration(new ManagerConfiguration());
         builder.ApplyConfiguration(new AddressesConfiguration());
+        builder.ApplyConfiguration(new OfficeConfiguration());
     
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {

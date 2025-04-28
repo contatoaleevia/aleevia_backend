@@ -28,14 +28,15 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 .HasMaxLength(11)
                 .HasColumnName("cpf");
         });
-        
+
         builder.OwnsOne(x => x.Cnpj, document =>
         {
             document.Property(x => x.Value)
-                .IsRequired(false)
+                .IsRequired()
+                .HasDefaultValue(string.Empty)
                 .HasMaxLength(14)
                 .HasColumnName("cnpj");
-        }).Navigation(x => x.Cnpj).IsRequired(false);
+        });
 
         builder.OwnsOne(x => x.UserType, userType =>
         {
