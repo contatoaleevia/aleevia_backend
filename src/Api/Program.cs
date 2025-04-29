@@ -8,6 +8,7 @@ IConfiguration configuration = builder.Configuration;
 
 builder.Services.AddCrossCuttingServices();
 builder.Services.AddInfrastructureServices(configuration);
+builder.Services.AddEmailServices(configuration);
 builder.Services.AddApiServices();
 builder.Services.AddApplicationServices();
 
