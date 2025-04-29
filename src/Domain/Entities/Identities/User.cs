@@ -9,7 +9,7 @@ public sealed class User : IdentityUser<Guid>
 {
     public string Name { get; private set; }
     public Document Cpf { get; private set; }
-    public Document? Cnpj { get; private set; }
+    public Document Cnpj { get; private set; }
     public UserType UserType { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
@@ -28,8 +28,8 @@ public sealed class User : IdentityUser<Guid>
         string email,
         string phoneNumber,
         string name,
-        Document cpf,
-        Document? cnpj,
+        string cpf,
+        string? cnpj,
         UserType userType)
     {
         Email = email;
@@ -37,8 +37,8 @@ public sealed class User : IdentityUser<Guid>
         PhoneNumber = SetPhoneNumber(phoneNumber);
         PhoneNumberConfirmed = true;
         Name = name;
-        Cpf = cpf;
-        Cnpj = cnpj;
+        Cpf = SetCpf(cpf);
+        Cnpj = SetCnpj(cnpj);
         UserType = userType;
         Active = true;
         CreatedAt = DateTime.UtcNow;
@@ -48,10 +48,12 @@ public sealed class User : IdentityUser<Guid>
         LockoutEnabled = false;
         LockoutEnd = null;
         AccessFailedCount = 0;
-        UserName = cpf.Value;
+        UserName = cpf;
     }
 
     public void AddRoleAdmin() => AddRole(RoleUtils.Admin.Id);
+
+    public string GetUserTypeName() => UserType.UserTypeName;
     
     private void AddRole(Guid roleId)
     {
@@ -70,4 +72,8 @@ public sealed class User : IdentityUser<Guid>
         
         return phoneNumber;
     }
+    
+    private static Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
+    private static Document SetCnpj(string? cnpj)
+        => string.IsNullOrEmpty(cnpj) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(cnpj);
 }

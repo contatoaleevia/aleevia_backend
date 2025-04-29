@@ -1,0 +1,56 @@
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+
+namespace CrossCutting.Session;
+
+public class UserSession : IUserSession
+{
+    private readonly IHttpContextAccessor _contextAccessor;
+    private readonly ClaimRetriever _claimRetriever;
+
+    public UserSession(IHttpContextAccessor contextAccessor)
+    {
+        _contextAccessor = contextAccessor;
+        _claimRetriever = new ClaimRetriever(GetClaims());
+    }
+
+    public Guid UserId => IsAuthenticated() ? _claimRetriever.GetUserId() : Guid.Empty;
+    public string UserType => IsAuthenticated() ? _claimRetriever.GetUserType() : string.Empty;
+    public string Email => IsAuthenticated() ? _claimRetriever.GetEmail() : string.Empty;
+
+    public bool IsAuthenticated()
+    {
+        var httpContext = _contextAccessor.HttpContext;
+        if (httpContext == null)
+            return false;
+
+        var identity = httpContext.User.Identity;
+        return identity != null && identity.IsAuthenticated;
+    }
+
+    private IEnumerable<Claim> GetClaims()
+    {
+        var httpContext = _contextAccessor.HttpContext;
+        return httpContext == null ? [] : httpContext.User.Claims;
+    }
+
+    private class ClaimRetriever(IEnumerable<Claim> claims)
+    {
+        public Guid GetUserId()
+        {
+            var userIdClaim = FindClaimValue(ClaimTypes.NameIdentifier);
+            return Guid.TryParse(userIdClaim, out var userId) ? userId : Guid.Empty;
+        }
+
+        public string GetUserType()
+            => FindClaimValue(ClaimTypes.Actor);
+
+        public string GetEmail()
+            => FindClaimValue(ClaimTypes.Email);
+
+        private string FindClaimValue(string claimType)
+            => claims
+                .FirstOrDefault(x => x.Type.Equals(claimType))?
+                .Value ?? string.Empty;
+    }
+}

@@ -37,8 +37,8 @@ public class AuthService(
         return new LoginResponseDto
         (
             token,
-            user.UserName,
-            user.Email
+            user.UserName!,
+            user.Email!
         );
     }
 }

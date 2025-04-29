@@ -3,4 +3,7 @@ using Domain.Entities.Identities;
 
 namespace Domain.Contracts.Repositories;
 
-public interface IManagerRepository : IRepository<Manager>;
+public interface IManagerRepository : IRepository<Manager>
+{
+    Task<Manager?> GetManagerByUserId(Guid userId);
+}

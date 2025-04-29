@@ -1,4 +1,4 @@
 ﻿namespace Domain.Exceptions;
 
 public class UserNotFoundException(Guid id)
-    : ApiException($"User with Id: {id} not found", 404);
+    : ApiException($"Usuário com Id: {id} não encontrado", 404);
