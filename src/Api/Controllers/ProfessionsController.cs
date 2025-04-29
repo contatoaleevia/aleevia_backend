@@ -13,6 +13,7 @@ public class ProfessionsController(IProfessionService professionService)
     : ControllerBase
 {
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(GetProfessionsResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
