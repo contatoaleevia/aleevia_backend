@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Domain.Utils;
+namespace CrossCutting.Utils;
 
 public static class RoleUtils
 {
@@ -13,6 +13,19 @@ public static class RoleUtils
     public static IdentityRole<Guid> Employee 
         = CreateRole(Guid.Parse("4fa64c52-e389-4bbc-be5f-8565081eb393"), "Employee");
 
+    
+    public static IdentityRole<Guid> GetRole(string role)
+    {
+        return AllRoles.FirstOrDefault(x => x.Name == role)
+            ?? throw new ArgumentException($"Role {role} not found");
+    }
+    
+    private static readonly List<IdentityRole<Guid>> AllRoles = [
+        Admin,
+        Patient,
+        Employee
+    ];
+    
     private static IdentityRole<Guid> CreateRole(Guid roleId, string name)
         => new()
         {
@@ -21,4 +34,5 @@ public static class RoleUtils
             NormalizedName = name.ToUpper(),
             ConcurrencyStamp = null
         };
+
 }
