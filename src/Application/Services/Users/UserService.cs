@@ -45,7 +45,6 @@ public class UserService(
             if (!response.Succeeded)
             {
                 identityNotificationHandler.AddNotifications(response.Errors);
-                throw new CreateManagerException(user.Id);
             }
 
             await managerService.CreateManager(request.Manager, user.Id);
