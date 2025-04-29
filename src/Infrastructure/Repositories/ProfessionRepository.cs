@@ -5,9 +5,9 @@ using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories;
 
-public class ProfessionalProfessionRepository(ApiDbContext context) : Repository<Profession>(context), IProfessionalProfessionRepository
+public class ProfessionRepository(ApiDbContext context) : Repository<Profession>(context), IProfessionRepository 
 {
-    public async Task<List<Profession>> GetAllAsync()
+    public async Task<List<Profession>> GetAllActiveAsync()
     {
         return await context.Set<Profession>()
             .Include(p => p.Specialties.Where(s => s.Active))

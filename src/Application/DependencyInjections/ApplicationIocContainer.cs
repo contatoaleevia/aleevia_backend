@@ -21,6 +21,6 @@ public static class ApplicationIocContainer
         services.AddScoped<IManagerService, ManagerService>();
         services.AddScoped<IOfficeService, OfficeService>();
         services.AddScoped<IServiceTypeService, ServiceTypeService>();
-        services.AddScoped<IProfessionalProfessionService, ProfessionalProfessionService>();
+        services.AddScoped<IProfessionService, ProfessionService>();
     }
 }

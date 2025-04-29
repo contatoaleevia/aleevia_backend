@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddProfessionalProfessions : Migration
+    public partial class AddProfessions : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,10 +17,10 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Active = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    active = table.Column<bool>(type: "boolean", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -33,18 +33,18 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Active = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ProfessionId = table.Column<Guid>(type: "uuid", nullable: false)
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    active = table.Column<bool>(type: "boolean", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    profession_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_specialties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_specialties_professions_ProfessionId",
-                        column: x => x.ProfessionId,
+                        name: "FK_specialties_professions_profession_id",
+                        column: x => x.profession_id,
                         principalSchema: "public",
                         principalTable: "professions",
                         principalColumn: "Id");
@@ -56,34 +56,34 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Active = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    SpecialtyId = table.Column<Guid>(type: "uuid", nullable: false)
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    active = table.Column<bool>(type: "boolean", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    specialty_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_sub_specialties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_sub_specialties_specialties_SpecialtyId",
-                        column: x => x.SpecialtyId,
+                        name: "FK_sub_specialties_specialties_specialty_id",
+                        column: x => x.specialty_id,
                         principalSchema: "public",
                         principalTable: "specialties",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_specialties_ProfessionId",
+                name: "IX_specialties_profession_id",
                 schema: "public",
                 table: "specialties",
-                column: "ProfessionId");
+                column: "profession_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_sub_specialties_SpecialtyId",
+                name: "IX_sub_specialties_specialty_id",
                 schema: "public",
                 table: "sub_specialties",
-                column: "SpecialtyId");
+                column: "specialty_id");
         }
 
         /// <inheritdoc />

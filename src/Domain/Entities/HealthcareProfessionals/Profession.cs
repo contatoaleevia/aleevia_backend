@@ -10,14 +10,14 @@ public class Profession : AggregateRoot
     public bool Active { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
-    public virtual ICollection<Specialty> Specialties { get; private set; }
+    public virtual ICollection<Specialty> Specialties { get; private set; } = [];
 
     public Profession(string name)
     {
         Name = name;
         Active = true;
         CreatedAt = DateTime.UtcNow;
-        Specialties = new List<Specialty>();
+        Specialties = [];
     }
 
     protected Profession() { }

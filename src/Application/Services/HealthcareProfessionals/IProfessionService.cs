@@ -3,7 +3,7 @@ using Application.DTOs.HealthcareProfessionals;
 
 namespace Application.Services.HealthcareProfessionals;
 
-public interface IProfessionalProfessionService
+public interface IProfessionService
 {
-    Task<GetProfessionalProfessionsResponseDto> GetAllAsync();
+    Task<GetProfessionsResponseDto> GetAllActiveAsync();
 } 

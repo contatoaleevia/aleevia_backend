@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20250426214934_SeedProfessionalProfessionsData")]
-    partial class SeedProfessionalProfessionsData
+    [Migration("20250429125629_AddProfessions")]
+    partial class AddProfessions
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,6 +108,47 @@ namespace Infrastructure.Migrations
                     b.ToTable("addresses", "public");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Faqs.Faq", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Answer")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("answer");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("question");
+
+                    b.Property<Guid>("SourceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SourceId");
+
+                    b.ToTable("faq", "public");
+                });
+
             modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Profession", b =>
                 {
                     b.Property<Guid>("Id")
@@ -115,18 +156,22 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<bool>("Active")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("active");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id");
 
@@ -140,21 +185,26 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<bool>("Active")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("active");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
                     b.Property<Guid>("ProfessionId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("profession_id");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id");
 
@@ -170,21 +220,26 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<bool>("Active")
-                        .HasColumnType("boolean");
+                        .HasColumnType("boolean")
+                        .HasColumnName("active");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
                     b.Property<Guid>("SpecialtyId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("specialty_id");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id");
 
@@ -320,6 +375,65 @@ namespace Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("user", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("owner_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("office", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ServiceTypes.ServiceType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean")
+                        .HasColumnName("active");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("service_type", "public");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -485,6 +599,56 @@ namespace Infrastructure.Migrations
                     b.Navigation("SourceType");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Faqs.Faq", b =>
+                {
+                    b.HasOne("Domain.Entities.Identities.User", "Source")
+                        .WithMany()
+                        .HasForeignKey("SourceId")
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Entities.Faqs.FaqCategoryType", "FaqCategory", b1 =>
+                        {
+                            b1.Property<Guid>("FaqId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("CategoryType")
+                                .HasColumnType("integer")
+                                .HasColumnName("faq_category");
+
+                            b1.HasKey("FaqId");
+
+                            b1.ToTable("faq", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FaqId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.Faqs.FaqSourceType", "SourceType", b1 =>
+                        {
+                            b1.Property<Guid>("FaqId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("SourceType")
+                                .HasColumnType("integer")
+                                .HasColumnName("source_type");
+
+                            b1.HasKey("FaqId");
+
+                            b1.ToTable("faq", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FaqId");
+                        });
+
+                    b.Navigation("FaqCategory")
+                        .IsRequired();
+
+                    b.Navigation("Source");
+
+                    b.Navigation("SourceType")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Specialty", b =>
                 {
                     b.HasOne("Domain.Entities.HealthcareProfessionals.Profession", "Profession")
@@ -543,8 +707,11 @@ namespace Infrastructure.Migrations
                                 .HasColumnType("uuid");
 
                             b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
                                 .HasMaxLength(14)
                                 .HasColumnType("character varying(14)")
+                                .HasDefaultValue("")
                                 .HasColumnName("cnpj");
 
                             b1.HasKey("UserId");
@@ -591,12 +758,191 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.Navigation("Cnpj");
+                    b.Navigation("Cnpj")
+                        .IsRequired();
 
                     b.Navigation("Cpf")
                         .IsRequired();
 
                     b.Navigation("UserType")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
+                {
+                    b.HasOne("Domain.Entities.Identities.Manager", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cnpj", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(14)
+                                .HasColumnType("character varying(14)")
+                                .HasDefaultValue("")
+                                .HasColumnName("cnpj");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Instagram", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasDefaultValue("")
+                                .HasColumnName("instagram");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Logo", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasDefaultValue("")
+                                .HasColumnName("logo");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.PhoneNumber", "Phone", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(15)
+                                .HasColumnType("character varying(15)")
+                                .HasDefaultValue("")
+                                .HasColumnName("phone");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Site", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasDefaultValue("")
+                                .HasColumnName("site");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.PhoneNumber", "Whatsapp", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(15)
+                                .HasColumnType("character varying(15)")
+                                .HasDefaultValue("")
+                                .HasColumnName("whatsapp");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Utils.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasDefaultValue("")
+                                .HasColumnName("email");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.Navigation("Cnpj")
+                        .IsRequired();
+
+                    b.Navigation("Email")
+                        .IsRequired();
+
+                    b.Navigation("Instagram")
+                        .IsRequired();
+
+                    b.Navigation("Logo")
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Phone")
+                        .IsRequired();
+
+                    b.Navigation("Site")
+                        .IsRequired();
+
+                    b.Navigation("Whatsapp")
                         .IsRequired();
                 });
 

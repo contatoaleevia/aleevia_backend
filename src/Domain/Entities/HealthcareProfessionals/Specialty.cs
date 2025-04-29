@@ -12,7 +12,7 @@ public class Specialty : Entity
     public DateTime? UpdatedAt { get; private set; }
     public Guid ProfessionId { get; private set; }
     public virtual Profession Profession { get; private set; }
-    public virtual ICollection<SubSpecialty> SubSpecialties { get; private set; }
+    public virtual ICollection<SubSpecialty> SubSpecialties { get; private set; } = [];
 
     public Specialty(string name, Guid professionId)
     {
@@ -20,7 +20,7 @@ public class Specialty : Entity
         ProfessionId = professionId;
         Active = true;
         CreatedAt = DateTime.UtcNow;
-        SubSpecialties = new List<SubSpecialty>();
+        SubSpecialties = [];
     }
 
     protected Specialty() { }

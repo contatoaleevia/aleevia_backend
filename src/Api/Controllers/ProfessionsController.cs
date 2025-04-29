@@ -8,17 +8,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers;
 
 [ApiController]
-[Route("api/professional-professions")]
-public class ProfessionalProfessionsController(IProfessionalProfessionService professionalProfessionService) 
+[Route("api/professions")]
+public class ProfessionsController(IProfessionService professionService) 
     : ControllerBase
 {
     [HttpGet]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(GetProfessionalProfessionsResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetProfessionsResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await professionalProfessionService.GetAllAsync());
+        return Ok(await professionService.GetAllActiveAsync());
     }
 } 

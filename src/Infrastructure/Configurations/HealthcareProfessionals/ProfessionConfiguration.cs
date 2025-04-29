@@ -14,15 +14,19 @@ public class ProfessionConfiguration : IEntityTypeConfiguration<Profession>
 
         builder.Property(x => x.Name)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(100)
+            .HasColumnName("name");
 
         builder.Property(x => x.Active)
-            .IsRequired();
+            .IsRequired()
+            .HasColumnName("active");
 
         builder.Property(x => x.CreatedAt)
-            .IsRequired();
+            .IsRequired()
+            .HasColumnName("created_at");
 
-        builder.Property(x => x.UpdatedAt);
+        builder.Property(x => x.UpdatedAt)
+            .HasColumnName("updated_at");
 
         builder.HasMany(x => x.Specialties)
             .WithOne(x => x.Profession)

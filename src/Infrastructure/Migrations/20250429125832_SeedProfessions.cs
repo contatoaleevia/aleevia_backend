@@ -1,14 +1,12 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedProfessionalProfessionsData : Migration
+    public partial class SeedProfessions : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             var professions_data = new Dictionary<string, Dictionary<string, string[]>>
@@ -116,7 +114,7 @@ namespace Infrastructure.Migrations
                 migrationBuilder.InsertData(
                     schema: "public",
                     table: "professions",
-                    columns: new[] { "Id", "Name", "Active", "CreatedAt" },
+                    columns: new[] { "Id", "name", "active", "created_at" },
                     values: new object[] { professionId, profession.Key, true, DateTime.UtcNow }
                 );
 
@@ -126,7 +124,7 @@ namespace Infrastructure.Migrations
                     migrationBuilder.InsertData(
                         schema: "public",
                         table: "specialties",
-                        columns: new[] { "Id", "Name", "Active", "CreatedAt", "ProfessionId" },
+                        columns: new[] { "Id", "name", "active", "created_at", "profession_id" },
                         values: new object[] { specialtyId, specialty.Key, true, DateTime.UtcNow, professionId }
                     );
 
@@ -135,7 +133,7 @@ namespace Infrastructure.Migrations
                         migrationBuilder.InsertData(
                             schema: "public",
                             table: "sub_specialties",
-                            columns: new[] { "Id", "Name", "Active", "CreatedAt", "SpecialtyId" },
+                            columns: new[] { "Id", "name", "active", "created_at", "specialty_id" },
                             values: new object[] { Guid.NewGuid(), subSpecialty, true, DateTime.UtcNow, specialtyId }
                         );
                     }

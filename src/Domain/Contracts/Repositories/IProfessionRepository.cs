@@ -3,7 +3,7 @@ using Domain.Entities.HealthcareProfessionals;
 
 namespace Domain.Contracts.Repositories;
 
-public interface IProfessionalProfessionRepository : IRepository<Profession>
+public interface IProfessionRepository : IRepository<Profession>
 {
-    Task<List<Profession>> GetAllAsync();
+    Task<List<Profession>> GetAllActiveAsync();
 }

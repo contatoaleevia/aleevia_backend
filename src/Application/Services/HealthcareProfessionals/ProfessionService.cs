@@ -4,15 +4,15 @@ using Domain.Contracts.Repositories;
 
 namespace Application.Services.HealthcareProfessionals;
 
-public class ProfessionalProfessionService(IProfessionalProfessionRepository repository) : IProfessionalProfessionService
+public class ProfessionService(IProfessionRepository professionRepository) : IProfessionService
 {
-    public async Task<GetProfessionalProfessionsResponseDto> GetAllAsync()
+    public async Task<GetProfessionsResponseDto> GetAllActiveAsync()
     {
-        var professions = await repository.GetAllAsync();
+        var professions = await professionRepository.GetAllActiveAsync();
 
-        var result = new GetProfessionalProfessionsResponseDto
+        var result = new GetProfessionsResponseDto
         {
-            Professions = professions.Select(profession => new ProfessionDto
+            Professions = [.. professions.Select(profession => new ProfessionDto
             {
                 Id = profession.Id,
                 Name = profession.Name,
@@ -24,9 +24,9 @@ public class ProfessionalProfessionService(IProfessionalProfessionRepository rep
                     {
                         Id = subSpecialty.Id,
                         Name = subSpecialty.Name
-                    }).ToList() ?? new List<SubSpecialtyDto>()
-                }).ToList() ?? new List<SpecialtyDto>()
-            }).ToList()
+                    }).ToList() ?? []
+                }).ToList() ?? []
+            })]
         };
 
         return result;
