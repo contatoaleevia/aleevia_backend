@@ -7,6 +7,7 @@ using Application.Services.Faqs;
 using Application.Services.Users;
 using Application.Services.ServiceTypes;
 using Microsoft.Extensions.DependencyInjection;
+using Application.Services.HealthcareProfessionals;
 
 namespace Application.DependencyInjections;
 
@@ -21,5 +22,6 @@ public static class ApplicationIocContainer
         services.AddScoped<IManagerService, ManagerService>();
         services.AddScoped<IOfficeService, OfficeService>();
         services.AddScoped<IServiceTypeService, ServiceTypeService>();
+        services.AddScoped<IProfessionService, ProfessionService>();
     }
 }
