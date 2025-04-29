@@ -1,9 +1,9 @@
 ﻿using Application.DTOs.Adresses.CreateAdressDTOs;
 using Application.DTOs.Adresses.GetAddressDTOs;
 using CrossCutting.Repositories;
-using Domain.Entities;
+using Domain.Entities.Addresses;
 
-namespace Application.Services;
+namespace Application.Services.Addresses;
 public class AddressService(IRepository<Address> repository)
 {
     public async Task<GetAddressByIdReponseDto> GetByIdAddress(Guid id)

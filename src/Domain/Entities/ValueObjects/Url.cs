@@ -1,4 +1,4 @@
-﻿namespace Domain.Utils.ValueObjects;
+﻿namespace Domain.Entities.ValueObjects;
 
 public class Url
 {

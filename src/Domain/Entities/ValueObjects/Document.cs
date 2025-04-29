@@ -1,7 +1,8 @@
 ﻿using CrossCutting.Utils;
 using Domain.Exceptions;
+using Domain.Utils;
 
-namespace Domain.Utils.ValueObjects;
+namespace Domain.Entities.ValueObjects;
 
 public class Document
 {

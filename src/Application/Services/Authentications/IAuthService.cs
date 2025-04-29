@@ -1,6 +1,6 @@
 ﻿using Application.DTOs.Users.LoginDTOs;
 
-namespace Application.Services;
+namespace Application.Services.Authentications;
 
 public interface IAuthService
 {
