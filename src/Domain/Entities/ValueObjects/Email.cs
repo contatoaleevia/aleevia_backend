@@ -1,7 +1,7 @@
 ﻿using CrossCutting.Utils;
 using Domain.Exceptions;
 
-namespace Domain.Utils.ValueObjects;
+namespace Domain.Entities.ValueObjects;
 
 public class Email
 {

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.ServiceTypes;
+using Infrastructure.Configurations.Addresses;
 
 namespace Infrastructure.Contexts;
 

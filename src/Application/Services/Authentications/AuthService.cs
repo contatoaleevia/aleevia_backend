@@ -5,7 +5,7 @@ using Domain.Entities.Identities;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Services;
+namespace Application.Services.Authentications;
 
 public class AuthService(
     UserManager<User> userManager,

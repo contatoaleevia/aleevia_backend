@@ -1,5 +1,4 @@
 ﻿using CrossCutting.Entities;
-using Domain.Utils.ValueObjects;
 
 namespace Domain.Entities.Identities;
 
