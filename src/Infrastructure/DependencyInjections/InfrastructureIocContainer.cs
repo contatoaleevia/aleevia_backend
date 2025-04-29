@@ -60,6 +60,7 @@ public static class InfrastructureIocContainer
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             }).AddDefaultTokenProviders()
+            .AddRoles<IdentityRole<Guid>>()
             .AddErrorDescriber<IdentityErrorExtension>()
             .AddEntityFrameworkStores<ApiDbContext>();
 

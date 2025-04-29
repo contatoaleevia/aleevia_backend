@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
+using CrossCutting.Utils;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace CrossCutting.Session;
 
@@ -17,6 +19,7 @@ public class UserSession : IUserSession
     public Guid UserId => IsAuthenticated() ? _claimRetriever.GetUserId() : Guid.Empty;
     public string UserType => IsAuthenticated() ? _claimRetriever.GetUserType() : string.Empty;
     public string Email => IsAuthenticated() ? _claimRetriever.GetEmail() : string.Empty;
+    public IEnumerable<IdentityRole<Guid>> Roles => IsAuthenticated() ? _claimRetriever.GetRoles() : [];
 
     public bool IsAuthenticated()
     {
@@ -48,9 +51,24 @@ public class UserSession : IUserSession
         public string GetEmail()
             => FindClaimValue(ClaimTypes.Email);
 
+        public IEnumerable<IdentityRole<Guid>> GetRoles()
+        {
+            var rolesClaim = FindClaimValues(ClaimTypes.Role);
+            if (rolesClaim.Count == 0)
+                return [];
+
+            return rolesClaim
+                .Select(r => RoleUtils.GetRole(r.Value));
+        }
+
         private string FindClaimValue(string claimType)
             => claims
                 .FirstOrDefault(x => x.Type.Equals(claimType))?
                 .Value ?? string.Empty;
+        
+        private List<Claim> FindClaimValues(string claimType)
+            => claims
+                .Where(x => x.Type.Equals(claimType))
+                .ToList();
     }
 }

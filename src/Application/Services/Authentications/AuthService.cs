@@ -32,7 +32,8 @@ public class AuthService(
         var user = await userManager.FindByNameAsync(requestDto.UserName);
         if (user is null)
             throw new EmailNotFoundException(requestDto.UserName);
-        var token = generateJwtTokenHelper.GenerateJwtToken(user);
+        var roles = await userManager.GetRolesAsync(user);
+        var token = generateJwtTokenHelper.GenerateJwtToken(user, roles);
 
         return new LoginResponseDto
         (
