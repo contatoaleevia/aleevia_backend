@@ -11,8 +11,8 @@ public class Specialty : Entity
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
     public Guid ProfessionId { get; private set; }
-    public virtual Profession Profession { get; private set; }
-    public virtual ICollection<SubSpecialty> SubSpecialties { get; private set; } = [];
+    public Profession Profession { get; private set; }
+    public ICollection<SubSpecialty> SubSpecialties { get; private set; } = [];
 
     public Specialty(string name, Guid professionId)
     {

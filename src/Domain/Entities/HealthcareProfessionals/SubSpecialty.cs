@@ -10,7 +10,7 @@ public class SubSpecialty : Entity
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
     public Guid SpecialtyId { get; private set; }
-    public virtual Specialty Specialty { get; private set; }
+    public Specialty Specialty { get; private set; }
 
     public SubSpecialty(string name, Guid specialtyId)
     {
