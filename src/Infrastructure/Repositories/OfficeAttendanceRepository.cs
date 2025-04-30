@@ -11,8 +11,7 @@ public class OfficeAttendanceRepository(ApiDbContext context)
 {
     public async Task<List<OfficeAttendance>> GetAllByOfficeIdAsync(Guid officeId)
     {
-        return await context
-            .Set<OfficeAttendance>()
+        return await DbSet
             .Where(oa => oa.OfficeId == officeId && oa.Active)
             .Include(oa => oa.ServiceType)
             .AsNoTracking()
@@ -21,17 +20,17 @@ public class OfficeAttendanceRepository(ApiDbContext context)
 
     public new async Task<OfficeAttendance?> GetByIdAsync(Guid id)
     {
-        return await context
-            .Set<OfficeAttendance>()
+        return await DbSet
             .Include(oa => oa.ServiceType)
             .Include(oa => oa.Office)
+            .AsNoTracking()
             .FirstOrDefaultAsync(oa => oa.Id == id);
     }
 
     public async Task<bool> ExistsByOfficeIdAndServiceTypeIdAsync(Guid officeId, Guid serviceTypeId)
     {
-        return await context
-            .Set<OfficeAttendance>()
+        return await DbSet
+            .AsNoTracking()
             .AnyAsync(oa => oa.OfficeId == officeId && oa.ServiceTypeId == serviceTypeId && oa.Active);
     }
 } 

@@ -39,7 +39,7 @@ public class OfficeAttendanceService(
             ServiceTypeId = officeAttendance.ServiceTypeId,
             Title = officeAttendance.Title,
             Description = officeAttendance.Description,
-            Price = officeAttendance.Price,
+            Price = officeAttendance.Price.Value,
             Active = officeAttendance.Active,
             CreatedAt = officeAttendance.CreatedAt
         };
@@ -56,7 +56,7 @@ public class OfficeAttendanceService(
             ServiceTypeId = oa.ServiceTypeId,
             Title = oa.Title,
             Description = oa.Description,
-            Price = oa.Price,
+            Price = oa.Price.Value,
             Active = oa.Active,
             CreatedAt = oa.CreatedAt,
             UpdatedAt = oa.UpdatedAt,

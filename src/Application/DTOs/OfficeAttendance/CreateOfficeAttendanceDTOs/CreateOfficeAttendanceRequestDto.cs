@@ -19,5 +19,5 @@ public class CreateOfficeAttendanceRequestDto
 
     [Required(ErrorMessage = "Preço é obrigatório")]
     [Range(0.01, 99999.99, ErrorMessage = "Preço deve ser maior que zero")]
-    public decimal Price { get; set; }
+    public long Price { get; set; }
 } 

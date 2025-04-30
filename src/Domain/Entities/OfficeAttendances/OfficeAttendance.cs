@@ -1,6 +1,7 @@
 using CrossCutting.Entities;
 using Domain.Entities.Offices;
 using Domain.Entities.ServiceTypes;
+using Domain.Entities.ValueObjects;
 
 namespace Domain.Entities.OfficeAttendances;
 
@@ -10,11 +11,10 @@ public class OfficeAttendance : AggregateRoot
     public Guid ServiceTypeId { get; private set; }
     public string Title { get; private set; }
     public string? Description { get; private set; }
-    public decimal Price { get; private set; }
+    public Money Price { get; private set; }
     public bool Active { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
-
     public Office Office { get; set; } = null!;
     public ServiceType ServiceType { get; set; } = null!;
 
@@ -22,22 +22,27 @@ public class OfficeAttendance : AggregateRoot
     {
     }
 
-    public OfficeAttendance(Guid officeId, Guid serviceTypeId, string title, decimal price, string? description = null)
+    public OfficeAttendance(
+        Guid officeId,
+        Guid serviceTypeId,
+        string title,
+        long price,
+        string? description)
     {
         OfficeId = officeId;
         ServiceTypeId = serviceTypeId;
         Title = title;
+        Price = SetPrice(price);
         Description = description;
-        Price = price;
         Active = true;
         CreatedAt = DateTime.UtcNow;
     }
 
-    public void Update(string title, decimal price, string? description = null)
+    public void Update(string title, long price, string? description)
     {
         Title = title;
+        Price = SetPrice(price);
         Description = description;
-        Price = price;
         UpdatedAt = DateTime.UtcNow;
     }
 
@@ -46,4 +51,7 @@ public class OfficeAttendance : AggregateRoot
         Active = false;
         UpdatedAt = DateTime.UtcNow;
     }
+
+    private static Money SetPrice(long? price)
+        => price is null ? Money.CreateAsEmpty() : Money.Create(price.Value);
 } 
