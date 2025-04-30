@@ -5,8 +5,6 @@ public class GetAddressByIdReponseDto
 {
     public GetAddressByIdReponseDto(
         Guid id, 
-        Guid? sourceId, 
-        User? source, 
         UserType? sourceType, 
         string? name, 
         string street, 
@@ -22,8 +20,6 @@ public class GetAddressByIdReponseDto
         DateTime? updatedAt)
     {
         Id = id;
-        SourceId = sourceId;
-        Source = source;
         SourceType = sourceType;
         Name = name;
         Street = street;
@@ -40,8 +36,6 @@ public class GetAddressByIdReponseDto
     }
 
     public Guid Id { get; set; }
-    public Guid? SourceId { get; set; }
-    public User? Source { get; set; }
     public UserType? SourceType { get; set; }
     public string? Name { get; set; }
     public string Street { get; set; } = null!;

@@ -5,9 +5,6 @@ namespace Domain.Entities.Addresses;
 
 public sealed class Address : AggregateRoot
 {
-    public Guid Id { get; private set; }
-    public Guid? SourceId { get; private set; }
-    public User? Source { get; private set; }
     public UserType? SourceType { get; private set; }
     public string? Name { get; private set; }
     public string Street { get; private set; }
