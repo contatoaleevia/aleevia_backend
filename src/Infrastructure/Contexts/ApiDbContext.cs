@@ -1,5 +1,6 @@
 ﻿using Domain.Entities.Faqs;
 using Domain.Entities.Identities;
+using Domain.Entities.IaChats;
 using Infrastructure.Configurations.Faqs;
 using Domain.Entities.HealthcareProfessionals;
 using Infrastructure.Configurations;
@@ -7,6 +8,7 @@ using Infrastructure.Configurations.Identities;
 using Infrastructure.Configurations.Offices;
 using Infrastructure.Configurations.ServiceTypes;
 using Infrastructure.Configurations.HealthcareProfessionals;
+using Infrastructure.Configurations.IaChats;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +27,8 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public DbSet<Profession> Professions { get; set; }
     public DbSet<Specialty> Specialties { get; set; }
     public DbSet<SubSpecialty> SubSpecialties { get; set; }
+    public DbSet<IaChat> IaChats { get; set; }
+    public DbSet<IaMessage> IaMessages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -49,6 +53,8 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new ProfessionConfiguration());
         builder.ApplyConfiguration(new SpecialtyConfiguration());
         builder.ApplyConfiguration(new SubSpecialtyConfiguration());
+        builder.ApplyConfiguration(new IaChatConfiguration());
+        builder.ApplyConfiguration(new IaMessageConfiguration());
     
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
