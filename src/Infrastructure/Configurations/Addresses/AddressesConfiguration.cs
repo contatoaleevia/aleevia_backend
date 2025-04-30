@@ -1,8 +1,8 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities.Addresses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Configurations.Addresses;
 public class AddressesConfiguration : IEntityTypeConfiguration<Address>
 {
     public void Configure(EntityTypeBuilder<Address> builder)

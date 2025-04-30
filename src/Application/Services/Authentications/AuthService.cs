@@ -5,7 +5,7 @@ using Domain.Entities.Identities;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Services;
+namespace Application.Services.Authentications;
 
 public class AuthService(
     UserManager<User> userManager,
@@ -32,7 +32,8 @@ public class AuthService(
         var user = await userManager.FindByNameAsync(requestDto.UserName);
         if (user is null)
             throw new EmailNotFoundException(requestDto.UserName);
-        var token = generateJwtTokenHelper.GenerateJwtToken(user);
+        var roles = await userManager.GetRolesAsync(user);
+        var token = generateJwtTokenHelper.GenerateJwtToken(user, roles);
 
         return new LoginResponseDto
         (

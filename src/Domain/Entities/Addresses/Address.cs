@@ -1,7 +1,8 @@
 ﻿using CrossCutting.Entities;
 using Domain.Entities.Identities;
 
-namespace Domain.Entities;
+namespace Domain.Entities.Addresses;
+
 public sealed class Address : AggregateRoot
 {
     public Guid Id { get; private set; }

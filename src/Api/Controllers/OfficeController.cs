@@ -10,7 +10,7 @@ namespace Api.Controllers;
 public class OfficeController(IOfficeService service, IUserSession session) : ControllerBase
 {
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
     public async Task<IActionResult> CreateOffice([FromBody] CreateOfficeRequest request)
     {
