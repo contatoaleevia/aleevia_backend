@@ -23,7 +23,7 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.Address", b =>
+            modelBuilder.Entity("Domain.Entities.Addresses.Address", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -269,30 +269,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("manager", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("CorporateName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("corporate_name");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("manager", "public");
-                });
-
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -398,7 +374,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("user", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.OfficeAttendance.OfficeAttendance", b =>
+            modelBuilder.Entity("Domain.Entities.OfficeAttendances.OfficeAttendance", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -643,7 +619,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("identity_user_token", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Address", b =>
+            modelBuilder.Entity("Domain.Entities.Addresses.Address", b =>
                 {
                     b.HasOne("Domain.Entities.Identities.User", "Source")
                         .WithMany()
@@ -722,8 +698,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-<<<<<<< HEAD
-=======
             modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Specialty", b =>
                 {
                     b.HasOne("Domain.Entities.HealthcareProfessionals.Profession", "Profession")
@@ -744,7 +718,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Specialty");
                 });
 
->>>>>>> ab2a51a13f1ce4adf1bec9acee093b063256ba54
             modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
                 {
                     b.HasOne("Domain.Entities.Identities.User", "User")
@@ -777,7 +750,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
-                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cnpj", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cnpj", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -798,7 +771,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cpf", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cpf", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -844,7 +817,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.OfficeAttendance.OfficeAttendance", b =>
+            modelBuilder.Entity("Domain.Entities.OfficeAttendances.OfficeAttendance", b =>
                 {
                     b.HasOne("Domain.Entities.Offices.Office", "Office")
                         .WithMany()
@@ -868,7 +841,7 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("OwnerId")
                         .IsRequired();
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cnpj", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cnpj", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -889,7 +862,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Instagram", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Instagram", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -910,7 +883,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Logo", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Logo", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -931,7 +904,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.PhoneNumber", "Phone", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.PhoneNumber", "Phone", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -952,7 +925,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Site", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Site", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -973,7 +946,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.PhoneNumber", "Whatsapp", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.PhoneNumber", "Whatsapp", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -994,7 +967,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Email", "Email", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Email", "Email", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
