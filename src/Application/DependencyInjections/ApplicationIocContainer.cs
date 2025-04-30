@@ -5,6 +5,7 @@ using Application.Services.Offices;
 using Application.Services.Faqs;
 using Application.Services.Users;
 using Application.Services.ServiceTypes;
+using Application.Services.OfficeAttendances;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.DependencyInjections;
@@ -20,5 +21,6 @@ public static class ApplicationIocContainer
         services.AddScoped<IManagerService, ManagerService>();
         services.AddScoped<IOfficeService, OfficeService>();
         services.AddScoped<IServiceTypeService, ServiceTypeService>();
+        services.AddScoped<IOfficeAttendanceService, OfficeAttendanceService>();
     }
 }
