@@ -12,9 +12,9 @@ public class Money
         ValueAsCents = valueAsCents;
     }
 
-    public static Money Create(long value)
+    public static Money Create(decimal value)
     {
-        var cents = value * 100;
+        var cents = (long)(value * 100);
         return new Money(cents);
     }
 

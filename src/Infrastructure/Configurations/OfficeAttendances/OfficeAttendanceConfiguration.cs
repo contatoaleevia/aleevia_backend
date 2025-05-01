@@ -9,51 +9,54 @@ public class OfficeAttendanceConfiguration : IEntityTypeConfiguration<OfficeAtte
     public void Configure(EntityTypeBuilder<OfficeAttendance> builder)
     {
         builder.ToTable("office_attendance");
+        
+        builder.HasKey(x => x.Id);
+        
+        builder.Property(x => x.Id)
+            .HasColumnName("id")
+            .IsRequired();
 
-        builder.Property(oa => oa.Id)
-            .HasColumnName("id");
-
-        builder.Property(oa => oa.OfficeId)
+        builder.Property(x => x.OfficeId)
             .HasColumnName("office_id")
             .IsRequired();
 
-        builder.Property(oa => oa.ServiceTypeId)
+        builder.Property(x => x.ServiceTypeId)
             .HasColumnName("service_type_id")
             .IsRequired();
 
-        builder.Property(oa => oa.Title)
+        builder.Property(x => x.Title)
             .HasColumnName("title")
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.Property(oa => oa.Description)
+        builder.Property(x => x.Description)
             .HasColumnName("description")
             .HasMaxLength(500);
 
-        builder.Property(oa => oa.Price)
-            .HasColumnName("price")
-            .HasPrecision(10, 2)
-            .IsRequired();
+        builder.OwnsOne(x => x.Price, price =>
+        {
+            price.Property(p => p.ValueAsCents)
+                .HasColumnName("price")
+                .IsRequired();
+        });
 
-        builder.Property(oa => oa.Active)
+        builder.Property(x => x.Active)
             .HasColumnName("active")
             .IsRequired();
 
-        builder.Property(oa => oa.CreatedAt)
+        builder.Property(x => x.CreatedAt)
             .HasColumnName("created_at")
             .IsRequired();
 
-        builder.Property(oa => oa.UpdatedAt)
+        builder.Property(x => x.UpdatedAt)
             .HasColumnName("updated_at");
 
-        builder.HasOne(oa => oa.Office)
+        builder.HasOne(x => x.Office)
             .WithMany()
-            .HasForeignKey(oa => oa.OfficeId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasForeignKey(x => x.OfficeId);
 
-        builder.HasOne(oa => oa.ServiceType)
+        builder.HasOne(x => x.ServiceType)
             .WithMany()
-            .HasForeignKey(oa => oa.ServiceTypeId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasForeignKey(x => x.ServiceTypeId);
     }
 } 

@@ -26,7 +26,7 @@ public class OfficeAttendance : AggregateRoot
         Guid officeId,
         Guid serviceTypeId,
         string title,
-        long price,
+        decimal price,
         string? description)
     {
         OfficeId = officeId;
@@ -38,7 +38,7 @@ public class OfficeAttendance : AggregateRoot
         CreatedAt = DateTime.UtcNow;
     }
 
-    public void Update(string title, long price, string? description)
+    public void Update(string title, decimal price, string? description)
     {
         Title = title;
         Price = SetPrice(price);
@@ -52,6 +52,6 @@ public class OfficeAttendance : AggregateRoot
         UpdatedAt = DateTime.UtcNow;
     }
 
-    private static Money SetPrice(long? price)
-        => price is null ? Money.CreateAsEmpty() : Money.Create(price.Value);
+    private static Money SetPrice(decimal price)
+        => Money.Create(price);
 } 
