@@ -1,6 +1,6 @@
 ﻿using CrossCutting.Entities;
 using Domain.Entities.Identities;
-using Domain.Utils.ValueObjects;
+using Domain.Entities.ValueObjects;
 
 namespace Domain.Entities.Offices;
 

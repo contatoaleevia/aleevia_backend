@@ -1,14 +1,19 @@
 ﻿using Domain.Entities.Faqs;
 using Domain.Entities.Identities;
 using Infrastructure.Configurations.Faqs;
+using Domain.Entities.HealthcareProfessionals;
 using Infrastructure.Configurations;
 using Infrastructure.Configurations.Identities;
 using Infrastructure.Configurations.Offices;
 using Infrastructure.Configurations.ServiceTypes;
+using Infrastructure.Configurations.HealthcareProfessionals;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.ServiceTypes;
+using Infrastructure.Configurations.Addresses;
+using Infrastructure.Configurations.OfficeAttendances;
+using Domain.Entities.OfficeAttendances;
 
 namespace Infrastructure.Contexts;
 
@@ -19,6 +24,10 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public DbSet<Faq> Faqs { get; set; }
     public DbSet<Manager> Managers { get; set; }
     public DbSet<ServiceType> ServiceTypes { get; set; }
+    public DbSet<Profession> Professions { get; set; }
+    public DbSet<Specialty> Specialties { get; set; }
+    public DbSet<SubSpecialty> SubSpecialties { get; set; }
+    public DbSet<OfficeAttendance> OfficeAttendances { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -40,6 +49,10 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new AddressesConfiguration());
         builder.ApplyConfiguration(new OfficeConfiguration());
         builder.ApplyConfiguration(new ServiceTypeConfiguration());
+        builder.ApplyConfiguration(new ProfessionConfiguration());
+        builder.ApplyConfiguration(new SpecialtyConfiguration());
+        builder.ApplyConfiguration(new SubSpecialtyConfiguration());
+        builder.ApplyConfiguration(new OfficeAttendanceConfiguration());
     
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {

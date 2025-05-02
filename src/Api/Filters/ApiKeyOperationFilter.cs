@@ -31,7 +31,7 @@ public class ApiKeyOperationFilter : IOperationFilter
             In = ParameterLocation.Header,
             Required = true,
             Schema = new OpenApiSchema { Type = "string" },
-            Description = "API Key Authentication"
+            Description = "Chave da API"
         });
     }
 }

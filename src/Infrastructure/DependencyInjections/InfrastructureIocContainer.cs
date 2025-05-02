@@ -3,10 +3,13 @@ using CrossCutting.Databases;
 using CrossCutting.Identities;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Identities;
+using Domain.Interfaces;
+using Domain.ValueObjects;
 using Infrastructure.Contexts;
 using Infrastructure.Helpers.ApiSettings.Settings;
 using Infrastructure.Helpers.TokenObtainer.Settings;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +26,7 @@ public static class InfrastructureIocContainer
         RegisterApiDbContext(services, configuration);
         RegisterRepositories(services);
         RegisterIdentityConfiguration(services, configuration);
+        RegisterEmailServices(services, configuration);
     }
     
     private static void RegisterApiDbContext(IServiceCollection services, IConfiguration configuration)
@@ -38,6 +42,8 @@ public static class InfrastructureIocContainer
         services.AddScoped<IOfficeRepository, OfficeRepository>();
         services.AddScoped<IServiceTypeRepository, ServiceTypeRepository>();
         services.AddScoped<IFaqRepository, FaqRepository>();
+        services.AddScoped<IProfessionRepository, ProfessionRepository>();
+        services.AddScoped<IOfficeAttendanceRepository, OfficeAttendanceRepository>();
     }
     
     private static void RegisterIdentityConfiguration(IServiceCollection services, IConfiguration configuration)
@@ -60,6 +66,7 @@ public static class InfrastructureIocContainer
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             }).AddDefaultTokenProviders()
+            .AddRoles<IdentityRole<Guid>>()
             .AddErrorDescriber<IdentityErrorExtension>()
             .AddEntityFrameworkStores<ApiDbContext>();
 
@@ -85,5 +92,11 @@ public static class InfrastructureIocContainer
                 ValidIssuer = apiSettings.Issuer
             };
         });
+    }
+
+    private static void RegisterEmailServices(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+        services.AddScoped<IEmailService, EmailService>();
     }
 }

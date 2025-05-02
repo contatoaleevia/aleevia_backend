@@ -1,12 +1,9 @@
-﻿using Api.ApiResponses;
+﻿using System.Web;
+using Api.ApiResponses;
 using Api.Attributes;
 using Application.DTOs.Users.CreateAdminUserDTOs;
-using Application.DTOs.Users.CreateHealthcareUserDTOs;
-using Application.DTOs.Users.DeleteUserDTOs;
-using Application.DTOs.Users.LoginDTOs;
-using Application.DTOs.Users.UpdateUserDTOs;
+using Application.DTOs.Users.IsRegisteredDTOs;
 using Application.Services.Users;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -19,14 +16,6 @@ public class UserController(IUserService userService) : ControllerBase
     {
         return Ok(await userService.GetByGuidAsync(id));
     }
-
-    // [HttpPost]
-    // [AllowAnonymous]
-    // public async Task<IActionResult> CreateHealthcareProfessionalUser([FromBody] CreateHealthcareUserRequest request)
-    // {
-    //     if (!ModelState.IsValid) return BadRequest(ModelState);
-    //     return Ok(await userService.CreateHealthcareProfessionalUserAsync(request));
-    // }
     
     [HttpPost("manager")]
     [ApiKey]
@@ -41,20 +30,22 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(await userService.CreateManagerUserAsync(request));
     }
 
-    // [HttpPut]
-    // [AllowAnonymous]
-    // public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequestDto requestDto)
-    // {
-    //     if (!ModelState.IsValid) return BadRequest(ModelState);
-    //     var response = await userService.UpdateUserAsync(requestDto);
-    //     return Ok(response);
-    // }
-    //
-    // [HttpDelete]
-    // [AllowAnonymous]
-    // public async Task<IActionResult> DeleteUser([FromBody] DeleteUserRequestDto requestDto)
-    // {
-    //     if (!ModelState.IsValid) return BadRequest(ModelState);
-    //     return Ok(await userService.DeleteUserAsync(requestDto));
-    // }
+    /// <summary>
+    /// Verifica se o usuário já está cadastrado no sistema pelo documento.
+    /// </summary>
+    /// <param name="document">Informar CPF ou CNPJ com ou sem pontuação para verificar</param>
+    /// <returns></returns>
+    [HttpGet("is-registered/{document}")]
+    [ApiKey]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(IsRegisteredResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    [Consumes("application/json")]
+    public async Task<IActionResult> IsRegistered([FromRoute] string document)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        return Ok(await userService.IsRegisteredAsync(HttpUtility.UrlDecode(document)));
+    }
+
 }

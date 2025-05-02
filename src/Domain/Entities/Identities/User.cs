@@ -1,6 +1,6 @@
 ﻿using CrossCutting.Utils;
+using Domain.Entities.ValueObjects;
 using Domain.Utils;
-using Domain.Utils.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities.Identities;
@@ -52,6 +52,8 @@ public sealed class User : IdentityUser<Guid>
     }
 
     public void AddRoleAdmin() => AddRole(RoleUtils.Admin.Id);
+
+    public string GetUserTypeName() => UserType.UserTypeName;
     
     private void AddRole(Guid roleId)
     {
