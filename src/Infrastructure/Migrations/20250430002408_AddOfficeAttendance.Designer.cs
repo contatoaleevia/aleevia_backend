@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430002408_AddOfficeAttendance")]
+    partial class AddOfficeAttendance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,105 +149,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("faq", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Profession", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean")
-                        .HasColumnName("active");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("professions", "public");
-                });
-
-            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Specialty", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean")
-                        .HasColumnName("active");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<Guid>("ProfessionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("profession_id");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProfessionId");
-
-                    b.ToTable("specialties", "public");
-                });
-
-            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.SubSpecialty", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean")
-                        .HasColumnName("active");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<Guid>("SpecialtyId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("specialty_id");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SpecialtyId");
-
-                    b.ToTable("sub_specialties", "public");
-                });
-
             modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
                 {
                     b.Property<Guid>("Id")
@@ -374,7 +278,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("user", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.OfficeAttendances.OfficeAttendance", b =>
+            modelBuilder.Entity("Domain.Entities.OfficeAttendance.OfficeAttendance", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -698,26 +602,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Specialty", b =>
-                {
-                    b.HasOne("Domain.Entities.HealthcareProfessionals.Profession", "Profession")
-                        .WithMany("Specialties")
-                        .HasForeignKey("ProfessionId")
-                        .IsRequired();
-
-                    b.Navigation("Profession");
-                });
-
-            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.SubSpecialty", b =>
-                {
-                    b.HasOne("Domain.Entities.HealthcareProfessionals.Specialty", "Specialty")
-                        .WithMany("SubSpecialties")
-                        .HasForeignKey("SpecialtyId")
-                        .IsRequired();
-
-                    b.Navigation("Specialty");
-                });
-
             modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
                 {
                     b.HasOne("Domain.Entities.Identities.User", "User")
@@ -817,7 +701,7 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.OfficeAttendances.OfficeAttendance", b =>
+            modelBuilder.Entity("Domain.Entities.OfficeAttendance.OfficeAttendance", b =>
                 {
                     b.HasOne("Domain.Entities.Offices.Office", "Office")
                         .WithMany()
@@ -1055,16 +939,6 @@ namespace Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Profession", b =>
-                {
-                    b.Navigation("Specialties");
-                });
-
-            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Specialty", b =>
-                {
-                    b.Navigation("SubSpecialties");
                 });
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
