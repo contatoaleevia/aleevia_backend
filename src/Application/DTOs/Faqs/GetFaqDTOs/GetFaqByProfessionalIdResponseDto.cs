@@ -46,5 +46,5 @@ public class GetFaqByProfessionalIdResponseDto
 
 public class GetFaqByProfessionalIdResponseDtoList
 {
-    public List<GetFaqByProfessionalIdResponseDto> Faqs { get; set; }
+    public List<GetFaqByProfessionalIdResponseDto> Faqs { get; set; } = [];
 }

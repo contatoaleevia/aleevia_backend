@@ -1,4 +1,5 @@
-﻿using Api.Filters;
+﻿using System.Reflection;
+using Api.Filters;
 using Application;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
@@ -19,6 +20,9 @@ public static class ApiServiceCollectionsExtensions
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Aleevia API", Version = "v1" });
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            c.IncludeXmlComments(xmlPath);
             c.OperationFilter<ApiKeyOperationFilter>();
             c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
             {

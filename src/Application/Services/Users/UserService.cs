@@ -8,6 +8,9 @@ using Domain.Exceptions;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Application.DTOs.Email;
+using Application.DTOs.Users.IsRegisteredDTOs;
+using CrossCutting.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Users;
 
@@ -67,6 +70,13 @@ public class UserService(
         }
         
         return new CreateManagerUserResponse(user.Id);
+    }
+
+    public async Task<IsRegisteredResponse> IsRegisteredAsync(string document)
+    {
+        document = document.RemoveSpecialCharacters();
+        var user = await userManager.Users.FirstOrDefaultAsync(x => x.Cpf.Value == document || x.Cnpj.Value == document);
+        return new IsRegisteredResponse(IsRegistered: user is not null, UserId: user?.Id);
     }
 
     // public async Task<UpdateUserResponseDto> UpdateUserAsync(UpdateUserRequestDto requestDto)

@@ -18,11 +18,6 @@ public static class EnumExtensions
         }
     }
 
-    public static IEnumerable<string> TryGetDescriptions<TEnum>(this IEnumerable<TEnum> pEnumerador)
-    {
-        return pEnumerador.Select(item => TryGetDescription(item as Enum));
-    }
-
     private static TAttribute GetAttribute<TAttribute>(this Enum? value) where TAttribute : Attribute
     {
         if (value == null)
@@ -30,9 +25,20 @@ public static class EnumExtensions
 
         var type = value.GetType();
         var name = Enum.GetName(type, value);
-        return type.GetField(name)
-            .GetCustomAttributes(false)
-            .OfType<TAttribute>()
-            .SingleOrDefault();
+        if (name == null)
+            throw new ArgumentException($"Enum value '{value}' not found in type '{type.Name}'.");
+
+        try
+        {
+            return type.GetField(name)!
+                .GetCustomAttributes(false)
+                .OfType<TAttribute>()
+                .SingleOrDefault()!;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw new InvalidEnumArgumentException($"Enum value '{value}' does not have an attribute of type '{typeof(TAttribute).Name}'.");
+        }
     }
 }

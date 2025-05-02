@@ -23,11 +23,7 @@ public class AuthService(
         lockoutOnFailure: true);
 
         if (!result.Succeeded)
-        {
-            identityNotificationHandler.AddNotifications(new[]
-            { new IdentityError { Description = "Credenciais inválidas." }});
-            return new LoginResponseDto();
-        }
+            identityNotificationHandler.AddNotifications([new IdentityError { Description = "Credenciais inválidas." }]);
 
         var user = await userManager.FindByNameAsync(requestDto.UserName);
         if (user is null)
