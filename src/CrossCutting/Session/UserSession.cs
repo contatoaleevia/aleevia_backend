@@ -15,7 +15,7 @@ public class UserSession : IUserSession
     }
 
     public Guid UserId => IsAuthenticated() ? _claimRetriever.GetUserId() : Guid.Empty;
-    public string UserType => IsAuthenticated() ? _claimRetriever.GetUserType() : string.Empty;
+    public ushort? UserType => IsAuthenticated() ? _claimRetriever.GetUserType() : null;
     public string Email => IsAuthenticated() ? _claimRetriever.GetEmail() : string.Empty;
     public IEnumerable<string> Roles => IsAuthenticated() ? _claimRetriever.GetRoles() : [];
 
@@ -40,8 +40,8 @@ public class UserSession : IUserSession
             return Guid.TryParse(userIdClaim, out var userId) ? userId : Guid.Empty;
         }
 
-        public string GetUserType()
-            => FindClaimValue(ClaimTypes.Actor);
+        public ushort? GetUserType()
+            => ushort.TryParse(FindClaimValue(ClaimTypes.Actor), out var userType) ? userType : null;
 
         public string GetEmail()
             => FindClaimValue(ClaimTypes.Email);

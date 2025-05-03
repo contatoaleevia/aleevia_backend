@@ -31,7 +31,6 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public override DbSet<User> Users { get; set; }
     public override DbSet<Role> Roles { get; set; }
     public override DbSet<UserRole> UserRoles { get; set; }
-
     public DbSet<Faq> Faqs { get; set; }
     public DbSet<Manager> Managers { get; set; }
     public DbSet<ServiceType> ServiceTypes { get; set; }

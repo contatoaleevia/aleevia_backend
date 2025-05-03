@@ -56,6 +56,7 @@ public sealed class User : IdentityUser<Guid>
 
     public static Document SetCnpj(string? cnpj)
         => string.IsNullOrEmpty(cnpj) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(cnpj);
+    public ushort GetUserTypeId() => (ushort) UserType.UserTypeId;
     
     public static string SetPhoneNumber(string phoneNumber)
     {

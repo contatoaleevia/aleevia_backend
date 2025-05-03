@@ -3,7 +3,7 @@
 public interface IUserSession
 {
     Guid UserId { get; }
-    string UserType { get; }
+    ushort? UserType { get; }
     string Email { get; }
     IEnumerable<string> Roles { get; }
     bool IsAuthenticated();
