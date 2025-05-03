@@ -1,4 +1,5 @@
 ﻿using CrossCutting.Utils;
+using Domain.Entities.Identities;
 using Domain.Utils;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -12,9 +13,9 @@ namespace Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            var adminRole = RoleUtils.Admin;
-            var patientRole = RoleUtils.Patient;
-            var employeeRole = RoleUtils.Employee;
+            var adminRole = Role.Admin;
+            var patientRole = Role.Patient;
+            var employeeRole = Role.Employee;
             
             var sql = @$"
 INSERT INTO public.identity_role (""Id"", ""Name"", ""NormalizedName"", ""ConcurrencyStamp"")
@@ -32,9 +33,9 @@ VALUES ('{employeeRole.Id}', '{employeeRole.Name}', '{employeeRole.NormalizedNam
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            var adminRole = RoleUtils.Admin;
-            var patientRole = RoleUtils.Patient;
-            var employerRole = RoleUtils.Employee;
+            var adminRole = Role.Admin;
+            var patientRole = Role.Patient;
+            var employerRole = Role.Employee;
             
             var sql = @$"
 DELETE

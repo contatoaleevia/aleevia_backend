@@ -12,7 +12,6 @@ public class Manager : AggregateRoot
 
     private Manager()
     {
-        
     }
     
     public Manager(Guid userId, ManagerType managerType, string? corporateName)

@@ -22,11 +22,8 @@ public class UserSession : IUserSession
     public bool IsAuthenticated()
     {
         var httpContext = _contextAccessor.HttpContext;
-        if (httpContext == null)
-            return false;
-
-        var identity = httpContext.User.Identity;
-        return identity != null && identity.IsAuthenticated;
+        var identity = httpContext?.User.Identity;
+        return identity is { IsAuthenticated: true };
     }
 
     private IEnumerable<Claim> GetClaims()

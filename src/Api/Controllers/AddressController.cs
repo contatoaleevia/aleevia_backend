@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
+
+[Route("api/address")]
 public class AddressController(IAddressService addressService) : ControllerBase
 {
     [HttpGet("{id:guid}")]

@@ -22,6 +22,7 @@ public class GenerateJwtTokenHelper(IConfiguration configuration) : IGenerateJwt
             new(ClaimTypes.Email, user.Email!),
             new(ClaimTypes.Actor, user.GetUserTypeName())
         ];
+        
         claims.AddRange(user.GetRolesNames().Select(role => new Claim(ClaimTypes.Role, role)));
         
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Secret));

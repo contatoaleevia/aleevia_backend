@@ -49,9 +49,9 @@ public sealed class User : IdentityUser<Guid>
         LockoutEnd = null;
         AccessFailedCount = 0;
         UserName = cpf;
+        UserRoles = SetRolesByUserType(userType);
     }
 
-    
     public static Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
 
     public static Document SetCnpj(string? cnpj)
@@ -69,11 +69,9 @@ public sealed class User : IdentityUser<Guid>
     public string GetUserTypeName() => UserType.UserTypeName;
     public IEnumerable<string> GetRolesNames() => UserRoles.Select(x => x.GetRoleName());
     
-    private void AddRoleAdmin() => AddRole(RoleUtils.Admin.Id);
-
-    private void AddRole(Guid roleId)
+    private ICollection<UserRole> SetRolesByUserType(UserType userType)
     {
-        UserRoles.Add(new UserRole(Id, roleId));
+        var roles = UserRole.GetRolesByUserType(userType);
+        return roles.Select(x => new UserRole(Id, x.Id)).ToList();
     }
-
 }
