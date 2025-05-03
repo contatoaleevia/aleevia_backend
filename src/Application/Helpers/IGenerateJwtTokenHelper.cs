@@ -4,5 +4,5 @@ namespace Application.Helpers;
 
 public interface IGenerateJwtTokenHelper
 {
-    string GenerateJwtToken(User user, IList<string> roles);
+    string GenerateJwtToken(User user);
 }

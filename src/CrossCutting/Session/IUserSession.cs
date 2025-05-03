@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace CrossCutting.Session;
+﻿namespace CrossCutting.Session;
 
 public interface IUserSession
 {
     Guid UserId { get; }
-    string UserType { get; }
+    ushort? UserType { get; }
     string Email { get; }
-    IEnumerable<IdentityRole<Guid>> Roles { get; }
+    IEnumerable<string> Roles { get; }
     bool IsAuthenticated();
 }

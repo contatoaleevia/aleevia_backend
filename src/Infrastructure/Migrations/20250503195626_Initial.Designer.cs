@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20250429125629_AddProfessions")]
-    partial class AddProfessions
+    [Migration("20250503195626_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,7 +26,7 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.Address", b =>
+            modelBuilder.Entity("Domain.Entities.Addresses.Address", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -248,6 +248,58 @@ namespace Infrastructure.Migrations
                     b.ToTable("sub_specialties", "public");
                 });
 
+            modelBuilder.Entity("Domain.Entities.IaChats.IaChat", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("SourceId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SourceId");
+
+                    b.ToTable("ia_chat", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.IaChats.IaMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("IaChatId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("message");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IaChatId");
+
+                    b.ToTable("ia_message", "public");
+                });
+
             modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
                 {
                     b.Property<Guid>("Id")
@@ -270,6 +322,41 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("manager", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identities.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("concurrency_stamp");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("NormalizedName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("normalized_name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("role", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
@@ -377,6 +464,70 @@ namespace Infrastructure.Migrations
                     b.ToTable("user", "public");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Identities.UserRole", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("role_id");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("identity_user_role", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.OfficeAttendances.OfficeAttendance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean")
+                        .HasColumnName("active");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<Guid>("OfficeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("office_id");
+
+                    b.Property<Guid>("ServiceTypeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("service_type_id");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("title");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("ServiceTypeId");
+
+                    b.ToTable("office_attendance", "public");
+                });
+
             modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
                 {
                     b.Property<Guid>("Id")
@@ -434,33 +585,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("service_type", "public");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
-
-                    b.ToTable("identity_role", "public");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -534,21 +658,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("identity_user_login", "public");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("identity_user_role", "public");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -570,7 +679,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("identity_user_token", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Address", b =>
+            modelBuilder.Entity("Domain.Entities.Addresses.Address", b =>
                 {
                     b.HasOne("Domain.Entities.Identities.User", "Source")
                         .WithMany()
@@ -669,6 +778,66 @@ namespace Infrastructure.Migrations
                     b.Navigation("Specialty");
                 });
 
+            modelBuilder.Entity("Domain.Entities.IaChats.IaChat", b =>
+                {
+                    b.HasOne("Domain.Entities.Identities.User", "Source")
+                        .WithMany()
+                        .HasForeignKey("SourceId")
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Entities.IaChats.IaChatSourceType", "SourceType", b1 =>
+                        {
+                            b1.Property<Guid>("IaChatId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("SourceType")
+                                .HasColumnType("integer")
+                                .HasColumnName("source_type");
+
+                            b1.HasKey("IaChatId");
+
+                            b1.ToTable("ia_chat", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("IaChatId");
+                        });
+
+                    b.Navigation("Source");
+
+                    b.Navigation("SourceType")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.IaChats.IaMessage", b =>
+                {
+                    b.HasOne("Domain.Entities.IaChats.IaChat", "IaChat")
+                        .WithMany("Messages")
+                        .HasForeignKey("IaChatId")
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Entities.IaChats.IaMessageSenderType", "SenderType", b1 =>
+                        {
+                            b1.Property<Guid>("IaMessageId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("SenderType")
+                                .HasColumnType("integer")
+                                .HasColumnName("sender_type");
+
+                            b1.HasKey("IaMessageId");
+
+                            b1.ToTable("ia_message", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("IaMessageId");
+                        });
+
+                    b.Navigation("IaChat");
+
+                    b.Navigation("SenderType")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
                 {
                     b.HasOne("Domain.Entities.Identities.User", "User")
@@ -701,7 +870,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
-                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cnpj", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cnpj", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -722,7 +891,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cpf", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cpf", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -768,6 +937,60 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.Identities.UserRole", b =>
+                {
+                    b.HasOne("Domain.Entities.Identities.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identities.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.OfficeAttendances.OfficeAttendance", b =>
+                {
+                    b.HasOne("Domain.Entities.Offices.Office", "Office")
+                        .WithMany()
+                        .HasForeignKey("OfficeId")
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.ServiceTypes.ServiceType", "ServiceType")
+                        .WithMany()
+                        .HasForeignKey("ServiceTypeId")
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Entities.ValueObjects.Money", "Price", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeAttendanceId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<long>("ValueAsCents")
+                                .HasColumnType("bigint")
+                                .HasColumnName("price");
+
+                            b1.HasKey("OfficeAttendanceId");
+
+                            b1.ToTable("office_attendance", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeAttendanceId");
+                        });
+
+                    b.Navigation("Office");
+
+                    b.Navigation("Price")
+                        .IsRequired();
+
+                    b.Navigation("ServiceType");
+                });
+
             modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
                 {
                     b.HasOne("Domain.Entities.Identities.Manager", "Owner")
@@ -775,7 +998,7 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("OwnerId")
                         .IsRequired();
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Document", "Cnpj", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cnpj", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -796,7 +1019,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Instagram", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Instagram", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -817,7 +1040,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Logo", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Logo", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -838,7 +1061,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.PhoneNumber", "Phone", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.PhoneNumber", "Phone", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -859,7 +1082,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Url", "Site", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Site", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -880,7 +1103,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.PhoneNumber", "Whatsapp", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.PhoneNumber", "Whatsapp", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -901,7 +1124,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Utils.ValueObjects.Email", "Email", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Email", "Email", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -948,7 +1171,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                    b.HasOne("Domain.Entities.Identities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .IsRequired();
@@ -970,19 +1193,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Identities.User", null)
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.HasOne("Domain.Entities.Identities.User", null)
@@ -999,6 +1209,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Specialty", b =>
                 {
                     b.Navigation("SubSpecialties");
+                });
+
+            modelBuilder.Entity("Domain.Entities.IaChats.IaChat", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>

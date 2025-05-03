@@ -12,6 +12,7 @@ using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +45,7 @@ public static class InfrastructureIocContainer
         services.AddScoped<IFaqRepository, FaqRepository>();
         services.AddScoped<IProfessionRepository, ProfessionRepository>();
         services.AddScoped<IOfficeAttendanceRepository, OfficeAttendanceRepository>();
+        services.AddScoped<IIaChatRepository, IaChatRepository>();
     }
     
     private static void RegisterIdentityConfiguration(IServiceCollection services, IConfiguration configuration)
@@ -66,7 +68,8 @@ public static class InfrastructureIocContainer
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             }).AddDefaultTokenProviders()
-            .AddRoles<IdentityRole<Guid>>()
+            .AddRoles<Role>()
+            .AddUserStore<UserStore<User, Role, ApiDbContext, Guid, IdentityUserClaim<Guid>, UserRole, IdentityUserLogin<Guid>, IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>>()
             .AddErrorDescriber<IdentityErrorExtension>()
             .AddEntityFrameworkStores<ApiDbContext>();
 

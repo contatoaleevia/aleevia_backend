@@ -4,7 +4,8 @@ using CrossCutting.Repositories;
 using Domain.Entities.Addresses;
 
 namespace Application.Services.Addresses;
-public class AddressService(IRepository<Address> repository)
+
+public class AddressService(IRepository<Address> repository) : IAddressService
 {
     public async Task<GetAddressByIdReponseDto> GetByIdAddress(Guid id)
     {
@@ -28,7 +29,7 @@ public class AddressService(IRepository<Address> repository)
                 createdAt: address.CreatedAt,
                 updatedAt: address.UpdatedAt
                 );
-        else throw new Exception("Address not found");
+        throw new Exception("Address not found");
     }
 
     public async Task<CreateAddressResponseDto> CreateAddressAsync(CreateAddressRequestDto requestDto)
@@ -42,9 +43,6 @@ public class AddressService(IRepository<Address> repository)
             neighborhood: requestDto.Neighborhood);
 
         var response = await repository.CreateAsync(address);
-        if (response != null)
-            return new CreateAddressResponseDto(response.Id, response.Street, response.Number);
-
-        else throw new Exception("Error creating address");
+        return new CreateAddressResponseDto(response.Id, response.Street, response.Number);
     }
 }

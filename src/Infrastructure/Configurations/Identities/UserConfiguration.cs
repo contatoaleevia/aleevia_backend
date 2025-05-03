@@ -113,7 +113,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasColumnName("password_hash");
 
         builder.HasMany(x => x.UserRoles)
-            .WithOne()
+            .WithOne(x => x.User)
             .HasForeignKey(x => x.UserId);
     }
 }
