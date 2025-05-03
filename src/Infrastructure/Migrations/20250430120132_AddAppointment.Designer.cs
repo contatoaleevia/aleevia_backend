@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430120132_AddAppointment")]
+    partial class AddAppointment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -460,58 +463,6 @@ namespace Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("user", "public");
-                });
-
-            modelBuilder.Entity("Domain.Entities.OfficeAttendances.OfficeAttendance", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean")
-                        .HasColumnName("active");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("description");
-
-                    b.Property<Guid>("OfficeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("office_id");
-
-                    b.Property<decimal>("Price")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("numeric(10,2)")
-                        .HasColumnName("price");
-
-                    b.Property<Guid>("ServiceTypeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("service_type_id");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("title");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OfficeId");
-
-                    b.HasIndex("ServiceTypeId");
-
-                    b.ToTable("office_attendance", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
@@ -976,23 +927,6 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("UserType")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.OfficeAttendances.OfficeAttendance", b =>
-                {
-                    b.HasOne("Domain.Entities.Offices.Office", "Office")
-                        .WithMany()
-                        .HasForeignKey("OfficeId")
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.ServiceTypes.ServiceType", "ServiceType")
-                        .WithMany()
-                        .HasForeignKey("ServiceTypeId")
-                        .IsRequired();
-
-                    b.Navigation("Office");
-
-                    b.Navigation("ServiceType");
                 });
 
             modelBuilder.Entity("Domain.Entities.Offices.Office", b =>

@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.ServiceTypes;
+using Infrastructure.Configurations.Appointments;
+using Infrastructure.Configurations.Associations;
 using Infrastructure.Configurations.Addresses;
 using Infrastructure.Configurations.OfficeAttendances;
 using Domain.Entities.OfficeAttendances;
@@ -44,7 +46,8 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
 
         builder.ApplyConfiguration(new UserConfiguration());
         builder.ApplyConfiguration(new FaqConfiguration());
-
+        builder.ApplyConfiguration(new AppointmentConfiguration());
+        builder.ApplyConfiguration(new AppointmentAddressConfiguration());
         builder.ApplyConfiguration(new ManagerConfiguration());
         builder.ApplyConfiguration(new AddressesConfiguration());
         builder.ApplyConfiguration(new OfficeConfiguration());

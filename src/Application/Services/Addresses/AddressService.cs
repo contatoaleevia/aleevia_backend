@@ -2,6 +2,7 @@
 using Application.DTOs.Adresses.GetAddressDTOs;
 using CrossCutting.Repositories;
 using Domain.Entities.Addresses;
+using Domain.Exceptions.Addresses;
 
 namespace Application.Services.Addresses;
 public class AddressService(IRepository<Address> repository)
@@ -9,11 +10,10 @@ public class AddressService(IRepository<Address> repository)
     public async Task<GetAddressByIdReponseDto> GetByIdAddress(Guid id)
     {
         var address = await repository.GetByIdAsync(id);
-        if (address != null)
-            return new GetAddressByIdReponseDto(
+        if (address == null)
+            throw new AddressNotFoundException(id);
+        else return new GetAddressByIdReponseDto(
                 id: address.Id,
-                sourceId: address.SourceId,
-                source: address.Source,
                 sourceType: address.SourceType,
                 name: address.Name,
                 street: address.Street,
@@ -28,7 +28,6 @@ public class AddressService(IRepository<Address> repository)
                 createdAt: address.CreatedAt,
                 updatedAt: address.UpdatedAt
                 );
-        else throw new Exception("Address not found");
     }
 
     public async Task<CreateAddressResponseDto> CreateAddressAsync(CreateAddressRequestDto requestDto)
@@ -45,6 +44,6 @@ public class AddressService(IRepository<Address> repository)
         if (response != null)
             return new CreateAddressResponseDto(response.Id, response.Street, response.Number);
 
-        else throw new Exception("Error creating address");
+        else throw new CreateAddressException(address.Id);
     }
 }

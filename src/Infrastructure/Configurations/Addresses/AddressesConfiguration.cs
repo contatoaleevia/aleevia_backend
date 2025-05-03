@@ -15,17 +15,7 @@ public class AddressesConfiguration : IEntityTypeConfiguration<Address>
             .IsRequired()
             .HasColumnName("id");
 
-        builder.HasOne(x => x.Source)
-            .WithMany()
-            .HasForeignKey(x => x.SourceId);
-
-        builder.OwnsOne(x => x.SourceType, sourceType =>
-        {
-            sourceType.Property(x => x.UserTypeId)
-                .HasColumnName("source_type")
-                .HasMaxLength(50)
-                .IsRequired();
-        });
+        builder.OwnsOne(x => x.SourceType);
 
         builder.Property(x => x.Name)
             .HasMaxLength(100)
