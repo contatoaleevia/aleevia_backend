@@ -20,7 +20,7 @@ public class GenerateJwtTokenHelper(IConfiguration configuration) : IGenerateJwt
         [
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email!),
-            new(ClaimTypes.Actor, user.GetUserTypeName())
+            new(ClaimTypes.Actor, user.GetUserTypeId().ToString())
         ];
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
         

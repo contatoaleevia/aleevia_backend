@@ -1,13 +1,7 @@
 namespace Application.DTOs.IaChats.CreateIaChatDTOs;
 
-public class CreateIaChatRequestDto
+public class CreateIaChatRequestDto(Guid sourceId, ushort sourceType)
 {
-    public Guid SourceId { get; set; }
-    public ushort SourceType { get; set; }
-
-    public CreateIaChatRequestDto(Guid sourceId, ushort sourceType)
-    {
-        SourceId = sourceId;
-        SourceType = sourceType;
-    }
+    public Guid SourceId { get; set; } = sourceId;
+    public ushort SourceType { get; set; } = sourceType;
 } 

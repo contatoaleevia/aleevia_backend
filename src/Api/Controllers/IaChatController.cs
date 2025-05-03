@@ -17,7 +17,7 @@ public class IaChatController(IIaChatService iaChatService) : ControllerBase
     }
 
     [HttpPost]
-    [AllowAnonymous]
+    [Authorize]
     public async Task<IActionResult> CreateChat([FromBody] CreateIaChatRequestDto requestDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -39,12 +39,5 @@ public class IaChatController(IIaChatService iaChatService) : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
         var response = await iaChatService.AddMessageToChatAsync(chatId, requestDto);
         return Ok(response);
-    }
-
-    [HttpGet("{chatId:guid}/messages")]
-    [AllowAnonymous]
-    public async Task<IActionResult> GetChatMessagesHistory(Guid chatId)
-    {
-        return Ok(await iaChatService.GetChatMessagesAsync(chatId));
     }
 } 

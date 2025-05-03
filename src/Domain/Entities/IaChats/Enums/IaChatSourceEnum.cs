@@ -4,12 +4,18 @@ namespace Domain.Entities.IaChats.Enums;
 
 public enum IaChatSourceEnum : ushort
 {
-    [Description("Patient")]
-    Patient = 0,
+    [Description("Gestor")]
+    Manager = 0,
     
-    [Description("Professional")]
-    Professional = 1,
+    [Description("Funcionário")]
+    Employee = 1,
     
+    [Description("Profissional de saúde")]
+    HealthcareProfessional = 2,
+    
+    [Description("Paciente")]
+    Patient = 3,
+
     [Description("Lead")]
-    Lead = 2
+    Lead = 4
 } 
