@@ -245,6 +245,58 @@ namespace Infrastructure.Migrations
                     b.ToTable("sub_specialties", "public");
                 });
 
+            modelBuilder.Entity("Domain.Entities.IaChats.IaChat", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("SourceId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SourceId");
+
+                    b.ToTable("ia_chat", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.IaChats.IaMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("IaChatId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("message");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IaChatId");
+
+                    b.ToTable("ia_message", "public");
+                });
+
             modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
                 {
                     b.Property<Guid>("Id")
@@ -279,7 +331,8 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("concurrency_stamp");
 
                     b.Property<string>("Name")
@@ -300,7 +353,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("identity_role", "public");
+                    b.ToTable("role", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
@@ -722,6 +775,66 @@ namespace Infrastructure.Migrations
                     b.Navigation("Specialty");
                 });
 
+            modelBuilder.Entity("Domain.Entities.IaChats.IaChat", b =>
+                {
+                    b.HasOne("Domain.Entities.Identities.User", "Source")
+                        .WithMany()
+                        .HasForeignKey("SourceId")
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Entities.IaChats.IaChatSourceType", "SourceType", b1 =>
+                        {
+                            b1.Property<Guid>("IaChatId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("SourceType")
+                                .HasColumnType("integer")
+                                .HasColumnName("source_type");
+
+                            b1.HasKey("IaChatId");
+
+                            b1.ToTable("ia_chat", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("IaChatId");
+                        });
+
+                    b.Navigation("Source");
+
+                    b.Navigation("SourceType")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.IaChats.IaMessage", b =>
+                {
+                    b.HasOne("Domain.Entities.IaChats.IaChat", "IaChat")
+                        .WithMany("Messages")
+                        .HasForeignKey("IaChatId")
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Entities.IaChats.IaMessageSenderType", "SenderType", b1 =>
+                        {
+                            b1.Property<Guid>("IaMessageId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("SenderType")
+                                .HasColumnType("integer")
+                                .HasColumnName("sender_type");
+
+                            b1.HasKey("IaMessageId");
+
+                            b1.ToTable("ia_message", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("IaMessageId");
+                        });
+
+                    b.Navigation("IaChat");
+
+                    b.Navigation("SenderType")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entities.Identities.Manager", b =>
                 {
                     b.HasOne("Domain.Entities.Identities.User", "User")
@@ -1093,6 +1206,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Specialty", b =>
                 {
                     b.Navigation("SubSpecialties");
+                });
+
+            modelBuilder.Entity("Domain.Entities.IaChats.IaChat", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>

@@ -9,7 +9,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
     public void Configure(EntityTypeBuilder<Role> builder)
     {
-        builder.ToTable("identity_role");
+        builder.ToTable("role");
 
         builder.HasKey(x => x.Id);
 
@@ -29,6 +29,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
 
         builder.Property(x => x.ConcurrencyStamp)
             .IsRequired()
+            .HasMaxLength(100)
             .HasColumnName("concurrency_stamp");
 
         builder.HasMany<IdentityRoleClaim<Guid>>()

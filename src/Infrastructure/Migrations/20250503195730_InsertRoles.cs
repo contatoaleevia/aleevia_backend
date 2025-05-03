@@ -1,6 +1,4 @@
-﻿using CrossCutting.Utils;
-using Domain.Entities.Identities;
-using Domain.Utils;
+﻿using Domain.Entities.Identities;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -18,14 +16,14 @@ namespace Infrastructure.Migrations
             var employeeRole = Role.Employee;
             
             var sql = @$"
-INSERT INTO public.identity_role (""Id"", ""Name"", ""NormalizedName"", ""ConcurrencyStamp"")
-VALUES ('{adminRole.Id}', '{adminRole.Name}', '{adminRole.NormalizedName}', {adminRole.ConcurrencyStamp ?? "null"});
+INSERT INTO public.role (""id"", ""name"", ""normalized_name"", ""concurrency_stamp"")
+VALUES ('{adminRole.Id}', '{adminRole.Name}', '{adminRole.NormalizedName}', '{adminRole.ConcurrencyStamp}');
 
-INSERT INTO public.identity_role (""Id"", ""Name"", ""NormalizedName"", ""ConcurrencyStamp"")
-VALUES ('{patientRole.Id}', '{patientRole.Name}', '{patientRole.NormalizedName}', {patientRole.ConcurrencyStamp ?? "null"});
+INSERT INTO public.role (""id"", ""name"", ""normalized_name"", ""concurrency_stamp"")
+VALUES ('{patientRole.Id}', '{patientRole.Name}', '{patientRole.NormalizedName}', '{patientRole.ConcurrencyStamp}');
 
-INSERT INTO public.identity_role (""Id"", ""Name"", ""NormalizedName"", ""ConcurrencyStamp"")
-VALUES ('{employeeRole.Id}', '{employeeRole.Name}', '{employeeRole.NormalizedName}', {employeeRole.ConcurrencyStamp ?? "null"});";
+INSERT INTO public.role (""id"", ""name"", ""normalized_name"", ""concurrency_stamp"")
+VALUES ('{employeeRole.Id}', '{employeeRole.Name}', '{employeeRole.NormalizedName}', '{employeeRole.ConcurrencyStamp}');";
             
             migrationBuilder.Sql(sql);
         }
@@ -39,18 +37,19 @@ VALUES ('{employeeRole.Id}', '{employeeRole.Name}', '{employeeRole.NormalizedNam
             
             var sql = @$"
 DELETE
-FROM public.identity_role
+FROM public.role
 WHERE ""Id"" = '{adminRole.Id}';
 
 DELETE
-FROM public.identity_role
+FROM public.role
 WHERE ""Id"" = '{patientRole.Id}';
 
 DELETE
-FROM public.identity_role
+FROM public.role
 WHERE ""Id"" = '{employerRole.Id}';";
             
             migrationBuilder.Sql(sql);
         }
+
     }
 }

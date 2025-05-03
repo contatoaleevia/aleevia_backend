@@ -47,6 +47,6 @@ public sealed class Role : IdentityRole<Guid>
             Id = roleId,
             Name = name,
             NormalizedName = name.ToUpper(),
-            ConcurrencyStamp = null
+            ConcurrencyStamp = Guid.NewGuid().ToString()
         };
 }
