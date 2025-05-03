@@ -40,15 +40,11 @@ public class UserService(
             userType: UserType.CreateAsManager()
         );
 
-        user.AddRoleAdmin();
-
         using (var scope = ApiTransactionScope.RepeatableRead(true))
         {
             var response = await userManager.CreateAsync(user, request.Password);
             if (!response.Succeeded)
-            {
                 identityNotificationHandler.AddNotifications(response.Errors);
-            }
 
             await managerService.CreateManager(request.Manager, user.Id);
 

@@ -4,6 +4,7 @@ using CrossCutting.Identities;
 using Domain.Entities.Identities;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Authentications;
 
@@ -17,19 +18,25 @@ public class AuthService(
     public async Task<LoginResponseDto> LoginAsync(LoginRequestDto requestDto)
     {
         var result = await signInManager.PasswordSignInAsync(
-        requestDto.UserName,
-        requestDto.Password,
-        requestDto.RememberMe,
-        lockoutOnFailure: true);
+            requestDto.UserName,
+            requestDto.Password,
+            requestDto.RememberMe,
+            lockoutOnFailure: true);
 
         if (!result.Succeeded)
-            identityNotificationHandler.AddNotifications([new IdentityError { Description = "Credenciais inválidas." }]);
+            identityNotificationHandler.AddNotifications([
+                new IdentityError { Description = "Credenciais inválidas." }
+            ]);
 
-        var user = await userManager.FindByNameAsync(requestDto.UserName);
+        var user = await userManager.Users
+            .AsNoTracking()
+            .Include(x => x.UserRoles)
+            .ThenInclude(x => x.Role)
+            .FirstOrDefaultAsync(x => x.Cpf.Value == requestDto.Document || x.Cnpj.Value == requestDto.Document);
+
         if (user is null)
             throw new EmailNotFoundException(requestDto.UserName);
-        var roles = await userManager.GetRolesAsync(user);
-        var token = generateJwtTokenHelper.GenerateJwtToken(user, roles);
+        var token = generateJwtTokenHelper.GenerateJwtToken(user);
 
         return new LoginResponseDto
         (

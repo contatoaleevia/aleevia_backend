@@ -15,9 +15,9 @@ public sealed class User : IdentityUser<Guid>
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
     public bool Active { get; private set; }
-    
-    public ICollection<IdentityUserRole<Guid>> UserRoles { get; private set; } = new List<IdentityUserRole<Guid>>();
-    
+
+    public ICollection<UserRole> UserRoles { get; private set; } = new List<UserRole>();
+
     public Manager? Manager { get; private set; }
 
     private User()
@@ -49,31 +49,30 @@ public sealed class User : IdentityUser<Guid>
         LockoutEnd = null;
         AccessFailedCount = 0;
         UserName = cpf;
+        UserRoles = SetRolesByUserType(userType);
     }
 
-    public void AddRoleAdmin() => AddRole(RoleUtils.Admin.Id);
+    public static Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
 
+    public static Document SetCnpj(string? cnpj)
+        => string.IsNullOrEmpty(cnpj) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(cnpj);
     public ushort GetUserTypeId() => (ushort) UserType.UserTypeId;
     
-    private void AddRole(Guid roleId)
-    {
-        UserRoles.Add(new IdentityUserRole<Guid>
-        {
-            UserId = Id,
-            RoleId = roleId
-        });
-    }
-
-    private static string SetPhoneNumber(string phoneNumber)
+    public static string SetPhoneNumber(string phoneNumber)
     {
         phoneNumber = phoneNumber.Replace(" ", string.Empty).Trim();
-        if(PhoneNumberValidator.IsValid(phoneNumber))
+        if (PhoneNumberValidator.IsValid(phoneNumber))
             throw new ArgumentException("Invalid phone number.");
-        
+
         return phoneNumber;
     }
     
-    private static Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
-    private static Document SetCnpj(string? cnpj)
-        => string.IsNullOrEmpty(cnpj) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(cnpj);
+    public string GetUserTypeName() => UserType.UserTypeName;
+    public IEnumerable<string> GetRolesNames() => UserRoles.Select(x => x.GetRoleName());
+    
+    private ICollection<UserRole> SetRolesByUserType(UserType userType)
+    {
+        var roles = UserRole.GetRolesByUserType(userType);
+        return roles.Select(x => new UserRole(Id, x.Id)).ToList();
+    }
 }

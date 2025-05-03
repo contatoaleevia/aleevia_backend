@@ -1,7 +1,5 @@
 ﻿using System.Security.Claims;
-using CrossCutting.Utils;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 
 namespace CrossCutting.Session;
 
@@ -19,16 +17,13 @@ public class UserSession : IUserSession
     public Guid UserId => IsAuthenticated() ? _claimRetriever.GetUserId() : Guid.Empty;
     public ushort? UserType => IsAuthenticated() ? _claimRetriever.GetUserType() : null;
     public string Email => IsAuthenticated() ? _claimRetriever.GetEmail() : string.Empty;
-    public IEnumerable<IdentityRole<Guid>> Roles => IsAuthenticated() ? _claimRetriever.GetRoles() : [];
+    public IEnumerable<string> Roles => IsAuthenticated() ? _claimRetriever.GetRoles() : [];
 
     public bool IsAuthenticated()
     {
         var httpContext = _contextAccessor.HttpContext;
-        if (httpContext == null)
-            return false;
-
-        var identity = httpContext.User.Identity;
-        return identity != null && identity.IsAuthenticated;
+        var identity = httpContext?.User.Identity;
+        return identity is { IsAuthenticated: true };
     }
 
     private IEnumerable<Claim> GetClaims()
@@ -51,14 +46,14 @@ public class UserSession : IUserSession
         public string GetEmail()
             => FindClaimValue(ClaimTypes.Email);
 
-        public IEnumerable<IdentityRole<Guid>> GetRoles()
+        public IEnumerable<string> GetRoles()
         {
             var rolesClaim = FindClaimValues(ClaimTypes.Role);
             if (rolesClaim.Count == 0)
                 return [];
 
             return rolesClaim
-                .Select(r => RoleUtils.GetRole(r.Value));
+                .Select(r => r.Value);
         }
 
         private string FindClaimValue(string claimType)

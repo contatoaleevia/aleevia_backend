@@ -11,7 +11,7 @@ namespace Application.Helpers;
 
 public class GenerateJwtTokenHelper(IConfiguration configuration) : IGenerateJwtTokenHelper
 {
-    public string GenerateJwtToken(User user, IList<string> roles)
+    public string GenerateJwtToken(User user)
     {
         var settings = TokenObtainHelperSettings.GetInstance(configuration);
         var apiSettings = ApiSettingsHelper.GetInstance(configuration);
@@ -22,7 +22,8 @@ public class GenerateJwtTokenHelper(IConfiguration configuration) : IGenerateJwt
             new(ClaimTypes.Email, user.Email!),
             new(ClaimTypes.Actor, user.GetUserTypeId().ToString())
         ];
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        
+        claims.AddRange(user.GetRolesNames().Select(role => new Claim(ClaimTypes.Role, role)));
         
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Secret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
