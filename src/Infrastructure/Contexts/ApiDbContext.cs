@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.ServiceTypes;
 using Infrastructure.Configurations.Addresses;
+using Infrastructure.Configurations.OfficeAttendances;
+using Domain.Entities.OfficeAttendances;
 
 namespace Infrastructure.Contexts;
 
@@ -27,6 +29,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public DbSet<Profession> Professions { get; set; }
     public DbSet<Specialty> Specialties { get; set; }
     public DbSet<SubSpecialty> SubSpecialties { get; set; }
+    public DbSet<OfficeAttendance> OfficeAttendances { get; set; }
     public DbSet<IaChat> IaChats { get; set; }
     public DbSet<IaMessage> IaMessages { get; set; }
 
@@ -53,6 +56,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new ProfessionConfiguration());
         builder.ApplyConfiguration(new SpecialtyConfiguration());
         builder.ApplyConfiguration(new SubSpecialtyConfiguration());
+        builder.ApplyConfiguration(new OfficeAttendanceConfiguration());
         builder.ApplyConfiguration(new IaChatConfiguration());
         builder.ApplyConfiguration(new IaMessageConfiguration());
     

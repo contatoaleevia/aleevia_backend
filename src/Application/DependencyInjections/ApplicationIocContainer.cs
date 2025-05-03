@@ -6,6 +6,7 @@ using Application.Services.Offices;
 using Application.Services.Faqs;
 using Application.Services.Users;
 using Application.Services.ServiceTypes;
+using Application.Services.OfficeAttendances;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Services.HealthcareProfessionals;
 using Application.Services.IaChats;
@@ -24,6 +25,7 @@ public static class ApplicationIocContainer
         services.AddScoped<IOfficeService, OfficeService>();
         services.AddScoped<IServiceTypeService, ServiceTypeService>();
         services.AddScoped<IProfessionService, ProfessionService>();
+        services.AddScoped<IOfficeAttendanceService, OfficeAttendanceService>();
         services.AddScoped<IIaChatService, IaChatService>();
     }
 }
