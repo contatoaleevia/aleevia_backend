@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250503175420_CreateChatAndMessageTable")]
+    partial class CreateChatAndMessageTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -625,7 +628,7 @@ namespace Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("SourceId");
 
-                    b.OwnsOne("Domain.Entities.Addresses.Address.SourceType#Domain.Entities.Identities.UserType", "SourceType", b1 =>
+                    b.OwnsOne("Domain.Entities.Identities.UserType", "SourceType", b1 =>
                         {
                             b1.Property<Guid>("AddressId")
                                 .HasColumnType("uuid");
@@ -725,7 +728,7 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("SourceId")
                         .IsRequired();
 
-                    b.OwnsOne("Domain.Entities.IaChats.IaChat.SourceType#Domain.Entities.IaChats.IaChatSourceType", "SourceType", b1 =>
+                    b.OwnsOne("Domain.Entities.IaChats.IaChatSourceType", "SourceType", b1 =>
                         {
                             b1.Property<Guid>("IaChatId")
                                 .HasColumnType("uuid");
@@ -755,7 +758,7 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("IaChatId")
                         .IsRequired();
 
-                    b.OwnsOne("Domain.Entities.IaChats.IaMessage.SenderType#Domain.Entities.IaChats.IaMessageSenderType", "SenderType", b1 =>
+                    b.OwnsOne("Domain.Entities.IaChats.IaMessageSenderType", "SenderType", b1 =>
                         {
                             b1.Property<Guid>("IaMessageId")
                                 .HasColumnType("uuid");
@@ -785,7 +788,7 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("Domain.Entities.Identities.Manager", "UserId")
                         .IsRequired();
 
-                    b.OwnsOne("Domain.Entities.Identities.Manager.ManagerType#Domain.Entities.Identities.ManagerType", "ManagerType", b1 =>
+                    b.OwnsOne("Domain.Entities.Identities.ManagerType", "ManagerType", b1 =>
                         {
                             b1.Property<Guid>("ManagerId")
                                 .HasColumnType("uuid");
@@ -810,7 +813,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Identities.User", b =>
                 {
-                    b.OwnsOne("Domain.Entities.Identities.User.Cnpj#Domain.Entities.ValueObjects.Document", "Cnpj", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cnpj", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -831,7 +834,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Domain.Entities.Identities.User.Cpf#Domain.Entities.ValueObjects.Document", "Cpf", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cpf", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -850,7 +853,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("UserId");
                         });
 
-                    b.OwnsOne("Domain.Entities.Identities.User.UserType#Domain.Entities.Identities.UserType", "UserType", b1 =>
+                    b.OwnsOne("Domain.Entities.Identities.UserType", "UserType", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");
@@ -884,7 +887,7 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("OwnerId")
                         .IsRequired();
 
-                    b.OwnsOne("Domain.Entities.Offices.Office.Cnpj#Domain.Entities.ValueObjects.Document", "Cnpj", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cnpj", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -905,28 +908,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Entities.Offices.Office.Email#Domain.Entities.ValueObjects.Email", "Email", b1 =>
-                        {
-                            b1.Property<Guid>("OfficeId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .ValueGeneratedOnAdd()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)")
-                                .HasDefaultValue("")
-                                .HasColumnName("email");
-
-                            b1.HasKey("OfficeId");
-
-                            b1.ToTable("office", "public");
-
-                            b1.WithOwner()
-                                .HasForeignKey("OfficeId");
-                        });
-
-                    b.OwnsOne("Domain.Entities.Offices.Office.Instagram#Domain.Entities.ValueObjects.Url", "Instagram", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Instagram", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -947,7 +929,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Entities.Offices.Office.Logo#Domain.Entities.ValueObjects.Url", "Logo", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Logo", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -968,7 +950,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Entities.Offices.Office.Phone#Domain.Entities.ValueObjects.PhoneNumber", "Phone", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.PhoneNumber", "Phone", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -989,7 +971,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Entities.Offices.Office.Site#Domain.Entities.ValueObjects.Url", "Site", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Site", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -1010,7 +992,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("OfficeId");
                         });
 
-                    b.OwnsOne("Domain.Entities.Offices.Office.Whatsapp#Domain.Entities.ValueObjects.PhoneNumber", "Whatsapp", b1 =>
+                    b.OwnsOne("Domain.Entities.ValueObjects.PhoneNumber", "Whatsapp", b1 =>
                         {
                             b1.Property<Guid>("OfficeId")
                                 .HasColumnType("uuid");
@@ -1022,6 +1004,27 @@ namespace Infrastructure.Migrations
                                 .HasColumnType("character varying(15)")
                                 .HasDefaultValue("")
                                 .HasColumnName("whatsapp");
+
+                            b1.HasKey("OfficeId");
+
+                            b1.ToTable("office", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OfficeId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.ValueObjects.Email", "Email", b1 =>
+                        {
+                            b1.Property<Guid>("OfficeId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .ValueGeneratedOnAdd()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)")
+                                .HasDefaultValue("")
+                                .HasColumnName("email");
 
                             b1.HasKey("OfficeId");
 

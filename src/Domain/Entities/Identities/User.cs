@@ -53,7 +53,7 @@ public sealed class User : IdentityUser<Guid>
 
     public void AddRoleAdmin() => AddRole(RoleUtils.Admin.Id);
 
-    public string GetUserTypeName() => UserType.UserTypeName;
+    public ushort GetUserTypeId() => (ushort) UserType.UserTypeId;
     
     private void AddRole(Guid roleId)
     {
