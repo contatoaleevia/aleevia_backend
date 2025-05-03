@@ -11,12 +11,13 @@ namespace Api.Controllers;
 [Route("api/user")]
 public class UserController(IUserService userService) : ControllerBase
 {
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetUserById(Guid id)
-    {
-        return Ok(await userService.GetByGuidAsync(id));
-    }
     
+    /// <summary>
+    /// Cria usuário com Perfil Admin. 
+    /// Manager Type Id é o Tipo do Administrador. 
+    /// Exemplo: 0 = Individual. 1 = Compartilhado
+    /// </summary>
+    /// <returns></returns>
     [HttpPost("manager")]
     [ApiKey]
     [Produces("application/json")]
