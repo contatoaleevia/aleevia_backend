@@ -1,15 +1,15 @@
-﻿namespace Application.DTOs.Users.LoginDTOs;
-public class LoginRequestDto
+﻿using System.Text.Json.Serialization;
+using CrossCutting.Extensions;
+
+namespace Application.DTOs.Users.LoginDTOs;
+
+public record LoginRequestDto(string UserName, string Password, bool RememberMe)
 {
-    public LoginRequestDto(string userName, string password, bool rememberMe)
-    {
-        UserName = userName;
-        Password = password;
-        RememberMe = rememberMe;
-    }
+    public string UserName { get; set; } = UserName;
 
-    public string UserName { get; set; }
+    public string Password { get; set; } = Password;
+    public bool RememberMe { get; set; } = RememberMe;
 
-    public string Password { get; set; }
-    public bool RememberMe { get; set; } = false;
+    [JsonIgnore]
+    public string Document => UserName.RemoveSpecialCharacters();
 }
