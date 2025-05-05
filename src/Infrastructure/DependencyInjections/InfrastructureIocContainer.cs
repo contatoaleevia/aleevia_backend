@@ -46,6 +46,8 @@ public static class InfrastructureIocContainer
         services.AddScoped<IProfessionRepository, ProfessionRepository>();
         services.AddScoped<IOfficeAttendanceRepository, OfficeAttendanceRepository>();
         services.AddScoped<IIaChatRepository, IaChatRepository>();
+        services.AddScoped<IPatientRepository, PatientRepository>();
+        services.AddScoped<IPatientLeadRepository, PatientLeadRepository>();
     }
     
     private static void RegisterIdentityConfiguration(IServiceCollection services, IConfiguration configuration)

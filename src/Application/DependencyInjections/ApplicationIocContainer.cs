@@ -10,6 +10,7 @@ using Application.Services.OfficeAttendances;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Services.HealthcareProfessionals;
 using Application.Services.IaChats;
+using Application.Services.Patients;
 
 namespace Application.DependencyInjections;
 
@@ -27,5 +28,7 @@ public static class ApplicationIocContainer
         services.AddScoped<IProfessionService, ProfessionService>();
         services.AddScoped<IOfficeAttendanceService, OfficeAttendanceService>();
         services.AddScoped<IIaChatService, IaChatService>();
+        services.AddScoped<IPatientService, PatientService>();
+        services.AddScoped<IPatientLeadService, PatientLeadService>();
     }
 }
