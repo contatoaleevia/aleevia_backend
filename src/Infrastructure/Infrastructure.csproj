@@ -25,7 +25,6 @@
       <Folder Include="Helpers\ApiSettings\" />
       <Folder Include="Helpers\TokenObtainer\" />
       <Folder Include="Migrations\" />
-      <Folder Include="Repositories\" />
     </ItemGroup>
 
 </Project>

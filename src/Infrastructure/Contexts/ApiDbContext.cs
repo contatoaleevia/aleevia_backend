@@ -3,7 +3,6 @@ using Domain.Entities.Identities;
 using Infrastructure.Configurations.Faqs;
 using Domain.Entities.HealthcareProfessionals;
 using Domain.Entities.IaChats;
-using Infrastructure.Configurations;
 using Infrastructure.Configurations.Identities;
 using Infrastructure.Configurations.Offices;
 using Infrastructure.Configurations.ServiceTypes;
@@ -16,6 +15,9 @@ using Infrastructure.Configurations.Addresses;
 using Infrastructure.Configurations.OfficeAttendances;
 using Domain.Entities.OfficeAttendances;
 using Infrastructure.Configurations.IaChats;
+using Domain.Entities.Professionals;
+using Infrastructure.Configurations.Professionals;
+using Domain.Entities.Offices;
 
 namespace Infrastructure.Contexts;
 
@@ -42,6 +44,8 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public DbSet<OfficeAttendance> OfficeAttendances { get; set; }
     public DbSet<IaChat> IaChats { get; set; }
     public DbSet<IaMessage> IaMessages { get; set; }
+    public DbSet<Professional> Professionals { get; set; }
+    public DbSet<OfficesProfessionals> OfficesProfessionals { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -68,6 +72,8 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new UserRoleConfiguration());
         builder.ApplyConfiguration(new IaChatConfiguration());
         builder.ApplyConfiguration(new IaMessageConfiguration());
+        builder.ApplyConfiguration(new ProfessionalConfiguration());
+        builder.ApplyConfiguration(new OfficesProfessionalsConfiguration());
 
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
