@@ -17,6 +17,8 @@ using Infrastructure.Configurations.OfficeAttendances;
 using Domain.Entities.OfficeAttendances;
 using Domain.Entities.Offices;
 using Infrastructure.Configurations.IaChats;
+using Domain.Entities.Patients;
+using Infrastructure.Configurations.Patients;
 using Domain.Entities.Professionals;
 using Infrastructure.Configurations.Professionals;
 using Domain.Entities.Offices;
@@ -51,6 +53,8 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public DbSet<OfficeAddress> OfficeAddresses { get; set; }
     public DbSet<Professional> Professionals { get; set; }
     public DbSet<OfficesProfessionals> OfficesProfessionals { get; set; }
+    public DbSet<Patient> Patients { get; set; }
+    public DbSet<PatientLead> PatientLeads { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -80,6 +84,8 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new OfficeAddressConfiguration());
         builder.ApplyConfiguration(new ProfessionalConfiguration());
         builder.ApplyConfiguration(new OfficesProfessionalsConfiguration());
+        builder.ApplyConfiguration(new PatientConfiguration());
+        builder.ApplyConfiguration(new PatientLeadConfiguration());
 
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {

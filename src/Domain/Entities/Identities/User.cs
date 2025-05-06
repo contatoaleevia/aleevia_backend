@@ -73,6 +73,6 @@ public sealed class User : IdentityUser<Guid>
     private ICollection<UserRole> SetRolesByUserType(UserType userType)
     {
         var roles = UserRole.GetRolesByUserType(userType);
-        return roles.Select(x => new UserRole(Id, x.Id)).ToList();
+        return [.. roles.Select(x => new UserRole(Id, x.Id))];
     }
 }
