@@ -5,7 +5,6 @@ namespace Domain.Entities.Addresses;
 
 public sealed class Address : AggregateRoot
 {
-    public Guid Id { get; private set; }
     public Guid? SourceId { get; private set; }
     public User? Source { get; private set; }
     public UserType? SourceType { get; private set; }
@@ -26,16 +25,20 @@ public sealed class Address : AggregateRoot
     {
     }
 
-    public Address(string street, string city, string state, string zipCode, string number, string neighborhood)
+    public Address(Guid? sourceId, UserType? sourceType, string? name, string street, string neighborhood,
+        string number, string city, string state, string zipCode, string? complement, string? type)
     {
-        Id = Guid.NewGuid();
+        SourceId = sourceId;
+        SourceType = sourceType;
+        Name = name;
         Street = street;
+        Neighborhood = neighborhood;
+        Number = number;
         City = city;
         State = state;
         ZipCode = zipCode;
-        Number = number;
-        Neighborhood = neighborhood;
-        // Gerar Latitude e Longitude automaticamente
+        Complement = complement;
+        Type = type;
         Location = string.Empty;
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = null;
