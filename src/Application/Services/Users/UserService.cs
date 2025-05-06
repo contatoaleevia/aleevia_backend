@@ -9,6 +9,8 @@ using Application.DTOs.Email;
 using Application.DTOs.Users.IsRegisteredDTOs;
 using CrossCutting.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.Patients;
+using Application.DTOs.Patients.CreatePatientDTOs;
 
 namespace Application.Services.Users;
 
@@ -16,7 +18,8 @@ public class UserService(
     UserManager<User> userManager,
     IIdentityNotificationHandler identityNotificationHandler,
     IManagerService managerService,
-    IEmailService emailService
+    IEmailService emailService,
+    IPatientService patientService
 ) : IUserService
 {
     public async Task<CreateManagerUserResponse> CreateManagerUserAsync(CreateManagerUserRequest request)
@@ -32,10 +35,7 @@ public class UserService(
 
         using (var scope = ApiTransactionScope.RepeatableRead(true))
         {
-            var response = await userManager.CreateAsync(user, request.Password);
-            if (!response.Succeeded)
-                identityNotificationHandler.AddNotifications(response.Errors);
-
+            await CreateUserAsync(user, request.Password);
             await managerService.CreateManager(request.Manager, user.Id);
 
             try
@@ -56,6 +56,35 @@ public class UserService(
         }
         
         return new CreateManagerUserResponse(user.Id);
+    }
+
+    public async Task<CreatePatientUserResponse> CreatePatientUserAsync(CreatePatientUserRequest request)
+    {
+        var user = new User(
+            email: request.Email,
+            phoneNumber: request.PhoneNumber,
+            name: request.Name,
+            cpf: request.Cpf,
+            cnpj: null,
+            userType: UserType.CreateAsPatient()
+        );
+        
+        using (var scope = ApiTransactionScope.RepeatableRead(true))
+        {
+            await CreateUserAsync(user, request.Password);
+            await patientService.CreatePatient(request, user.Id);
+
+            scope.Complete();
+        }
+        
+        return new CreatePatientUserResponse(user.Id);
+    }
+
+    private async Task CreateUserAsync(User user, string password)
+    {
+        var response = await userManager.CreateAsync(user, password);
+        if (!response.Succeeded)
+            identityNotificationHandler.AddNotifications(response.Errors);
     }
 
     public async Task<IsRegisteredResponse> IsRegisteredAsync(string document)

@@ -69,7 +69,8 @@ namespace Infrastructure.Migrations
                         .HasColumnName("number");
 
                     b.Property<Guid?>("SourceId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("source_id");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -102,7 +103,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SourceId");
 
-                    b.ToTable("addresses", "public");
+                    b.ToTable("address", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.Faqs.Faq", b =>
@@ -549,6 +550,223 @@ namespace Infrastructure.Migrations
                     b.ToTable("office", "public");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Offices.OfficeAddress", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid?>("AddressId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("address_id");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<bool>("IsTeleconsultation")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_teleconsultation");
+
+                    b.Property<Guid>("OfficeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("office_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("AddressId", "OfficeId")
+                        .IsUnique();
+
+                    b.ToTable("office_address", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessionals", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<Guid>("OfficeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProfessionalId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("ProfessionalId");
+
+                    b.ToTable("offices_professionals", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Patients.Patient", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date")
+                        .HasColumnName("birth_date");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("GoogleRefreshToken")
+                        .HasColumnType("text")
+                        .HasColumnName("google_refresh_token");
+
+                    b.Property<string>("GoogleToken")
+                        .HasColumnType("text")
+                        .HasColumnName("google_token");
+
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("picture_url");
+
+                    b.Property<bool>("PreRegister")
+                        .HasColumnType("boolean")
+                        .HasColumnName("pre_register");
+
+                    b.Property<DateTime?>("RemovedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("removed_at");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("patient", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Patients.PatientLead", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Approved")
+                        .HasColumnType("boolean")
+                        .HasColumnName("approved");
+
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date")
+                        .HasColumnName("birth_date");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("phone");
+
+                    b.Property<DateTime?>("RemovedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("removed_at");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("patient_lead", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Professionals.Professional", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<string>("GoogleRefreshToken")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("google_refresh_token");
+
+                    b.Property<string>("GoogleToken")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("google_token");
+
+                    b.Property<Guid>("OfficeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("PreRegister")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfficeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("professional", "public");
+                });
+
             modelBuilder.Entity("Domain.Entities.ServiceTypes.ServiceType", b =>
                 {
                     b.Property<Guid>("Id")
@@ -690,11 +908,12 @@ namespace Infrastructure.Migrations
                             b1.Property<int>("UserTypeId")
                                 .HasMaxLength(50)
                                 .HasColumnType("integer")
-                                .HasColumnName("source_type");
+                                .HasColumnName("source_type")
+                                .HasAnnotation("Relational:JsonPropertyName", "userTypeId");
 
                             b1.HasKey("AddressId");
 
-                            b1.ToTable("addresses", "public");
+                            b1.ToTable("address", "public");
 
                             b1.WithOwner()
                                 .HasForeignKey("AddressId");
@@ -914,7 +1133,8 @@ namespace Infrastructure.Migrations
 
                             b1.Property<int>("UserTypeId")
                                 .HasColumnType("integer")
-                                .HasColumnName("type");
+                                .HasColumnName("type")
+                                .HasAnnotation("Relational:JsonPropertyName", "userTypeId");
 
                             b1.HasKey("UserId");
 
@@ -1166,6 +1386,317 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.Offices.OfficeAddress", b =>
+                {
+                    b.HasOne("Domain.Entities.Addresses.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("Domain.Entities.Offices.Office", "Office")
+                        .WithMany("Addresses")
+                        .HasForeignKey("OfficeId")
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Office");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessionals", b =>
+                {
+                    b.HasOne("Domain.Entities.Offices.Office", "Office")
+                        .WithMany()
+                        .HasForeignKey("OfficeId")
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Professionals.Professional", "Professional")
+                        .WithMany()
+                        .HasForeignKey("ProfessionalId")
+                        .IsRequired();
+
+                    b.Navigation("Office");
+
+                    b.Navigation("Professional");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Patients.Patient", b =>
+                {
+                    b.HasOne("Domain.Entities.Identities.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.Patients.Patient", "UserId")
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Entities.Patients.BiologicalSex", "BiologicalSex", b1 =>
+                        {
+                            b1.Property<Guid>("PatientId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("TypeId")
+                                .HasColumnType("integer")
+                                .HasColumnName("biological_sex");
+
+                            b1.HasKey("PatientId");
+
+                            b1.ToTable("patient", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PatientId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.Patients.BloodType", "BloodType", b1 =>
+                        {
+                            b1.Property<Guid>("PatientId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("TypeId")
+                                .HasColumnType("integer")
+                                .HasColumnName("blood_type");
+
+                            b1.HasKey("PatientId");
+
+                            b1.ToTable("patient", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PatientId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.Patients.Gender", "Gender", b1 =>
+                        {
+                            b1.Property<Guid>("PatientId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("TypeId")
+                                .HasColumnType("integer")
+                                .HasColumnName("gender");
+
+                            b1.HasKey("PatientId");
+
+                            b1.ToTable("patient", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PatientId");
+                        });
+
+                    b.Navigation("BiologicalSex");
+
+                    b.Navigation("BloodType");
+
+                    b.Navigation("Gender");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Patients.PatientLead", b =>
+                {
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cpf", b1 =>
+                        {
+                            b1.Property<Guid>("PatientLeadId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(11)
+                                .HasColumnType("character varying(11)")
+                                .HasColumnName("cpf");
+
+                            b1.HasKey("PatientLeadId");
+
+                            b1.ToTable("patient_lead", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PatientLeadId");
+                        });
+
+                    b.Navigation("Cpf")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Professionals.Professional", b =>
+                {
+                    b.HasOne("Domain.Entities.Offices.Office", "Office")
+                        .WithMany()
+                        .HasForeignKey("OfficeId")
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .IsRequired();
+
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Biography", b1 =>
+                        {
+                            b1.Property<Guid>("ProfessionalId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("biography");
+
+                            b1.HasKey("ProfessionalId");
+
+                            b1.ToTable("professional", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProfessionalId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cpf", b1 =>
+                        {
+                            b1.Property<Guid>("ProfessionalId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(14)
+                                .HasColumnType("character varying(14)")
+                                .HasColumnName("cpf");
+
+                            b1.HasKey("ProfessionalId");
+
+                            b1.ToTable("professional", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProfessionalId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Doctoralia", b1 =>
+                        {
+                            b1.Property<Guid>("ProfessionalId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("doctoralia");
+
+                            b1.HasKey("ProfessionalId");
+
+                            b1.ToTable("professional", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProfessionalId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Instagram", b1 =>
+                        {
+                            b1.Property<Guid>("ProfessionalId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("instagram");
+
+                            b1.HasKey("ProfessionalId");
+
+                            b1.ToTable("professional", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProfessionalId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Linkedin", b1 =>
+                        {
+                            b1.Property<Guid>("ProfessionalId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("linkedin");
+
+                            b1.HasKey("ProfessionalId");
+
+                            b1.ToTable("professional", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProfessionalId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "PictureUrl", b1 =>
+                        {
+                            b1.Property<Guid>("ProfessionalId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("picture_url");
+
+                            b1.HasKey("ProfessionalId");
+
+                            b1.ToTable("professional", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProfessionalId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Website", b1 =>
+                        {
+                            b1.Property<Guid>("ProfessionalId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("website");
+
+                            b1.HasKey("ProfessionalId");
+
+                            b1.ToTable("professional", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProfessionalId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.Professionals.ProfessionalStatusType", "Status", b1 =>
+                        {
+                            b1.Property<Guid>("ProfessionalId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("StatusType")
+                                .HasMaxLength(50)
+                                .HasColumnType("integer")
+                                .HasColumnName("status");
+
+                            b1.HasKey("ProfessionalId");
+
+                            b1.ToTable("professional", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProfessionalId");
+                        });
+
+                    b.Navigation("Biography");
+
+                    b.Navigation("Cpf")
+                        .IsRequired();
+
+                    b.Navigation("Doctoralia");
+
+                    b.Navigation("Instagram");
+
+                    b.Navigation("Linkedin");
+
+                    b.Navigation("Office");
+
+                    b.Navigation("PictureUrl");
+
+                    b.Navigation("Status")
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Website");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Domain.Entities.Identities.Role", null)
@@ -1218,6 +1749,11 @@ namespace Infrastructure.Migrations
                     b.Navigation("Manager");
 
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
+                {
+                    b.Navigation("Addresses");
                 });
 #pragma warning restore 612, 618
         }
