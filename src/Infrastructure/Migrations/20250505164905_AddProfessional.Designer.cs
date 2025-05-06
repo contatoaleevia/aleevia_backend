@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250505164905_AddProfessional")]
+    partial class AddProfessional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,8 +72,7 @@ namespace Infrastructure.Migrations
                         .HasColumnName("number");
 
                     b.Property<Guid?>("SourceId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("source_id");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -103,7 +105,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SourceId");
 
-                    b.ToTable("address", "public");
+                    b.ToTable("addresses", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.Faqs.Faq", b =>
@@ -550,35 +552,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("office", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Offices.OfficeAddress", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid>("AddressId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("address_id");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_active");
-
-                    b.Property<Guid>("OfficeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("office_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OfficeId");
-
-                    b.HasIndex("AddressId", "OfficeId")
-                        .IsUnique();
-
-                    b.ToTable("office_address", "public");
-                });
-
             modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessionals", b =>
                 {
                     b.Property<Guid>("Id")
@@ -807,7 +780,7 @@ namespace Infrastructure.Migrations
 
                             b1.HasKey("AddressId");
 
-                            b1.ToTable("address", "public");
+                            b1.ToTable("addresses", "public");
 
                             b1.WithOwner()
                                 .HasForeignKey("AddressId");
@@ -1279,23 +1252,6 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.Offices.OfficeAddress", b =>
-                {
-                    b.HasOne("Domain.Entities.Addresses.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Offices.Office", "Office")
-                        .WithMany("Addresses")
-                        .HasForeignKey("OfficeId")
-                        .IsRequired();
-
-                    b.Navigation("Address");
-
-                    b.Navigation("Office");
-                });
-
             modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessionals", b =>
                 {
                     b.HasOne("Domain.Entities.Offices.Office", "Office")
@@ -1551,11 +1507,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Manager");
 
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
-                {
-                    b.Navigation("Addresses");
                 });
 #pragma warning restore 612, 618
         }
