@@ -556,8 +556,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date")
                         .HasColumnName("birth_date");
 
                     b.Property<DateTime>("CreatedAt")
@@ -611,8 +611,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("approved");
 
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date")
                         .HasColumnName("birth_date");
 
                     b.Property<DateTime>("CreatedAt")

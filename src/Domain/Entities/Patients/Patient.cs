@@ -13,7 +13,7 @@ public class Patient : AggregateRoot
     public string? GoogleRefreshToken { get; private set; }
     public bool PreRegister { get; private set; }
     public Gender? Gender { get; private set; }
-    public DateTime? BirthDate { get; private set; }
+    public DateOnly? BirthDate { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? RemovedAt { get; private set; }
@@ -29,18 +29,14 @@ public class Patient : AggregateRoot
         BiologicalSex? biologicalSex,
         string? pictureUrl,
         Gender? gender,
-        DateTime? birthDate,
-        bool preRegister = false,
-        string? googleToken = null,
-        string? googleRefreshToken = null)
+        DateOnly? birthDate,
+        bool preRegister = false)
     {
         Id = Guid.NewGuid();
         UserId = userId;
         BloodType = bloodType;
         BiologicalSex = biologicalSex;
         PictureUrl = pictureUrl;
-        GoogleToken = googleToken;
-        GoogleRefreshToken = googleRefreshToken;
         PreRegister = preRegister;
         Gender = gender;
         BirthDate = birthDate;
@@ -54,7 +50,7 @@ public class Patient : AggregateRoot
         BiologicalSex? biologicalSex,
         string? pictureUrl,
         Gender? gender,
-        DateTime? birthDate)
+        DateOnly? birthDate)
     {
         BloodType = bloodType;
         BiologicalSex = biologicalSex;

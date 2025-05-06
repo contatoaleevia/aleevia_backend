@@ -6,22 +6,22 @@ namespace Application.Services.Patients;
 
 public class PatientLeadService(IPatientLeadRepository patientLeadRepository) : IPatientLeadService
 {
-    public async Task<CreatePatientLeadResponseDto> CreatePatientLeadAsync(CreatePatientLeadRequestDto requestDto)
+    public async Task<CreatePatientLeadResponse> CreatePatientLeadAsync(CreatePatientLeadRequest request)
     {
-        var existingLead = await patientLeadRepository.GetByCpfOrEmailAsync(requestDto.Cpf, requestDto.Email);
+        var existingLead = await patientLeadRepository.GetByCpfOrEmailAsync(request.Cpf, request.Email);
         if (existingLead != null) throw new LeadAlreadyExistException();
 
         var patientLead = new PatientLead(
-            name: requestDto.Name,
-            phone: requestDto.Phone,
-            cpf: requestDto.Cpf,
-            birthDate: requestDto.BirthDate,
-            email: requestDto.Email
+            name: request.Name,
+            phone: request.Phone,
+            cpf: request.Cpf,
+            birthDate: request.BirthDate,
+            email: request.Email
         );
         
         await patientLeadRepository.CreateAsync(patientLead);
 
-        return new CreatePatientLeadResponseDto
+        return new CreatePatientLeadResponse
         {
             Id = patientLead.Id,
             Name = patientLead.Name,

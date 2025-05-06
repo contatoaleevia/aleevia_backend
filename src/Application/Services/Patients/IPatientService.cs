@@ -4,5 +4,5 @@ namespace Application.Services.Patients;
 
 public interface IPatientService
 {
-    Task<CreatePatientResponseDto> CreatePatientAsync(CreatePatientRequestDto requestDto);
+    Task CreatePatient(CreatePatientUserRequest request, Guid userId);
 } 

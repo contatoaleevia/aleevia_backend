@@ -25,7 +25,7 @@ namespace Infrastructure.Migrations
                     google_refresh_token = table.Column<string>(type: "text", nullable: true),
                     pre_register = table.Column<bool>(type: "boolean", nullable: false),
                     gender = table.Column<int>(type: "integer", nullable: true),
-                    birth_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    birth_date = table.Column<DateOnly>(type: "date", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     removed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
@@ -50,7 +50,7 @@ namespace Infrastructure.Migrations
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     cpf = table.Column<string>(type: "character varying(11)", maxLength: 11, nullable: false),
-                    birth_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    birth_date = table.Column<DateOnly>(type: "date", nullable: true),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     approved = table.Column<bool>(type: "boolean", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),

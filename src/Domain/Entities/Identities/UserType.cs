@@ -18,6 +18,7 @@ public class UserType
     }
     
     public static UserType CreateAsManager () => new(UserTypeEnum.Manager);
+    public static UserType CreateAsPatient () => new(UserTypeEnum.Patient);
     
     public static UserType Employee => new(UserTypeEnum.Employee);
     public static UserType HealthcareProfessional => new(UserTypeEnum.HealthcareProfessional);

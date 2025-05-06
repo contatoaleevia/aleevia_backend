@@ -1,6 +1,6 @@
 using CrossCutting.Extensions;
 using Domain.Entities.Patients.Enums;
-
+using System.Text.Json.Serialization;
 namespace Domain.Entities.Patients;
 
 public class BloodType
@@ -17,6 +17,7 @@ public class BloodType
         TypeId = (BloodTypeEnum)typeId;
     }
     
+    [JsonConstructor]
     private BloodType(BloodTypeEnum typeId)
     {
         TypeId = typeId;

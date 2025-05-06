@@ -1,11 +1,11 @@
+using CrossCutting.Repositories;
 using Domain.Entities.Patients;
 
 namespace Domain.Contracts.Repositories;
 
-public interface IPatientLeadRepository
+public interface IPatientLeadRepository : IRepository<PatientLead>
 {
-    Task<PatientLead?> GetByIdAsync(Guid id);
+    new Task<PatientLead?> GetByIdAsync(Guid id);
     Task<PatientLead?> GetByCpfOrEmailAsync(string cpf, string email);
     Task<IEnumerable<PatientLead>> GetAllAsync();
-    Task<PatientLead> CreateAsync(PatientLead patientLead);
 } 

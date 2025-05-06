@@ -33,9 +33,4 @@ public class PatientRepository(ApiDbContext context)
             .AsNoTracking()
             .ToListAsync();
     }
-
-    public Task<Patient> CreateAsync(Patient patient)
-    {
-        return base.CreateAsync(patient);
-    }
 } 

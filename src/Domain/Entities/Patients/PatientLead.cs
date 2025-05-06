@@ -8,7 +8,7 @@ public class PatientLead : AggregateRoot
     public string Name { get; private set; }
     public string Phone { get; private set; }
     public Document Cpf { get; private set; }
-    public DateTime? BirthDate { get; private set; }
+    public DateOnly? BirthDate { get; private set; }
     public string Email { get; private set; }
     public bool Approved { get; private set; }
     public DateTime CreatedAt { get; private set; }
@@ -21,7 +21,7 @@ public class PatientLead : AggregateRoot
         string name,
         string phone,
         string cpf,
-        DateTime? birthDate,
+        DateOnly? birthDate,
         string email)
     {
         Id = Guid.NewGuid();
@@ -45,11 +45,13 @@ public class PatientLead : AggregateRoot
     public void Update(
         string name,
         string phone,
-        string email)
+        string email,
+        DateOnly? birthDate)
     {
         Name = name;
         Phone = phone;
         Email = email;
+        BirthDate = birthDate;
         UpdatedAt = DateTime.UtcNow;
     }
     

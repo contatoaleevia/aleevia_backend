@@ -1,5 +1,6 @@
 using CrossCutting.Extensions;
 using Domain.Entities.Patients.Enums;
+using System.Text.Json.Serialization;
 
 namespace Domain.Entities.Patients;
 
@@ -17,6 +18,7 @@ public class BiologicalSex
         TypeId = (BiologicalSexEnum)typeId;
     }
     
+    [JsonConstructor]
     private BiologicalSex(BiologicalSexEnum typeId)
     {
         TypeId = typeId;

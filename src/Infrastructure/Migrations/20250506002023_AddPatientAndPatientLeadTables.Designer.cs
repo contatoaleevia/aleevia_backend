@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20250505202751_AddPatientAndPatientLeadTables")]
+    [Migration("20250506002023_AddPatientAndPatientLeadTables")]
     partial class AddPatientAndPatientLeadTables
     {
         /// <inheritdoc />
@@ -559,8 +559,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date")
                         .HasColumnName("birth_date");
 
                     b.Property<DateTime>("CreatedAt")
@@ -614,8 +614,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("approved");
 
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date")
                         .HasColumnName("birth_date");
 
                     b.Property<DateTime>("CreatedAt")

@@ -4,5 +4,5 @@ namespace Application.Services.Patients;
 
 public interface IPatientLeadService
 {
-    Task<CreatePatientLeadResponseDto> CreatePatientLeadAsync(CreatePatientLeadRequestDto requestDto);
+    Task<CreatePatientLeadResponse> CreatePatientLeadAsync(CreatePatientLeadRequest requestDto);
 } 
