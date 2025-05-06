@@ -1,10 +1,12 @@
-﻿using CrossCutting.Extensions;
+﻿using System.Text.Json.Serialization;
+using CrossCutting.Extensions;
 using Domain.Entities.Identities.Enums;
 
 namespace Domain.Entities.Identities;
 
 public class UserType
 {
+    [JsonPropertyName("userTypeId")]
     public UserTypeEnum UserTypeId { get; set; }
     public string UserTypeName => UserTypeId.TryGetDescription();
     
@@ -12,6 +14,7 @@ public class UserType
     {
     }
 
+    [JsonConstructor]
     private UserType(UserTypeEnum userTypeId)
     {
         UserTypeId = userTypeId;
