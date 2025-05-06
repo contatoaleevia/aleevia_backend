@@ -7,13 +7,17 @@ public class AddressesConfiguration : IEntityTypeConfiguration<Address>
 {
     public void Configure(EntityTypeBuilder<Address> builder)
     {
-        builder.ToTable("addresses");
+        builder.ToTable("address");
 
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id)
             .IsRequired()
             .HasColumnName("id");
+        
+        builder.Property(x => x.SourceId)
+            .HasColumnName("source_id")
+            .IsRequired(false);
 
         builder.HasOne(x => x.Source)
             .WithMany()

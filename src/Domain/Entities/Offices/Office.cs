@@ -1,4 +1,5 @@
 ﻿using CrossCutting.Entities;
+using Domain.Entities.Addresses;
 using Domain.Entities.Identities;
 using Domain.Entities.ValueObjects;
 
@@ -16,7 +17,8 @@ public class Office : AggregateRoot
     public Url Instagram { get; private set; }
     public Url Logo { get; private set; }
 
-    public Manager Owner { get; set; }
+    public Manager Owner { get; set; } = null!;
+    public ICollection<OfficeAddress> Addresses { get; set; } = [];
 
     private Office()
     {

@@ -1,5 +1,6 @@
 ﻿using Application.Helpers;
 using Application.Services;
+using Application.Services.Addresses;
 using Application.Services.Authentications;
 using Application.Services.Managers;
 using Application.Services.Offices;
@@ -28,6 +29,7 @@ public static class ApplicationIocContainer
         services.AddScoped<IProfessionService, ProfessionService>();
         services.AddScoped<IOfficeAttendanceService, OfficeAttendanceService>();
         services.AddScoped<IIaChatService, IaChatService>();
+        services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<IProfessionalService, ProfessionalService>();
     }
 }

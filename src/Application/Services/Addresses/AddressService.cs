@@ -1,11 +1,15 @@
-﻿using Application.DTOs.Adresses.CreateAdressDTOs;
+﻿using Application.DTOs.Addresses.CreateAddressDTOs;
+using Application.DTOs.Adresses.GetAddressBySourceDTOs;
 using Application.DTOs.Adresses.GetAddressDTOs;
 using CrossCutting.Repositories;
+using Domain.Contracts.Repositories;
 using Domain.Entities.Addresses;
+using Infrastructure.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Addresses;
 
-public class AddressService(IRepository<Address> repository) : IAddressService
+public class AddressService(IAddressRepository repository) : IAddressService
 {
     public async Task<GetAddressByIdReponseDto> GetByIdAddress(Guid id)
     {
@@ -28,21 +32,56 @@ public class AddressService(IRepository<Address> repository) : IAddressService
                 location: address.Location,
                 createdAt: address.CreatedAt,
                 updatedAt: address.UpdatedAt
-                );
+            );
         throw new Exception("Address not found");
     }
 
     public async Task<CreateAddressResponseDto> CreateAddressAsync(CreateAddressRequestDto requestDto)
     {
         var address = new Address(
+            name: requestDto.Name,
+            sourceId: requestDto.SourceId,
+            sourceType: requestDto.SourceType,
             street: requestDto.Street,
             city: requestDto.City,
             state: requestDto.State,
             zipCode: requestDto.ZipCode,
             number: requestDto.Number,
-            neighborhood: requestDto.Neighborhood);
+            neighborhood: requestDto.Neighborhood,
+            complement: requestDto.Complement,
+            type: requestDto.Type);
 
         var response = await repository.CreateAsync(address);
         return new CreateAddressResponseDto(response.Id, response.Street, response.Number);
+    }
+
+    public async Task<IEnumerable<GetAddressBySourceResponse>> GetAddressBySourceId(Guid userId, Guid managerId)
+    {
+        var addressIdsNotIn = await repository.GetDbContext<ApiDbContext>()
+            .Offices
+            .Include(x => x.Owner)
+            .Include(x => x.Addresses)
+            .AsNoTracking()
+            .Where(x => x.OwnerId == managerId)
+            .SelectMany(x => x.Addresses)
+            .Select(x => x.AddressId)
+            .ToListAsync();
+
+        var test = await repository.GetDbContext<ApiDbContext>()
+            .Addresses
+            .AsNoTracking()
+            .Where(x => x.SourceId == userId && !addressIdsNotIn.Contains(x.Id))
+            .Select(x => new GetAddressBySourceResponse(
+                x.Name,
+                x.Street,
+                x.Neighborhood,
+                x.Number,
+                x.City,
+                x.State,
+                x.ZipCode,
+                x.Complement
+            )).ToListAsync();
+    
+        return test.OrderByDescending(x => x.Name);
     }
 }

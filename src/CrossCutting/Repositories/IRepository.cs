@@ -1,4 +1,5 @@
 ﻿using CrossCutting.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CrossCutting.Repositories;
 
@@ -12,4 +13,5 @@ public interface IRepository<T> where T : AggregateRoot
     Task DeleteAsync(T entity, bool saveChanges = true);
     Task DeleteRangeAsync (IEnumerable<T> entity, bool saveChanges = true);
     Task SaveChangesAsync();
+    TDbContext GetDbContext<TDbContext>() where TDbContext : DbContext;
 }

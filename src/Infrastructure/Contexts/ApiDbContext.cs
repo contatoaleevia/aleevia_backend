@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Faqs;
+﻿using Domain.Entities.Addresses;
+using Domain.Entities.Faqs;
 using Domain.Entities.Identities;
 using Infrastructure.Configurations.Faqs;
 using Domain.Entities.HealthcareProfessionals;
@@ -14,6 +15,7 @@ using Domain.Entities.ServiceTypes;
 using Infrastructure.Configurations.Addresses;
 using Infrastructure.Configurations.OfficeAttendances;
 using Domain.Entities.OfficeAttendances;
+using Domain.Entities.Offices;
 using Infrastructure.Configurations.IaChats;
 using Domain.Entities.Professionals;
 using Infrastructure.Configurations.Professionals;
@@ -44,6 +46,9 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public DbSet<OfficeAttendance> OfficeAttendances { get; set; }
     public DbSet<IaChat> IaChats { get; set; }
     public DbSet<IaMessage> IaMessages { get; set; }
+    public DbSet<Address> Addresses { get; set; }
+    public DbSet<Office> Offices { get; set; }
+    public DbSet<OfficeAddress> OfficeAddresses { get; set; }
     public DbSet<Professional> Professionals { get; set; }
     public DbSet<OfficesProfessionals> OfficesProfessionals { get; set; }
 
@@ -72,6 +77,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new UserRoleConfiguration());
         builder.ApplyConfiguration(new IaChatConfiguration());
         builder.ApplyConfiguration(new IaMessageConfiguration());
+        builder.ApplyConfiguration(new OfficeAddressConfiguration());
         builder.ApplyConfiguration(new ProfessionalConfiguration());
         builder.ApplyConfiguration(new OfficesProfessionalsConfiguration());
 

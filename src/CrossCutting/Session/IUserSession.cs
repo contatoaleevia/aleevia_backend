@@ -7,4 +7,5 @@ public interface IUserSession
     string Email { get; }
     IEnumerable<string> Roles { get; }
     bool IsAuthenticated();
+    Guid? ManagerId { get; }
 }

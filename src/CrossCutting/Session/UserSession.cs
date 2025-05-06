@@ -18,6 +18,7 @@ public class UserSession : IUserSession
     public ushort? UserType => IsAuthenticated() ? _claimRetriever.GetUserType() : null;
     public string Email => IsAuthenticated() ? _claimRetriever.GetEmail() : string.Empty;
     public IEnumerable<string> Roles => IsAuthenticated() ? _claimRetriever.GetRoles() : [];
+    public Guid? ManagerId => IsAuthenticated() ? _claimRetriever.GetManagerId() : null;
 
     public bool IsAuthenticated()
     {
@@ -25,6 +26,7 @@ public class UserSession : IUserSession
         var identity = httpContext?.User.Identity;
         return identity is { IsAuthenticated: true };
     }
+
 
     private IEnumerable<Claim> GetClaims()
     {
@@ -55,6 +57,9 @@ public class UserSession : IUserSession
             return rolesClaim
                 .Select(r => r.Value);
         }
+
+        public Guid? GetManagerId()
+            => Guid.Parse(FindClaimValue("ManagerId"));
 
         private string FindClaimValue(string claimType)
             => claims

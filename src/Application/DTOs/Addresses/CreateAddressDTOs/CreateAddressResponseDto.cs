@@ -1,4 +1,4 @@
-﻿namespace Application.DTOs.Adresses.CreateAdressDTOs;
+﻿namespace Application.DTOs.Addresses.CreateAddressDTOs;
 public class CreateAddressResponseDto
 {
     public Guid Id { get; set; }
