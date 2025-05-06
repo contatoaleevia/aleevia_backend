@@ -21,12 +21,16 @@ public class OfficeAddressConfiguration : IEntityTypeConfiguration<OfficeAddress
             .HasColumnName("is_active");
         
         builder.Property(x => x.AddressId)
-            .IsRequired()
+            .IsRequired(false)
             .HasColumnName("address_id");
         
         builder.Property(x => x.OfficeId)
             .IsRequired()
             .HasColumnName("office_id");
+
+        builder.Property(x => x.IsTeleconsultation)
+            .IsRequired()
+            .HasColumnName("is_teleconsultation");
         
         builder.HasOne(x => x.Address)
             .WithMany()
