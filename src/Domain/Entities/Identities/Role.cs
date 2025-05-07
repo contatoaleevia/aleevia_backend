@@ -1,5 +1,4 @@
-﻿using CrossCutting.Utils;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities.Identities;
 
@@ -28,9 +27,10 @@ public sealed class Role : IdentityRole<Guid>
     
     public static readonly Role Employee 
         = CreateRole(Guid.Parse("4fa64c52-e389-4bbc-be5f-8565081eb393"), "Employee");
-    
-    //TODO: Adicionar Role Professional
-    
+
+    public static readonly Role Professional
+        = CreateRole(Guid.Parse("b0f3a1c2-4d8e-4b5c-9f7d-6a0e1f3b2c5e"), "Professional");
+
     public static Role GetRole(string role)
     {
         return AllRoles.FirstOrDefault(x => x.Name == role)
@@ -40,7 +40,8 @@ public sealed class Role : IdentityRole<Guid>
     private static readonly List<Role> AllRoles = [
         Admin,
         Patient,
-        Employee
+        Employee,
+        Professional
     ];
     
     private static Role CreateRole(Guid roleId, string name)

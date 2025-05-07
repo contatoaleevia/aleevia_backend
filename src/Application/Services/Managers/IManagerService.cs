@@ -7,4 +7,5 @@ public interface IManagerService
 {
     Task CreateManager(CreateManagerRequest request, Guid userId);
     Task<Manager> CreateManagerWhenNotExists(Guid userId, ManagerType managerType, string? corporateName);
+    Task<Manager?> GetManagerByUserIdAsync(Guid userId);
 }

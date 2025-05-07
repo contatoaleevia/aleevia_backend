@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Offices.BindOfficeAddressDTOs;
+﻿using System.Security.Cryptography.Xml;
+using Application.DTOs.Offices.BindOfficeAddressDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
 using Application.DTOs.Professionals;
 using Application.Services.Professionals;
@@ -15,7 +16,8 @@ public class OfficeService(
     IOfficeRepository repository,
     IManagerRepository managerRepository,
     IOfficeAddressRepository officeAddressRepository,
-    IProfessionalService professionalService) : IOfficeService
+    IProfessionalService professionalService,
+    IOfficesProfessionalsRepository officesProfessionalsRepository) : IOfficeService
 {
     public async Task<Guid> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
@@ -76,10 +78,11 @@ public class OfficeService(
 
     public async Task<Guid> BindOfficeProfessional(BindOfficeProfessionalRequest request)
     {
-        var cpf = Document.CreateDocumentAsCpf(request.Cpf);
-        var professional = await professionalService.PreRegisterWhenNotExists();
-        if (professional is null) //TODO: Chamar Pre Cadastro
-            professional = professionalSer;
+        var cpf = Document.CreateDocumentAsCpf(request.Professional.Cpf);
+        var preRegisterProfessional = new PreRegisterProfessionalRequest(cpf.Value, request.Professional.Email, request.Professional.Name);
+
+        //TODO: Chamar Pre Cadastro
+        var professional = await professionalService.PreRegisterWhenNotExists(preRegisterProfessional);
 
         var office = await repository.GetByIdAsync(request.OfficeId);
         if (office is null)

@@ -37,7 +37,7 @@ public class ProfessionalController(IProfessionalService service) : ControllerBa
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> BindProfessionalOffice([FromBody] BindProfessionalOfficeRequestDto requestDto)
+    public async Task<IActionResult> BindProfessionalOffice([FromBody] BindOfficeProfessionalRequest requestDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         var response = await service.BindProfessionalOffice(requestDto);
@@ -54,10 +54,10 @@ public class ProfessionalController(IProfessionalService service) : ControllerBa
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> PreCreateProfessional([FromBody] PreCreateProfessionalRequestDto requestDto)
+    public async Task<IActionResult> PreCreateProfessional([FromBody] PreRegisterProfessionalRequest requestDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        var response = await service.PreCreateProfessional(requestDto);
+        var response = await service.PreRegisterWhenNotExists(requestDto);
         return Ok(response);
     }
 }

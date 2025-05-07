@@ -13,6 +13,8 @@ using Application.Services.Patients;
 using Application.DTOs.Patients.CreatePatientDTOs;
 using Application.DTOs.Users.RetrieveUserDTOs;
 using Application.Helpers;
+using Application.Services.Professionals;
+using Application.DTOs.Professionals;
 
 namespace Application.Services.Users;
 
@@ -21,7 +23,8 @@ public class UserService(
     IIdentityNotificationHandler identityNotificationHandler,
     IManagerService managerService,
     IEmailService emailService,
-    IPatientService patientService
+    IPatientService patientService,
+    IProfessionalService professionalService
 ) : IUserService
 {
     public async Task<CreateManagerUserResponse> CreateManagerUserAsync(CreateManagerUserRequest request)
@@ -89,26 +92,39 @@ public class UserService(
             .Where(x => x.Cpf.Value == request.Cpf.RemoveSpecialCharacters())
             .FirstOrDefaultAsync();
 
+        //TODO: Adicionar Role de HealthCareProfessional e Manager caso não tenha
         if (user is not null)
+            user.SetRole(new Role("Professional"));
+        else
         {
-            //TODO: Adicionar Role de HealthCareProfessional e Manager caso não tenha
-            return user;
+            user = new User(
+                email: request.Email,
+                name: request.Name,
+                cpf: request.Cpf,
+                cnpj: null,
+                phoneNumber: null,
+                userType: UserType.CreateAsHealthcareProfessional());
         }
-            
-        user = new User(
-            email: request.Email,
-            name: request.Name,
-            cpf: request.Cpf,
-            cnpj: null,
-            phoneNumber: null,
-            userType: UserType.CreateAsHealthcareProfessional());
 
         var tempPassword = RandomGenerator.Generate(lenght: 10);
         await CreateUserAsync(user, tempPassword);
-        
+
         //TODO: Verificar se tem manager
         //TODO: Caso não, criar um manager com o mesmo cpf
         //TODO: Caso tenha, retornar o manager para vincular no profissional
+
+        var manager = await managerService.GetManagerByUserIdAsync(user.Id);
+        if (manager is null)
+            manager = await managerService.CreateManagerWhenNotExists(user.Id, new ManagerType(0), null);
+
+        // Criar o profissional
+        var professional = new CreateProfessionalRequestDto
+        {
+            ManagerId = manager.Id,
+            Cpf = request.Cpf.RemoveSpecialCharacters()
+        };
+        await professionalService.CreateProfessional(professional);
+
         return manager;        
     }
 

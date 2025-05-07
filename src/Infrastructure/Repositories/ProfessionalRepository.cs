@@ -13,6 +13,6 @@ public class ProfessionalRepository(ApiDbContext context) : Repository<Professio
     {
         return await DbSet
             .Include(x => x.Manager)
-            .FirstOrDefaultAsync(x => x.Manager.Cpf.Value == cpf.RemoveSpecialCharacters());
+            .FirstOrDefaultAsync(x => x.Cpf == Document.CreateDocumentAsCpf(cpf.RemoveSpecialCharacters()));
     }
 }

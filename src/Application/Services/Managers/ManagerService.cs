@@ -39,4 +39,9 @@ public class ManagerService(IManagerRepository repository) : IManagerService
         await repository.CreateAsync(manager);
         return manager;
     }
+
+    public async Task<Manager?> GetManagerByUserIdAsync(Guid userId)
+    {
+        return await repository.GetManagerByUserId(userId);
+    }
 }
