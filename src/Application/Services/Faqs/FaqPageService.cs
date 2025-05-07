@@ -4,6 +4,7 @@ using Application.DTOs.Faqs.UpdateFaqPageDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Faqs;
 using Domain.Exceptions;
+using Domain.Exceptions.Faq;
 using Microsoft.Extensions.Configuration;
 
 namespace Application.Services.Faqs;
