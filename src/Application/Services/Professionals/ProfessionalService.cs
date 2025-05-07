@@ -63,29 +63,8 @@ public class ProfessionalService(
 
     public async Task<Guid> CreateProfessional(CreateProfessionalRequestDto requestDto)
     {
-        var user = await userManager.FindByIdAsync(requestDto.UserId.ToString());
-        if (user is null)
-            throw new UserNotFoundException(requestDto.UserId);
-
-        var professional = new Professional(
-            user: user,
-            managerId: user.Id,
-            registerStatus: new ProfessionalRegisterStatus(requestDto.Status),
-            officeId: requestDto.OfficeId,
-            active: requestDto.Active,
-            cpf: Document.CreateDocumentAsCnpj(requestDto.Cnpj),
-            createdAt: DateTime.UtcNow
-        );
-
-        try
-        {
-            var response = await professionalRepository.CreateAsync(professional);
-            return response.Id;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw new CreateProfessionalException(user.Id);
-        }
+        //TODO: Procurar o profissional PRE Registrado para atualizar
+        //TODO: Caso não tenha, retornar erro
+        throw new NotImplementedException();
     }
 }
