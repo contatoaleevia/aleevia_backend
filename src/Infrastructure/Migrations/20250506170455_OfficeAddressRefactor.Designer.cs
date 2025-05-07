@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250506170455_OfficeAddressRefactor")]
+    partial class OfficeAddressRefactor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,54 +137,17 @@ namespace Infrastructure.Migrations
                         .HasColumnName("question");
 
                     b.Property<Guid>("SourceId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("source_id");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SourceId");
 
                     b.ToTable("faq", "public");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Faqs.FaqPage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("CustomUrl")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("custom_url");
-
-                    b.Property<Guid>("SourceId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("source_id");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<string>("WelcomeMessage")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("welcome_message");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomUrl")
-                        .IsUnique();
-
-                    b.ToTable("faq_page", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Profession", b =>
@@ -963,6 +929,11 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Faqs.Faq", b =>
                 {
+                    b.HasOne("Domain.Entities.Identities.User", "Source")
+                        .WithMany()
+                        .HasForeignKey("SourceId")
+                        .IsRequired();
+
                     b.OwnsOne("Domain.Entities.Faqs.FaqCategoryType", "FaqCategory", b1 =>
                         {
                             b1.Property<Guid>("FaqId")
@@ -999,6 +970,8 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("FaqCategory")
                         .IsRequired();
+
+                    b.Navigation("Source");
 
                     b.Navigation("SourceType")
                         .IsRequired();
