@@ -40,6 +40,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public override DbSet<Role> Roles { get; set; }
     public override DbSet<UserRole> UserRoles { get; set; }
     public DbSet<Faq> Faqs { get; set; }
+    public DbSet<FaqPage> FaqPages { get; set; }
     public DbSet<Manager> Managers { get; set; }
     public DbSet<ServiceType> ServiceTypes { get; set; }
     public DbSet<Profession> Professions { get; set; }
@@ -86,6 +87,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new OfficesProfessionalsConfiguration());
         builder.ApplyConfiguration(new PatientConfiguration());
         builder.ApplyConfiguration(new PatientLeadConfiguration());
+        builder.ApplyConfiguration(new FaqPageConfiguration());
 
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {

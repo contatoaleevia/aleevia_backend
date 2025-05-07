@@ -43,6 +43,7 @@ public static class InfrastructureIocContainer
         services.AddScoped<IOfficeRepository, OfficeRepository>();
         services.AddScoped<IServiceTypeRepository, ServiceTypeRepository>();
         services.AddScoped<IFaqRepository, FaqRepository>();
+        services.AddScoped<IFaqPageRepository, FaqPageRepository>();
         services.AddScoped<IProfessionRepository, ProfessionRepository>();
         services.AddScoped<IOfficeAttendanceRepository, OfficeAttendanceRepository>();
         services.AddScoped<IIaChatRepository, IaChatRepository>();
