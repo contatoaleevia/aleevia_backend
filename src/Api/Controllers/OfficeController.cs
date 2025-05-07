@@ -36,7 +36,7 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// Caso o AddressId seja vazio, o endereço será considerado como Teleconsulta automaticamente.
     /// </summary>
     /// <returns></returns>
-    [HttpPost]
+    [HttpPost("bind-address")]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
@@ -52,7 +52,7 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// Deleta um endereço de um Office (soft delete).
     /// </summary>
     /// <returns></returns>
-    [HttpPost]
+    [HttpDelete("bind-address")]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
     [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
