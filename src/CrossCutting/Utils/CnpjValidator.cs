@@ -42,4 +42,17 @@ public static class CnpjValidator
         digito += resto;
         return cnpj.EndsWith(digito);
     }
+
+    public static string Format(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return string.Empty;
+
+        if (value.Length != 14)
+            value = value.Replace(".", "").Replace("-", "").Replace("/", "").Trim();
+
+        if (value.Length != 14)
+            throw new ArgumentOutOfRangeException("");
+        return $"{value[..2]}.{value[2..5]}.{value[5..8]}/{value[8..12]}-{value[12..14]}";
+    }
 }

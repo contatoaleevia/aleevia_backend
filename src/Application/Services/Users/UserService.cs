@@ -11,6 +11,10 @@ using CrossCutting.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.Patients;
 using Application.DTOs.Patients.CreatePatientDTOs;
+using Application.DTOs.Users.RetrieveUserDTOs;
+using Application.Helpers;
+using Application.Services.Professionals;
+using Application.DTOs.Professionals;
 
 namespace Application.Services.Users;
 
@@ -78,6 +82,33 @@ public class UserService(
         }
         
         return new CreatePatientUserResponse(user.Id);
+    }
+
+    public async Task<Tuple<Manager, string>> CreateProfessionalUserAsync(CreateProfessionalUserRequest request)
+    {
+        var user = await userManager
+            .Users
+            .Where(x => x.Cpf.Value == request.Cpf.RemoveSpecialCharacters())
+            .FirstOrDefaultAsync();
+
+        if (user is not null)
+            user.SetRole(new Role("Professional"));
+        else
+        {
+            user = new User(
+                email: request.Email,
+                name: request.Name,
+                cpf: request.Cpf,
+                cnpj: null,
+                phoneNumber: null,
+                userType: UserType.CreateAsHealthcareProfessional());
+        }
+
+        var tempPassword = RandomGenerator.Generate(lenght: 10);
+        await CreateUserAsync(user, tempPassword);
+
+        var manager = await managerService.CreateManagerWhenNotExists(user.Id, ManagerType.CreateAsIndividual(), null);
+        return new Tuple<Manager, string>(manager, tempPassword);
     }
 
     private async Task CreateUserAsync(User user, string password)

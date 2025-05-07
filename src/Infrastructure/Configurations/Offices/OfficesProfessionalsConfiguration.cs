@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations.Offices;
-public class OfficesProfessionalsConfiguration : IEntityTypeConfiguration<OfficesProfessionals>
+public class OfficesProfessionalsConfiguration : IEntityTypeConfiguration<OfficesProfessional>
 {
-    public void Configure(EntityTypeBuilder<OfficesProfessionals> builder)
+    public void Configure(EntityTypeBuilder<OfficesProfessional> builder)
     {
-        builder.ToTable("offices_professionals");
+        builder.ToTable("offices_professional");
 
         builder.HasKey(x => x.Id);
 
@@ -15,9 +15,17 @@ public class OfficesProfessionalsConfiguration : IEntityTypeConfiguration<Office
             .WithMany()
             .HasForeignKey(x => x.ProfessionalId);
         
+        builder.Property(x => x.ProfessionalId)
+            .IsRequired()
+            .HasColumnName("professional_id");
+        
         builder.HasOne(x => x.Office)
             .WithMany()
             .HasForeignKey(x => x.OfficeId);
+
+        builder.Property(x => x.OfficeId)
+            .IsRequired()
+            .HasColumnName("office_id");
 
         builder.Property(x => x.CreatedAt)
             .IsRequired()
@@ -28,5 +36,13 @@ public class OfficesProfessionalsConfiguration : IEntityTypeConfiguration<Office
 
         builder.Property(x => x.DeletedAt)
             .HasColumnName("deleted_at");
+        
+        builder.Property(x => x.IsPublic)
+            .IsRequired()
+            .HasColumnName("is_public");
+        
+        builder.Property(x => x.IsActive)
+            .IsRequired()
+            .HasColumnName("is_active");
     }
 }

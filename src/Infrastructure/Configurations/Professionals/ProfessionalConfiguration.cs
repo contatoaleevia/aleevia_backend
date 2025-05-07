@@ -15,11 +15,14 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-        builder.HasOne(x => x.User)
+        builder.HasOne(x => x.Manager)
             .WithMany()
-            .HasForeignKey(x => x.UserId);  
+            .HasForeignKey(x => x.ManagerId);
 
-        builder.OwnsOne(x => x.Status, sourceType =>
+        builder.Property(x => x.ManagerId)
+            .HasColumnName("manager_id");
+
+        builder.OwnsOne(x => x.RegisterStatus, sourceType =>
         {
             sourceType.Property(x => x.StatusType)
                 .HasColumnName("status")
@@ -27,9 +30,9 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
                 .IsRequired();
         });
 
-        builder.HasOne(x => x.Office)
-            .WithMany()
-            .HasForeignKey(x => x.OfficeId);
+        builder.Property(x => x.IsRegistered)
+            .HasColumnName("is_registered")
+            .IsRequired();
 
         builder.OwnsOne(x => x.Cpf, sourceType =>
         {
@@ -37,6 +40,13 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
                 .HasColumnName("cpf")
                 .HasMaxLength(14)
                 .IsRequired();
+        });
+
+        builder.OwnsOne(x => x.Cnpj, sourceType =>
+        {
+            sourceType.Property(x => x.Value)
+                .HasColumnName("cnpj")
+                .HasMaxLength(14);
         });
 
         builder.OwnsOne(x => x.Website, sourceType =>
@@ -53,41 +63,12 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
                 .HasMaxLength(200);
         });
 
-        builder.OwnsOne(x => x.Linkedin, sourceType =>
-        {
-            sourceType.Property(x => x.Value)
-                .HasColumnName("linkedin")
-                .HasMaxLength(200);
-        });
-
-        builder.OwnsOne(x => x.Doctoralia, sourceType =>
-        {
-            sourceType.Property(x => x.Value)
-                .HasColumnName("doctoralia")
-                .HasMaxLength(200);
-        });
-
         builder.OwnsOne(x => x.Biography, sourceType =>
         {
             sourceType.Property(x => x.Value)
                 .HasColumnName("biography")
                 .HasMaxLength(200);
         });
-
-        builder.OwnsOne(x => x.PictureUrl, sourceType =>
-        {
-            sourceType.Property(x => x.Value)
-                .HasColumnName("picture_url")
-                .HasMaxLength(200);
-        });
-
-        builder.Property(x => x.GoogleToken)
-            .HasColumnName("google_token")
-            .HasMaxLength(200);
-
-        builder.Property(x => x.GoogleRefreshToken)
-            .HasColumnName("google_refresh_token")
-            .HasMaxLength(200);
 
         builder.Property(x => x.CreatedAt)
             .IsRequired()

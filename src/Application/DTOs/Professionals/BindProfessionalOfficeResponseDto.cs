@@ -5,7 +5,7 @@ namespace Application.DTOs.Professionals;
 public class BindProfessionalOfficeResponseDto
 {
     public Guid UserId { get; set; }
-    public ProfessionalStatusType Status { get; set; }
+    public ProfessionalRegisterStatus RegisterStatus { get; set; }
     public Guid OfficeId { get; set; }
     public bool Active { get; set; }
     public Document Cpf { get; set; }

@@ -26,7 +26,7 @@ public sealed class User : IdentityUser<Guid>
 
     public User(
         string email,
-        string phoneNumber,
+        string? phoneNumber,
         string name,
         string cpf,
         string? cnpj,
@@ -56,23 +56,29 @@ public sealed class User : IdentityUser<Guid>
 
     public static Document SetCnpj(string? cnpj)
         => string.IsNullOrEmpty(cnpj) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(cnpj);
-    public ushort GetUserTypeId() => (ushort) UserType.UserTypeId;
-    
-    public static string SetPhoneNumber(string phoneNumber)
+    public ushort GetUserTypeId() => (ushort)UserType.UserTypeId;
+
+    public static string SetPhoneNumber(string? phoneNumber)
     {
+        if (phoneNumber is null) return string.Empty;
         phoneNumber = phoneNumber.Replace(" ", string.Empty).Trim();
         if (PhoneNumberValidator.IsValid(phoneNumber))
             throw new ArgumentException("Invalid phone number.");
 
         return phoneNumber;
     }
-    
-    public string GetUserTypeName() => UserType.UserTypeName;
+
     public IEnumerable<string> GetRolesNames() => UserRoles.Select(x => x.GetRoleName());
-    
+
     private ICollection<UserRole> SetRolesByUserType(UserType userType)
     {
         var roles = UserRole.GetRolesByUserType(userType);
         return [.. roles.Select(x => new UserRole(Id, x.Id))];
+    }
+
+    public void SetRole(Role role)
+    {
+        if (UserRoles.All(x => x.RoleId != role.Id))
+            UserRoles.Add(new UserRole(Id, role.Id));
     }
 }
