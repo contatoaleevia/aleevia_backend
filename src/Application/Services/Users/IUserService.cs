@@ -11,6 +11,6 @@ namespace Application.Services.Users
         Task<CreateManagerUserResponse> CreateManagerUserAsync(CreateManagerUserRequest request);
         Task<CreatePatientUserResponse> CreatePatientUserAsync(CreatePatientUserRequest request);
         Task<IsRegisteredResponse> IsRegisteredAsync(string document);
-        Task<Manager> CreateProfessionalUserAsync(CreateProfessionalUserRequest request);
+        Task<Tuple<Manager, string>> CreateProfessionalUserAsync(CreateProfessionalUserRequest request);
     }
 }

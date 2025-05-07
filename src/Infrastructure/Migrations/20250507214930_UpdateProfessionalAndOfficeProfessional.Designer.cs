@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250507214930_UpdateProfessionalAndOfficeProfessional")]
+    partial class UpdateProfessionalAndOfficeProfessional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -620,7 +623,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("office_address", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessional", b =>
+            modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessionals", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -634,21 +637,11 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_active");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_public");
-
                     b.Property<Guid>("OfficeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("office_id");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("ProfessionalId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("professional_id");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -660,7 +653,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProfessionalId");
 
-                    b.ToTable("offices_professional", "public");
+                    b.ToTable("offices_professionals", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.Patients.Patient", b =>
@@ -1426,7 +1419,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("Office");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessional", b =>
+            modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessionals", b =>
                 {
                     b.HasOne("Domain.Entities.Offices.Office", "Office")
                         .WithMany()

@@ -66,7 +66,7 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     }
     
     
-    [HttpPost]
+    [HttpPost("bind-professional")]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
     public async Task<IActionResult> BindProfessionalOffice([FromBody] BindOfficeProfessionalRequest request)

@@ -22,8 +22,8 @@ public class OfficeService(
     public async Task<Guid> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
         var manager = await managerRepository.GetManagerByUserId(userId)
-            ?? throw new ManagerUserNotFoundException(userId);
-        
+                      ?? throw new ManagerUserNotFoundException(userId);
+
         var office = new Office(
             owner: manager,
             name: request.Name,
@@ -35,7 +35,7 @@ public class OfficeService(
             instagram: request.Instagram,
             logo: request.Logo
         );
-        
+
         try
         {
             var response = await repository.CreateAsync(office);
@@ -51,7 +51,7 @@ public class OfficeService(
     public async Task<Guid> BindOfficeAddress(BindOfficeAddressRequest request, Guid userId)
     {
         var manager = await managerRepository.GetManagerByUserId(userId)
-            ?? throw new ManagerUserNotFoundException(userId);
+                      ?? throw new ManagerUserNotFoundException(userId);
 
         var officeAddress = await officeAddressRepository.GetOfficeAddress(request.OfficeId);
         if (officeAddress.Count > 0) throw new OfficeAddressAlreadyExistsException(request.OfficeId);
@@ -68,8 +68,8 @@ public class OfficeService(
 
     public async Task DeleteOfficeAddress(Guid officeAddressId)
     {
-        var officeAddress = await officeAddressRepository.GetByIdAsync(officeAddressId) 
-            ?? throw new OfficeAddressNotFoundException(officeAddressId);
+        var officeAddress = await officeAddressRepository.GetByIdAsync(officeAddressId)
+                            ?? throw new OfficeAddressNotFoundException(officeAddressId);
 
         officeAddress.IsActive = false;
 
@@ -78,17 +78,19 @@ public class OfficeService(
 
     public async Task<Guid> BindOfficeProfessional(BindOfficeProfessionalRequest request)
     {
-        var cpf = Document.CreateDocumentAsCpf(request.Professional.Cpf);
-        var preRegisterProfessional = new PreRegisterProfessionalRequest(cpf.Value, request.Professional.Email, request.Professional.Name);
-
-        //TODO: Chamar Pre Cadastro
-        var professional = await professionalService.PreRegisterWhenNotExists(preRegisterProfessional);
+        var professional = await professionalService.PreRegisterWhenNotExists(request.Professional);
 
         var office = await repository.GetByIdAsync(request.OfficeId);
         if (office is null)
             throw new OfficeNotFoundException(request.OfficeId);
 
-        var officeProfessional = await officesProfessionalsRepository.CreateAsync(new OfficesProfessionals(office.Id, professional.Id));
+        var officeProfessional = new OfficesProfessional(
+            request.OfficeId,
+            professional.Id,
+            request.Professional.Active,
+            request.Professional.IsPublic
+        );
+        await officesProfessionalsRepository.CreateAsync(officeProfessional);
 
         return officeProfessional.Id;
     }

@@ -1,4 +1,5 @@
-﻿using CrossCutting.Extensions;
+﻿using System.Text.Json.Serialization;
+using CrossCutting.Extensions;
 using Domain.Entities.Identities.Enums;
 
 namespace Domain.Entities.Identities;
@@ -12,8 +13,17 @@ public class ManagerType
     {
     }
 
+    [JsonConstructor]
+    private ManagerType(ManagerTypeEnum typeId)
+    {
+        TypeId = typeId;
+    }
+
     public ManagerType(ushort typeId)
     {
         TypeId = (ManagerTypeEnum) typeId;
     }
+    
+    public static ManagerType CreateAsIndividual()
+        => new(ManagerTypeEnum.Individual);
 }

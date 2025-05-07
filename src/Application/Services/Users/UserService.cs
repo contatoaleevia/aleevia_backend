@@ -23,8 +23,7 @@ public class UserService(
     IIdentityNotificationHandler identityNotificationHandler,
     IManagerService managerService,
     IEmailService emailService,
-    IPatientService patientService,
-    IProfessionalService professionalService
+    IPatientService patientService
 ) : IUserService
 {
     public async Task<CreateManagerUserResponse> CreateManagerUserAsync(CreateManagerUserRequest request)
@@ -85,14 +84,13 @@ public class UserService(
         return new CreatePatientUserResponse(user.Id);
     }
 
-    public async Task<Manager> CreateProfessionalUserAsync(CreateProfessionalUserRequest request)
+    public async Task<Tuple<Manager, string>> CreateProfessionalUserAsync(CreateProfessionalUserRequest request)
     {
         var user = await userManager
             .Users
             .Where(x => x.Cpf.Value == request.Cpf.RemoveSpecialCharacters())
             .FirstOrDefaultAsync();
 
-        //TODO: Adicionar Role de HealthCareProfessional e Manager caso não tenha
         if (user is not null)
             user.SetRole(new Role("Professional"));
         else
@@ -109,23 +107,8 @@ public class UserService(
         var tempPassword = RandomGenerator.Generate(lenght: 10);
         await CreateUserAsync(user, tempPassword);
 
-        //TODO: Verificar se tem manager
-        //TODO: Caso não, criar um manager com o mesmo cpf
-        //TODO: Caso tenha, retornar o manager para vincular no profissional
-
-        var manager = await managerService.GetManagerByUserIdAsync(user.Id);
-        if (manager is null)
-            manager = await managerService.CreateManagerWhenNotExists(user.Id, new ManagerType(0), null);
-
-        // Criar o profissional
-        var professional = new CreateProfessionalRequestDto
-        {
-            ManagerId = manager.Id,
-            Cpf = request.Cpf.RemoveSpecialCharacters()
-        };
-        await professionalService.CreateProfessional(professional);
-
-        return manager;        
+        var manager = await managerService.CreateManagerWhenNotExists(user.Id, ManagerType.CreateAsIndividual(), null);
+        return new Tuple<Manager, string>(manager, tempPassword);
     }
 
     private async Task CreateUserAsync(User user, string password)

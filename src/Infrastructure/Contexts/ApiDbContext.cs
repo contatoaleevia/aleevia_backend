@@ -53,7 +53,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public DbSet<Office> Offices { get; set; }
     public DbSet<OfficeAddress> OfficeAddresses { get; set; }
     public DbSet<Professional> Professionals { get; set; }
-    public DbSet<OfficesProfessionals> OfficesProfessionals { get; set; }
+    public DbSet<OfficesProfessional> OfficesProfessionals { get; set; }
     public DbSet<Patient> Patients { get; set; }
     public DbSet<PatientLead> PatientLeads { get; set; }
 

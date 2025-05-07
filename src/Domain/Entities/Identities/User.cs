@@ -68,7 +68,6 @@ public sealed class User : IdentityUser<Guid>
         return phoneNumber;
     }
 
-    public string GetUserTypeName() => UserType.UserTypeName;
     public IEnumerable<string> GetRolesNames() => UserRoles.Select(x => x.GetRoleName());
 
     private ICollection<UserRole> SetRolesByUserType(UserType userType)
@@ -79,7 +78,7 @@ public sealed class User : IdentityUser<Guid>
 
     public void SetRole(Role role)
     {
-        if (!UserRoles.Any(x => x.RoleId == role.Id))
+        if (UserRoles.All(x => x.RoleId != role.Id))
             UserRoles.Add(new UserRole(Id, role.Id));
     }
 }

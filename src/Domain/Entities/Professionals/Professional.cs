@@ -42,6 +42,7 @@ namespace Domain.Entities.Professionals
             IsRegistered = false;
             return ProfessionalRegisterStatus.CreateAsPending();
         }
+        
         private Document SetDocument(string? document)
         => string.IsNullOrEmpty(document) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(document);
         private Url SetWebsite(string? url)

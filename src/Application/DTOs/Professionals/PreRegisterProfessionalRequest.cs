@@ -6,5 +6,7 @@ namespace Application.DTOs.Professionals;
 public record PreRegisterProfessionalRequest(
     string Cpf,
     string Name,
-    string Email
+    string Email,
+    bool Active,
+    bool IsPublic
 );
