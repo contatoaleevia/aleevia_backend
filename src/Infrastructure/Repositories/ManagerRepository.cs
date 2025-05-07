@@ -9,5 +9,5 @@ namespace Infrastructure.Repositories;
 public class ManagerRepository(ApiDbContext context) : Repository<Manager>(context), IManagerRepository
 {
     public async Task<Manager?> GetManagerByUserId(Guid userId)
-        => await DbSet.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == userId);
+        => await DbSet.FirstOrDefaultAsync(x => x.UserId == userId);
 }

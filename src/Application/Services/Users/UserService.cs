@@ -11,6 +11,8 @@ using CrossCutting.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.Patients;
 using Application.DTOs.Patients.CreatePatientDTOs;
+using Application.DTOs.Users.RetrieveUserDTOs;
+using Application.Helpers;
 
 namespace Application.Services.Users;
 
@@ -78,6 +80,36 @@ public class UserService(
         }
         
         return new CreatePatientUserResponse(user.Id);
+    }
+
+    public async Task<Manager> CreateProfessionalUserAsync(CreateProfessionalUserRequest request)
+    {
+        var user = await userManager
+            .Users
+            .Where(x => x.Cpf.Value == request.Cpf.RemoveSpecialCharacters())
+            .FirstOrDefaultAsync();
+
+        if (user is not null)
+        {
+            //TODO: Adicionar Role de HealthCareProfessional e Manager caso não tenha
+            return user;
+        }
+            
+        user = new User(
+            email: request.Email,
+            name: request.Name,
+            cpf: request.Cpf,
+            cnpj: null,
+            phoneNumber: null,
+            userType: UserType.CreateAsHealthcareProfessional());
+
+        var tempPassword = RandomGenerator.Generate(lenght: 10);
+        await CreateUserAsync(user, tempPassword);
+        
+        //TODO: Verificar se tem manager
+        //TODO: Caso não, criar um manager com o mesmo cpf
+        //TODO: Caso tenha, retornar o manager para vincular no profissional
+        return manager;        
     }
 
     private async Task CreateUserAsync(User user, string password)

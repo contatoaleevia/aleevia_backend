@@ -15,14 +15,4 @@ public class ProfessionalController(IProfessionalService service) : ControllerBa
         var response = await service.CreateProfessional(requestDto);
         return Ok(response);
     }
-
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
-    [Consumes("application/json")]
-    public async Task<IActionResult> BindProfessionalOffice([FromBody] BindProfessionalOfficeRequestDto requestDto)
-    {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-        var response = await service.BindProfessionalOffice(requestDto);
-        return Ok(response);
-    }
 }

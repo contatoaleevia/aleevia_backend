@@ -2,6 +2,7 @@
 using Application.DTOs.Offices.BindOfficeAddressDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
 using Application.DTOs.Offices.DeleteOfficeAddressDTOs;
+using Application.DTOs.Professionals;
 using Application.Services.Offices;
 using CrossCutting.Session;
 using Microsoft.AspNetCore.Authorization;
@@ -62,5 +63,16 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
         if (!ModelState.IsValid) return BadRequest(ModelState);
         await service.DeleteOfficeAddress(request.Id);
         return Ok();
+    }
+    
+    
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    [Consumes("application/json")]
+    public async Task<IActionResult> BindProfessionalOffice([FromBody] BindOfficeProfessionalRequest request)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var response = await service.BindOfficeProfessional(request);
+        return Ok(response);
     }
 }

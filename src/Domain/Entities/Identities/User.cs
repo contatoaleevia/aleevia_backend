@@ -26,7 +26,7 @@ public sealed class User : IdentityUser<Guid>
 
     public User(
         string email,
-        string phoneNumber,
+        string? phoneNumber,
         string name,
         string cpf,
         string? cnpj,
@@ -58,8 +58,9 @@ public sealed class User : IdentityUser<Guid>
         => string.IsNullOrEmpty(cnpj) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(cnpj);
     public ushort GetUserTypeId() => (ushort) UserType.UserTypeId;
     
-    public static string SetPhoneNumber(string phoneNumber)
+    public static string SetPhoneNumber(string? phoneNumber)
     {
+        if(phoneNumber is null) return string.Empty;
         phoneNumber = phoneNumber.Replace(" ", string.Empty).Trim();
         if (PhoneNumberValidator.IsValid(phoneNumber))
             throw new ArgumentException("Invalid phone number.");

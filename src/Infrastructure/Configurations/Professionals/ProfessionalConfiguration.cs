@@ -15,11 +15,11 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
             .ValueGeneratedOnAdd()
             .IsRequired();
 
-        builder.HasOne(x => x.User)
+        builder.HasOne(x => x.Manager)
             .WithMany()
-            .HasForeignKey(x => x.UserId);  
+            .HasForeignKey(x => x.ManagerId);  
 
-        builder.OwnsOne(x => x.Status, sourceType =>
+        builder.OwnsOne(x => x.RegisterStatus, sourceType =>
         {
             sourceType.Property(x => x.StatusType)
                 .HasColumnName("status")

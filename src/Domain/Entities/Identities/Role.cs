@@ -29,6 +29,8 @@ public sealed class Role : IdentityRole<Guid>
     public static readonly Role Employee 
         = CreateRole(Guid.Parse("4fa64c52-e389-4bbc-be5f-8565081eb393"), "Employee");
     
+    //TODO: Adicionar Role Professional
+    
     public static Role GetRole(string role)
     {
         return AllRoles.FirstOrDefault(x => x.Name == role)

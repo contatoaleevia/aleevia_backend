@@ -1,13 +1,21 @@
 ﻿using Application.DTOs.Offices.BindOfficeAddressDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
+using Application.DTOs.Professionals;
+using Application.Services.Professionals;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Offices;
+using Domain.Entities.ValueObjects;
 using Domain.Exceptions.Managers;
 using Domain.Exceptions.Offices;
+using Domain.Exceptions.Professionals;
 
 namespace Application.Services.Offices;
 
-public class OfficeService(IOfficeRepository repository, IManagerRepository managerRepository, IOfficeAddressRepository officeAddressRepository) : IOfficeService
+public class OfficeService(
+    IOfficeRepository repository,
+    IManagerRepository managerRepository,
+    IOfficeAddressRepository officeAddressRepository,
+    IProfessionalService professionalService) : IOfficeService
 {
     public async Task<Guid> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
@@ -64,5 +72,21 @@ public class OfficeService(IOfficeRepository repository, IManagerRepository mana
         officeAddress.IsActive = false;
 
         await officeAddressRepository.UpdateAsync(officeAddress);
+    }
+
+    public async Task<Guid> BindOfficeProfessional(BindOfficeProfessionalRequest request)
+    {
+        var cpf = Document.CreateDocumentAsCpf(request.Cpf);
+        var professional = await professionalService.PreRegisterWhenNotExists();
+        if (professional is null) //TODO: Chamar Pre Cadastro
+            professional = professionalSer;
+
+        var office = await repository.GetByIdAsync(request.OfficeId);
+        if (office is null)
+            throw new OfficeNotFoundException(request.OfficeId);
+
+        var officeProfessional = await officesProfessionalsRepository.CreateAsync(new OfficesProfessionals(office.Id, professional.Id));
+
+        return officeProfessional.Id;
     }
 }
