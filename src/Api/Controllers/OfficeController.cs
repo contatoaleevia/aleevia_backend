@@ -2,6 +2,7 @@
 using Application.DTOs.Offices.BindOfficeAddressDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
 using Application.DTOs.Offices.DeleteOfficeAddressDTOs;
+using Application.DTOs.Offices.GetOfficeDTOs;
 using Application.DTOs.Professionals;
 using Application.Services.Offices;
 using CrossCutting.Session;
@@ -73,6 +74,23 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         var response = await service.BindOfficeProfessional(request);
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Obtém os dados de um Office específico.
+    /// </summary>
+    /// <param name="id">ID do Office</param>
+    /// <returns>Dados do Office</returns>
+    [HttpGet("{id}")]
+    [Authorize]
+    [ProducesResponseType(typeof(OfficeResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetOffice(Guid id)
+    {
+        var response = await service.GetOffice(id);
         return Ok(response);
     }
 }
