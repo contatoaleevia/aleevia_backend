@@ -22,7 +22,6 @@ public class ProfessionalController(IProfessionalService service) : ControllerBa
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateProfessional([FromBody] CreateProfessionalRequestDto requestDto)
     {
-        throw new NotImplementedException("Em desenvolvimento");
         if (!ModelState.IsValid) return BadRequest(ModelState);
         var response = await service.CreateProfessional(requestDto);
         return Ok(response);

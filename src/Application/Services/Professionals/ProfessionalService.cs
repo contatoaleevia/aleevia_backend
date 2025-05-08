@@ -1,17 +1,21 @@
 ﻿using Application.DTOs.Email;
 using Application.DTOs.Professionals;
 using Application.DTOs.Users.RetrieveUserDTOs;
-using Application.Helpers;
+using Application.Services.Managers;
 using Application.Services.Users;
 using CrossCutting.Databases;
 using Domain.Contracts.Repositories;
+using Domain.Entities.Identities;
 using Domain.Entities.Professionals;
+using Domain.Exceptions;
 using Domain.Exceptions.Professionals;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 
 namespace Application.Services.Professionals;
 public class ProfessionalService(
+    UserManager<User> userManager,
     IProfessionalRepository professionalRepository,
     IUserService userService,
     IEmailService emailService,
@@ -59,9 +63,33 @@ public class ProfessionalService(
     {
         var professional = await professionalRepository.GetByCpfAsync(requestDto.Cpf);
         if (professional is null)
-            throw new ProfessionalNotFoundException(requestDto.ManagerId);
-           
-        //TODO: Caso não tenha, retornar erro
-        throw new NotImplementedException();
+            throw new ProfessionalNotFoundException(requestDto.Cpf);
+        if (professional.IsRegistered)
+            throw new ProfessionalAlreadyRegisteredException(requestDto.Cpf);
+
+        var user = await userService.GetUserByCpf(professional.Cpf.Value);
+        if (user is null)
+            throw new UserNotFoundException(professional.Cpf.Value);
+
+        using (var scope = ApiTransactionScope.RepeatableRead(true))
+        {
+            user.SetName(requestDto.Name);
+            user.SetEmail(requestDto.Email);
+            user.SetPhoneNumber(requestDto.PhoneNumber);
+            user.SetCnpj(requestDto.Cnpj);
+
+            await userManager.UpdateAsync(user);
+
+            professional.SetIsRegistered(true);
+            professional.SetWebsite(requestDto.Site);
+            professional.SetInstagram(requestDto.Instagram);
+            professional.SetBiography(requestDto.Biography);
+            professional.SetProfession(requestDto.ProfessionId);
+
+            await professionalRepository.UpdateAsync(professional);
+
+            scope.Complete();
+        }
+        return professional.Id;
     }
 }

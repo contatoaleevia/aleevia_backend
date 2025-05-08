@@ -13,8 +13,7 @@ using Application.Services.Patients;
 using Application.DTOs.Patients.CreatePatientDTOs;
 using Application.DTOs.Users.RetrieveUserDTOs;
 using Application.Helpers;
-using Application.Services.Professionals;
-using Application.DTOs.Professionals;
+using Domain.Exceptions;
 
 namespace Application.Services.Users;
 
@@ -123,5 +122,14 @@ public class UserService(
         document = document.RemoveSpecialCharacters();
         var user = await userManager.Users.FirstOrDefaultAsync(x => x.Cpf.Value == document || x.Cnpj.Value == document);
         return new IsRegisteredResponse(IsRegistered: user is not null, UserId: user?.Id);
+    }
+
+    public async Task<User> GetUserByCpf(string cpf)
+    {
+        cpf = cpf.RemoveSpecialCharacters();
+        var user = await userManager.Users.FirstOrDefaultAsync(x => x.Cpf.Value == cpf);
+        if (user is null)
+            throw new UserNotFoundException(cpf);
+        return user;
     }
 }

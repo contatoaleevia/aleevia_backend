@@ -1,6 +1,5 @@
 ﻿using CrossCutting.Utils;
 using Domain.Entities.ValueObjects;
-using Domain.Utils;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities.Identities;
@@ -34,11 +33,11 @@ public sealed class User : IdentityUser<Guid>
     {
         Email = email;
         EmailConfirmed = true;
-        PhoneNumber = SetPhoneNumber(phoneNumber);
+        PhoneNumber = SetPhoneNumberInternal(phoneNumber);
         PhoneNumberConfirmed = true;
         Name = name;
         Cpf = SetCpf(cpf);
-        Cnpj = SetCnpj(cnpj);
+        Cnpj = SetCnpjInternal(cnpj);
         UserType = userType;
         Active = true;
         CreatedAt = DateTime.UtcNow;
@@ -54,11 +53,29 @@ public sealed class User : IdentityUser<Guid>
 
     public static Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
 
-    public static Document SetCnpj(string? cnpj)
+    public void SetName(string name) => Name = string.IsNullOrEmpty(name) ? string.Empty : name.Trim();
+
+    public void SetEmail(string email)
+    {
+        Email = string.IsNullOrEmpty(email) ? string.Empty : email.Trim();
+    }
+
+    public static Document SetCnpjInternal(string? cnpj)
         => string.IsNullOrEmpty(cnpj) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(cnpj);
+
+    public void SetCnpj(string? cnpj)
+    {
+        if (string.IsNullOrEmpty(cnpj))
+        {
+            Cnpj = Document.CreateAsEmptyCnpj();
+            return;
+        }
+        Cnpj = Document.CreateDocumentAsCnpj(cnpj);
+    }
+
     public ushort GetUserTypeId() => (ushort)UserType.UserTypeId;
 
-    public static string SetPhoneNumber(string? phoneNumber)
+    public static string SetPhoneNumberInternal(string? phoneNumber)
     {
         if (phoneNumber is null) return string.Empty;
         phoneNumber = phoneNumber.Replace(" ", string.Empty).Trim();
@@ -66,6 +83,16 @@ public sealed class User : IdentityUser<Guid>
             throw new ArgumentException("Invalid phone number.");
 
         return phoneNumber;
+    }
+
+    public void SetPhoneNumber(string? phoneNumber)
+    {
+        if (string.IsNullOrEmpty(phoneNumber))
+        {
+            PhoneNumber = string.Empty;
+            return;
+        }
+        PhoneNumber = SetPhoneNumberInternal(phoneNumber);
     }
 
     public IEnumerable<string> GetRolesNames() => UserRoles.Select(x => x.GetRoleName());

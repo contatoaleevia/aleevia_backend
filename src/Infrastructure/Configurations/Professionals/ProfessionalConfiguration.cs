@@ -49,6 +49,14 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
                 .HasMaxLength(14);
         });
 
+        builder.HasOne(x => x.Profession)
+            .WithMany()
+            .HasForeignKey(x => x.ProfessionId);
+
+        builder.Property(x => x.ProfessionId)
+            .IsRequired(false)
+            .HasColumnName("profession_id");    
+
         builder.OwnsOne(x => x.Website, sourceType =>
         {
             sourceType.Property(x => x.Value)

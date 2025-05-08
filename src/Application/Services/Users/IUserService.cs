@@ -12,5 +12,6 @@ namespace Application.Services.Users
         Task<CreatePatientUserResponse> CreatePatientUserAsync(CreatePatientUserRequest request);
         Task<IsRegisteredResponse> IsRegisteredAsync(string document);
         Task<Tuple<Manager, string>> CreateProfessionalUserAsync(CreateProfessionalUserRequest request);
+        Task<User> GetUserByCpf(string cpf);
     }
 }

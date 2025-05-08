@@ -1,6 +1,6 @@
 ﻿using CrossCutting.Entities;
+using Domain.Entities.HealthcareProfessionals;
 using Domain.Entities.Identities;
-using Domain.Entities.Offices;
 using Domain.Entities.ValueObjects;
 
 namespace Domain.Entities.Professionals
@@ -30,6 +30,8 @@ namespace Domain.Entities.Professionals
         public bool IsRegistered { get; private set; }
         public Document Cpf { get; private set; }
         public Document? Cnpj { get; private set; }
+        public Profession? Profession { get; private set; }
+        public Guid? ProfessionId { get; private set; }
         public Url? Website { get; private set; }
         public Url? Instagram { get; private set; }
         public Url? Biography { get; private set; }
@@ -43,13 +45,26 @@ namespace Domain.Entities.Professionals
             return ProfessionalRegisterStatus.CreateAsPending();
         }
         
-        private Document SetDocument(string? document)
+        public Document SetDocument(string? document)
         => string.IsNullOrEmpty(document) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(document);
-        private Url SetWebsite(string? url)
-            => url is null ? Url.CreateAsEmpty() : Url.Create(url);
-        private Url SetInstagram(string? instagram)
-            => instagram is null ? Url.CreateAsEmpty() : Url.Create(instagram);
-        private Url SetBiography(string? biography)
-            => biography is null ? Url.CreateAsEmpty() : Url.Create(biography);
+
+        public void SetWebsite(string? url) =>
+            Website = url is null ? Url.CreateAsEmpty() : Url.Create(url);
+
+        public void SetInstagram(string? instagram)
+            => Instagram = instagram is null ? Url.CreateAsEmpty() : Url.Create(instagram);
+
+        public void SetBiography(string? biography)
+            => Biography = biography is null ? Url.CreateAsEmpty() : Url.Create(biography);
+
+        public void SetProfession(Guid professionId)
+        {
+            ProfessionId = professionId;
+        }
+
+        public void SetIsRegistered(bool isRegistered)
+        {
+            IsRegistered = isRegistered;
+        }
     }
 }
