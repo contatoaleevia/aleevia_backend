@@ -50,11 +50,6 @@ public class AuthService(
         
         var token = generateJwtTokenHelper.GenerateJwtToken(user, managerId);
 
-        return new LoginResponseDto
-        (
-            token,
-            user.UserName!,
-            user.Email!
-        );
+        return LoginResponseDto.FromUser(user, token, managerId);
     }
 }
