@@ -31,7 +31,9 @@ public class GenerateJwtTokenHelper(IConfiguration configuration) : IGenerateJwt
         var token = new JwtSecurityToken(
             claims: claims,
             signingCredentials: credentials,
-            expires: rememberMe ? DateTime.UtcNow.AddHours(apiSettings.ExpireHour) : null,
+            expires: rememberMe 
+                        ? DateTime.UtcNow.AddHours(apiSettings.ExpireHourWithRememberMe) 
+                        : DateTime.UtcNow.AddHours(apiSettings.ExpireHourWithoutRememberMe),
             issuer: apiSettings.Issuer,
             audience: apiSettings.ValidIn
         );
