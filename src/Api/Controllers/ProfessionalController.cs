@@ -1,6 +1,7 @@
 ﻿using Api.ApiResponses;
 using Application.DTOs.Professionals;
 using Application.Services.Professionals;
+using Domain.Contracts.Services.RegisterProfessionals;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,11 +21,10 @@ public class ProfessionalController(IProfessionalService service) : ControllerBa
     [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateProfessional([FromBody] CreateProfessionalRequestDto requestDto)
+    public async Task<IActionResult> CreateProfessional([FromBody] RegisterProfessionalRequest request)
     {
-        throw new NotImplementedException("Em desenvolvimento");
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        var response = await service.CreateProfessional(requestDto);
+        var response = await service.RegisterProfessional(request);
         return Ok(response);
     }
 }

@@ -5,5 +5,5 @@ using Domain.Entities.ValueObjects;
 namespace Domain.Contracts.Repositories;
 public interface IProfessionalRepository : IRepository<Professional>
 {
-    Task<Professional?> GetByCpfAsync(string cpf);
+    Task<Professional?> GetByCpfToRegisterAsync(string cpf);
 }

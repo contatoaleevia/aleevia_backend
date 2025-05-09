@@ -23,4 +23,7 @@ public class ProfessionalRegisterStatus
     }
     
     public static ProfessionalRegisterStatus CreateAsPending() => new(ProfessionalStatusEnum.Pending);
+
+    public static ProfessionalRegisterStatus CreateAsApproved() => new(ProfessionalStatusEnum.Approved);
+
 }

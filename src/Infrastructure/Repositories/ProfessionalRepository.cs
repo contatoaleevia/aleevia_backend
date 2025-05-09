@@ -8,8 +8,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories;
 public class ProfessionalRepository(ApiDbContext context) : Repository<Professional>(context), IProfessionalRepository
 {
-    public async Task<Professional?> GetByCpfAsync(string cpf)
+    public async Task<Professional?> GetByCpfToRegisterAsync(string cpf)
         => await DbSet
             .Include(x => x.Manager)
+            .ThenInclude(x => x.User)
             .FirstOrDefaultAsync(x => x.Cpf.Value == cpf.RemoveSpecialCharacters());
 }

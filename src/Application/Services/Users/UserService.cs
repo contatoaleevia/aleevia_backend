@@ -15,6 +15,7 @@ using Application.DTOs.Users.RetrieveUserDTOs;
 using Application.Helpers;
 using Application.Services.Professionals;
 using Application.DTOs.Professionals;
+using Domain.Entities.Professionals;
 
 namespace Application.Services.Users;
 
@@ -58,7 +59,7 @@ public class UserService(
 
             scope.Complete();
         }
-        
+
         return new CreateManagerUserResponse(user.Id);
     }
 
@@ -72,7 +73,7 @@ public class UserService(
             cnpj: null,
             userType: UserType.CreateAsPatient()
         );
-        
+
         using (var scope = ApiTransactionScope.RepeatableRead(true))
         {
             await CreateUserAsync(user, request.Password);
@@ -80,11 +81,11 @@ public class UserService(
 
             scope.Complete();
         }
-        
+
         return new CreatePatientUserResponse(user.Id);
     }
 
-    public async Task<Tuple<Manager, string>> CreateProfessionalUserAsync(CreateProfessionalUserRequest request)
+    public async Task<Tuple<Professional, string?>> CreateProfessionalUserAsync(CreateProfessionalUserRequest request)
     {
         var user = await userManager
             .Users
@@ -92,7 +93,14 @@ public class UserService(
             .FirstOrDefaultAsync();
 
         if (user is not null)
-            user.SetRole(new Role("Professional"));
+        {
+            user.SetRole(Role.Professional);
+            user.SetRole(Role.Admin);
+            var manager = await managerService.GetManagerByUserIdAsync(user.Id) ??
+                          await managerService.CreateManagerWhenNotExists(user.Id, ManagerType.CreateAsIndividual(), null);
+            var newProfessional = new Professional(manager.Id, request.Cpf, true);
+            return new Tuple<Professional, string?>(newProfessional, null);
+        }
         else
         {
             user = new User(
@@ -102,13 +110,15 @@ public class UserService(
                 cnpj: null,
                 phoneNumber: null,
                 userType: UserType.CreateAsHealthcareProfessional());
+
+            var tempPassword = RandomGenerator.Generate(lenght: 10);
+            await CreateUserAsync(user, tempPassword);
+
+            var manager =
+                await managerService.CreateManagerWhenNotExists(user.Id, ManagerType.CreateAsIndividual(), null);
+            var newProfessional = new Professional(manager.Id, request.Cpf, false);
+            return new Tuple<Professional, string?>(newProfessional, tempPassword);
         }
-
-        var tempPassword = RandomGenerator.Generate(lenght: 10);
-        await CreateUserAsync(user, tempPassword);
-
-        var manager = await managerService.CreateManagerWhenNotExists(user.Id, ManagerType.CreateAsIndividual(), null);
-        return new Tuple<Manager, string>(manager, tempPassword);
     }
 
     private async Task CreateUserAsync(User user, string password)
@@ -121,7 +131,8 @@ public class UserService(
     public async Task<IsRegisteredResponse> IsRegisteredAsync(string document)
     {
         document = document.RemoveSpecialCharacters();
-        var user = await userManager.Users.FirstOrDefaultAsync(x => x.Cpf.Value == document || x.Cnpj.Value == document);
+        var user = await userManager.Users.FirstOrDefaultAsync(x =>
+            x.Cpf.Value == document || x.Cnpj.Value == document);
         return new IsRegisteredResponse(IsRegistered: user is not null, UserId: user?.Id);
     }
 }

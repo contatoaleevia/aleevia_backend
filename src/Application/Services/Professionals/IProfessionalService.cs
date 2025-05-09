@@ -1,9 +1,10 @@
 ﻿using Application.DTOs.Professionals;
+using Domain.Contracts.Services.RegisterProfessionals;
 using Domain.Entities.Professionals;
 
 namespace Application.Services.Professionals;
 public interface IProfessionalService
 {
     Task<Professional> PreRegisterWhenNotExists(PreRegisterProfessionalRequest request);
-    Task<Guid> CreateProfessional(CreateProfessionalRequestDto requestDto);
+    Task<Guid> RegisterProfessional(RegisterProfessionalRequest request);
 }

@@ -3,6 +3,7 @@ using Application.DTOs.Patients.CreatePatientDTOs;
 using Application.DTOs.Users.IsRegisteredDTOs;
 using Application.DTOs.Users.RetrieveUserDTOs;
 using Domain.Entities.Identities;
+using Domain.Entities.Professionals;
 
 namespace Application.Services.Users
 {
@@ -11,6 +12,6 @@ namespace Application.Services.Users
         Task<CreateManagerUserResponse> CreateManagerUserAsync(CreateManagerUserRequest request);
         Task<CreatePatientUserResponse> CreatePatientUserAsync(CreatePatientUserRequest request);
         Task<IsRegisteredResponse> IsRegisteredAsync(string document);
-        Task<Tuple<Manager, string>> CreateProfessionalUserAsync(CreateProfessionalUserRequest request);
+        Task<Tuple<Professional, string?>> CreateProfessionalUserAsync(CreateProfessionalUserRequest request);
     }
 }

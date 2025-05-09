@@ -79,5 +79,20 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
 
         builder.Property(x => x.DeletedAt)
             .HasColumnName("deleted_at");
+
+        builder.Property(x => x.Name)
+            .HasMaxLength(100)
+            .IsRequired(false)
+            .HasColumnName("name");
+        
+        builder.Property(x => x.PreferredName)
+            .HasMaxLength(100)
+            .IsRequired(false)
+            .HasColumnName("preferred_name");
+        
+        builder.Property(x => x.Email)
+            .HasMaxLength(100)
+            .IsRequired(false)
+            .HasColumnName("email");
     }
 }
