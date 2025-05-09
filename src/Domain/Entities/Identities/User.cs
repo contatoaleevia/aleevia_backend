@@ -62,7 +62,7 @@ public sealed class User : IdentityUser<Guid>
     {
         if (phoneNumber is null) return string.Empty;
         phoneNumber = phoneNumber.Replace(" ", string.Empty).Trim();
-        if (PhoneNumberValidator.IsValid(phoneNumber))
+        if (!PhoneNumberValidator.IsValid(phoneNumber))
             throw new ArgumentException("Invalid phone number.");
 
         return phoneNumber;
