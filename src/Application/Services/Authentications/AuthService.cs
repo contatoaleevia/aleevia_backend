@@ -3,7 +3,6 @@ using Application.Helpers;
 using CrossCutting.Identities;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Identities;
-using Domain.Exceptions;
 using Domain.Exceptions.Authentications;
 using Infrastructure.Contexts;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +47,7 @@ public class AuthService(
             .Where(x => x.UserId == user.Id)
             .Select(x => x.Id).FirstOrDefaultAsync();
         
-        var token = generateJwtTokenHelper.GenerateJwtToken(user, managerId);
+        var token = generateJwtTokenHelper.GenerateJwtToken(user, managerId, requestDto.RememberMe);
 
         return LoginResponseDto.FromUser(user, token, managerId);
     }
