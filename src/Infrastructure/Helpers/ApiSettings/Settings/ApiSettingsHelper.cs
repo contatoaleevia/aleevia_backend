@@ -4,7 +4,8 @@ namespace Infrastructure.Helpers.ApiSettings.Settings;
 
 public class ApiSettingsHelper : IApiSettingsHelper
 {
-    public int ExpireHour { get; set; }
+    public int ExpireHourWithRememberMe { get; set; }
+    public int ExpireHourWithoutRememberMe { get; set; }
     public string Issuer { get; set; } = null!;
     public string ValidIn { get; set; } = null!;
     public string ApiKey { get; set; } = null!;
