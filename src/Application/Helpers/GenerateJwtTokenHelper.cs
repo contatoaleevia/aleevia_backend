@@ -11,7 +11,7 @@ namespace Application.Helpers;
 
 public class GenerateJwtTokenHelper(IConfiguration configuration) : IGenerateJwtTokenHelper
 {
-    public string GenerateJwtToken(User user, Guid? managerId)
+    public string GenerateJwtToken(User user, Guid? managerId, bool rememberMe)
     {
         var settings = TokenObtainHelperSettings.GetInstance(configuration);
         var apiSettings = ApiSettingsHelper.GetInstance(configuration);
@@ -31,7 +31,7 @@ public class GenerateJwtTokenHelper(IConfiguration configuration) : IGenerateJwt
         var token = new JwtSecurityToken(
             claims: claims,
             signingCredentials: credentials,
-            expires: DateTime.UtcNow.AddHours(apiSettings.ExpireHour),
+            expires: rememberMe ? DateTime.UtcNow.AddHours(apiSettings.ExpireHour) : null,
             issuer: apiSettings.Issuer,
             audience: apiSettings.ValidIn
         );
@@ -39,7 +39,7 @@ public class GenerateJwtTokenHelper(IConfiguration configuration) : IGenerateJwt
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
         
         if (string.IsNullOrEmpty(tokenString)) 
-            throw new InvalidOperationException("An error occurred while generating the token.");
+            throw new InvalidOperationException("Ocorreu um erro na geração do token");
 
         return tokenString;
     }
