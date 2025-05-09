@@ -13,7 +13,6 @@ public class PatientRepository(ApiDbContext context)
     {
         return await DbSet
             .Include(p => p.User)
-            .AsNoTracking()
             .FirstOrDefaultAsync(p => p.UserId == userId && p.RemovedAt == null);
     }
 

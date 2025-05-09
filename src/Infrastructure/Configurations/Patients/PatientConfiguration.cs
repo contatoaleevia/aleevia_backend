@@ -35,6 +35,9 @@ public class PatientConfiguration : IEntityTypeConfiguration<Patient>
         builder.Property(p => p.PictureUrl)
             .HasColumnName("picture_url");
 
+        builder.Property(p => p.PreferredName)
+            .HasColumnName("preferred_name");
+
         builder.Property(p => p.GoogleToken)
             .HasColumnName("google_token");
 

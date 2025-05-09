@@ -2,6 +2,7 @@
 using Application.DTOs.Patients.CreatePatientDTOs;
 using Application.DTOs.Users.IsRegisteredDTOs;
 using Application.DTOs.Users.RetrieveUserDTOs;
+using Application.DTOs.Users.UpdateUserDTOs;
 using Domain.Entities.Identities;
 using Domain.Entities.Professionals;
 
@@ -13,5 +14,6 @@ namespace Application.Services.Users
         Task<CreatePatientUserResponse> CreatePatientUserAsync(CreatePatientUserRequest request);
         Task<IsRegisteredResponse> IsRegisteredAsync(string document);
         Task<Tuple<Professional, string?>> CreateProfessionalUserAsync(CreateProfessionalUserRequest request);
+        Task<UpdatePatientUserResponse> UpdatePatientUserAsync(Guid userId, UpdatePatientUserRequest request);
     }
 }

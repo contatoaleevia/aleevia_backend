@@ -8,6 +8,8 @@ public class CreatePatientUserRequest
     [Required(ErrorMessage = "O nome é obrigatório")]
     public required string Name { get; set; }
     
+    public string? PreferredName { get; set; }
+    
     [Required(ErrorMessage = "O e-mail é obrigatório")]
     [EmailAddress(ErrorMessage = "E-mail inválido")]
     public required string Email { get; set; }

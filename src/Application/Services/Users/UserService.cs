@@ -16,6 +16,9 @@ using Application.Helpers;
 using Application.Services.Professionals;
 using Application.DTOs.Professionals;
 using Domain.Entities.Professionals;
+using Application.DTOs.Users.UpdateUserDTOs;
+using Domain.Exceptions;
+using Domain.Contracts.Repositories;
 
 namespace Application.Services.Users;
 
@@ -24,7 +27,8 @@ public class UserService(
     IIdentityNotificationHandler identityNotificationHandler,
     IManagerService managerService,
     IEmailService emailService,
-    IPatientService patientService
+    IPatientService patientService,
+    IPatientRepository patientRepository
 ) : IUserService
 {
     public async Task<CreateManagerUserResponse> CreateManagerUserAsync(CreateManagerUserRequest request)
@@ -71,7 +75,8 @@ public class UserService(
             name: request.Name,
             cpf: request.Cpf,
             cnpj: null,
-            userType: UserType.CreateAsPatient()
+            userType: UserType.CreateAsPatient(),
+            preferredName: request.PreferredName
         );
 
         using (var scope = ApiTransactionScope.RepeatableRead(true))
@@ -119,6 +124,43 @@ public class UserService(
             var newProfessional = new Professional(manager.Id, request.Cpf, false);
             return new Tuple<Professional, string?>(newProfessional, tempPassword);
         }
+    }
+
+
+    public async Task<UpdatePatientUserResponse> UpdatePatientUserAsync(Guid userId, UpdatePatientUserRequest request)
+    {
+        using var scope = ApiTransactionScope.RepeatableRead(true);
+        
+        var user = await userManager.FindByIdAsync(userId.ToString()) ?? throw new UserNotFoundException(userId);
+        var patient = await patientRepository.GetByUserIdAsync(userId) ?? throw new PatientNotExistException(userId);
+
+        user.Update(
+            name: request.Name ?? user.Name,
+            phoneNumber: request.PhoneNumber ?? user.PhoneNumber,
+            email: request.Email ?? user.Email
+        );
+
+        var userResult = await userManager.UpdateAsync(user);
+        if (!userResult.Succeeded)
+        {
+            identityNotificationHandler.AddNotifications(userResult.Errors);
+            throw new InvalidOperationException("Falha ao atualizar usuário");
+        }
+
+        patient.Update(
+            bloodType: request.BloodType,
+            biologicalSex: request.BiologicalSex,
+            pictureUrl: request.PictureUrl,
+            gender: request.Gender,
+            birthDate: request.BirthDate,
+            preferredName: request.PreferredName
+        );
+
+        await patientRepository.UpdateAsync(patient);
+        
+        scope.Complete();
+
+        return UpdatePatientUserResponse.FromUser(user, patient);
     }
 
     private async Task CreateUserAsync(User user, string password)

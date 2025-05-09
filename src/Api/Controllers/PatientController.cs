@@ -2,6 +2,7 @@ using Api.ApiResponses;
 using Api.Attributes;
 using Application.DTOs.Patients.CreatePatientDTOs;
 using Application.DTOs.Patients.CreatePatientLeadDTOs;
+using Application.DTOs.Users.UpdateUserDTOs;
 using Application.Services.Patients;
 using Application.Services.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,23 @@ public class PatientController(
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         return Ok(await userService.CreatePatientUserAsync(request));
+    }
+
+    /// <summary>
+    /// Edita um usuário paciente existente.
+    /// </summary>
+    [HttpPatch("{userId}")]
+    [ApiKey]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(UpdatePatientUserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdatePatientUser(Guid userId, [FromBody] UpdatePatientUserRequest request)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        return Ok(await userService.UpdatePatientUserAsync(userId, request));
     }
 
     /// <summary>

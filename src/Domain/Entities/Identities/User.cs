@@ -8,6 +8,7 @@ namespace Domain.Entities.Identities;
 public sealed class User : IdentityUser<Guid>
 {
     public string Name { get; private set; }
+    public string? PreferredName { get; private set; }
     public Document Cpf { get; private set; }
     public Document Cnpj { get; private set; }
     public UserType UserType { get; private set; }
@@ -30,13 +31,15 @@ public sealed class User : IdentityUser<Guid>
         string name,
         string cpf,
         string? cnpj,
-        UserType userType)
+        UserType userType,
+        string? preferredName = null)
     {
         Email = email;
         EmailConfirmed = true;
         PhoneNumber = SetPhoneNumber(phoneNumber);
         PhoneNumberConfirmed = true;
         Name = name;
+        PreferredName = preferredName;
         Cpf = SetCpf(cpf);
         Cnpj = SetCnpj(cnpj);
         UserType = userType;
@@ -50,6 +53,27 @@ public sealed class User : IdentityUser<Guid>
         AccessFailedCount = 0;
         UserName = cpf;
         UserRoles = SetRolesByUserType(userType);
+    }
+
+    public void Update(
+        string? name = null,
+        string? preferredName = null,
+        string? phoneNumber = null,
+        string? email = null)
+    {
+        if (name is not null)
+            Name = name;
+            
+        if (preferredName is not null)
+            PreferredName = preferredName;
+            
+        if (phoneNumber is not null)
+            PhoneNumber = SetPhoneNumber(phoneNumber);
+            
+        if (email is not null)
+            Email = email;
+            
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
