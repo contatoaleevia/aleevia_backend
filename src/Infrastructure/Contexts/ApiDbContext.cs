@@ -1,27 +1,26 @@
 ﻿using Domain.Entities.Addresses;
 using Domain.Entities.Faqs;
 using Domain.Entities.Identities;
-using Infrastructure.Configurations.Faqs;
 using Domain.Entities.HealthcareProfessionals;
 using Domain.Entities.IaChats;
-using Infrastructure.Configurations.Identities;
-using Infrastructure.Configurations.Offices;
-using Infrastructure.Configurations.ServiceTypes;
+using Domain.Entities.OfficeAttendances;
+using Domain.Entities.Offices;
+using Domain.Entities.Patients;
+using Domain.Entities.Professionals;
+using Domain.Entities.ServiceTypes;
+using Infrastructure.Configurations.Addresses;
+using Infrastructure.Configurations.Faqs;
 using Infrastructure.Configurations.HealthcareProfessionals;
+using Infrastructure.Configurations.IaChats;
+using Infrastructure.Configurations.Identities;
+using Infrastructure.Configurations.OfficeAttendances;
+using Infrastructure.Configurations.Offices;
+using Infrastructure.Configurations.Patients;
+using Infrastructure.Configurations.Professionals;
+using Infrastructure.Configurations.ServiceTypes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities.ServiceTypes;
-using Infrastructure.Configurations.Addresses;
-using Infrastructure.Configurations.OfficeAttendances;
-using Domain.Entities.OfficeAttendances;
-using Domain.Entities.Offices;
-using Infrastructure.Configurations.IaChats;
-using Domain.Entities.Patients;
-using Infrastructure.Configurations.Patients;
-using Domain.Entities.Professionals;
-using Infrastructure.Configurations.Professionals;
-using Domain.Entities.Offices;
 
 namespace Infrastructure.Contexts;
 
@@ -88,6 +87,8 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new PatientConfiguration());
         builder.ApplyConfiguration(new PatientLeadConfiguration());
         builder.ApplyConfiguration(new FaqPageConfiguration());
+        builder.ApplyConfiguration(new ProfessionalDocumentConfiguration());
+        builder.ApplyConfiguration(new ProfessionalSpecialtyDetailConfiguration());
 
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {

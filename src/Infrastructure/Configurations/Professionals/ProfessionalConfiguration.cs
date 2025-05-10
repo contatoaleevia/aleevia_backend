@@ -94,5 +94,15 @@ public class ProfessionalConfiguration : IEntityTypeConfiguration<Professional>
             .HasMaxLength(100)
             .IsRequired(false)
             .HasColumnName("email");
+
+        builder.HasMany(x => x.SpecialtyDetails)
+            .WithOne(x => x.Professional)
+            .HasForeignKey(x => x.ProfessionalId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.Documents)
+            .WithOne(x => x.Professional)
+            .HasForeignKey(x => x.ProfessionalId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

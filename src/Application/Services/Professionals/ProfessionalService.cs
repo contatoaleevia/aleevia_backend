@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Email;
 using Application.DTOs.Professionals;
+using Application.DTOs.Professionals.GetProfessionalDTOs;
 using Application.DTOs.Users.RetrieveUserDTOs;
 using Application.Services.Users;
 using CrossCutting.Databases;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 namespace Application.Services.Professionals;
 public class ProfessionalService(
     IProfessionalRepository professionalRepository,
+    IProfessionRepository professionRepository,
     IUserService userService,
     IEmailService emailService,
     IConfiguration configuration,
@@ -58,18 +60,66 @@ public class ProfessionalService(
         return newProfessional;
     }
 
-    public async Task<Guid> RegisterProfessional(RegisterProfessionalRequest request)
+    public async Task<ProfessionalResponse> RegisterProfessional(RegisterProfessionalRequest request)
+    {
+        using var scope = ApiTransactionScope.RepeatableRead(true);
+        
+        var professional = await ValidateAndGetProfessionalAsync(request);
+        await ValidateProfessionDataAsync(request.ProfessionData);
+
+        registerProfessional.Register(professional, request);
+
+        await professionalRepository.UpdateAsync(professional);
+        await professionalRepository.SaveChangesAsync();
+
+        var specialtyDetail = new ProfessionalSpecialtyDetail(
+            professional.Id,
+            request.ProfessionData.ProfessionId,
+            request.ProfessionData.SpecialityId,
+            request.ProfessionData.SubSpecialityId == Guid.Empty ? null : request.ProfessionData.SubSpecialityId
+        );
+        await professionalRepository.CreateSpecialtyDetailAsync(specialtyDetail);
+
+        var document = new ProfessionalDocument(
+            professional.Id,
+            request.DocumentData.DocumentType,
+            request.DocumentData.DocumentNumber,
+            request.DocumentData.DocumentState
+        );
+        await professionalRepository.CreateDocumentAsync(document);
+
+        professional.SpecialtyDetails.Add(specialtyDetail);
+        professional.Documents.Add(document);
+        
+        scope.Complete();
+        return ProfessionalResponse.FromProfessional(professional);
+    }
+
+    private async Task<Professional> ValidateAndGetProfessionalAsync(RegisterProfessionalRequest request)
     {
         var professional = await professionalRepository.GetByCpfToRegisterAsync(request.Cpf);
         if (professional is null)
             throw new ProfessionalWithCpfNotFoundException(request.Cpf);
         if (professional.IsRegistered)
             throw new ProfessionalAlreadyRegisteredException(request.Cpf);
+        if (request.ProfessionData is null)
+            throw new ProfessionalWithCpfNotFoundException(request.Cpf);
 
-        registerProfessional.Register(professional, request);
+        return professional;
+    }
 
-        await professionalRepository.UpdateAsync(professional);
-        await professionalRepository.SaveChangesAsync();
-        return professional.Id;
+    private async Task ValidateProfessionDataAsync(ProfessionalProfessionRequest professionData)
+    {
+        var profession = await professionRepository.GetByIdAsync(professionData.ProfessionId);
+        if (profession is null)
+            throw new ProfessionNotFoundException(professionData.ProfessionId);
+
+        var speciality = await professionRepository.GetSpecialityByIdAsync(professionData.SpecialityId);
+        if (speciality is null)
+            throw new SpecialityNotFoundException(professionData.SpecialityId);
+
+        var subspeciality = await professionRepository.GetSubSpecialityByIdAsync(professionData.SubSpecialityId);
+        if (subspeciality is null && professionData.SubSpecialityId.HasValue)
+            throw new SubSpecialityNotFoundException(professionData.SubSpecialityId.Value);
     }
 }

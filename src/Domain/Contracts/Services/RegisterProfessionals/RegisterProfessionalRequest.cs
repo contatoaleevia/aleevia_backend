@@ -22,11 +22,12 @@ public record RegisterProfessionalRequest(
 public record ProfessionalProfessionRequest(
     Guid ProfessionId,
     Guid SpecialityId,
-    Guid? SubSpeciality
+    Guid? SubSpecialityId
 );
 
 [method:JsonConstructor]
 public record ProfessionalDocumentRequest(
-    string Crm,
-    string CrmState
+    string DocumentType,
+    string DocumentNumber,
+    string DocumentState
 );
