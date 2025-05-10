@@ -1,4 +1,4 @@
-﻿using Api.ApiResponses;
+﻿﻿using Api.ApiResponses;
 using Application.Services.Professionals;
 using Domain.Contracts.Services.RegisterProfessionals;
 using Microsoft.AspNetCore.Authorization;
@@ -13,14 +13,15 @@ public class ProfessionalController(IProfessionalService service) : ControllerBa
     /// <summary>
     /// Cria um novo Profissional de Saúde.
     /// </summary>
-    /// <param name="request">Objeto com os dados do profissional</param>
-    /// <param name="request.Name">Nome completo do profissional</param>
-    /// <param name="request.Email">Email do profissional</param>
-    /// <param name="request.Document">Documento do profissional (CPF)</param>
-    /// <param name="request.PhoneNumber">Número de telefone do profissional</param>
-    /// <param name="request.Specialty">Especialidade do profissional</param>
-    /// <param name="request.RegisterNumber">Número de registro profissional (CRM, CRO, etc.)</param>
-    /// <param name="request.RegisterState">Estado do registro profissional (UF)</param>
+    /// <param name="request">Objeto com os dados do profissional:
+    /// <summary/>Name: Nome completo do profissional
+    /// <summary/>Email: Email do profissional
+    /// <summary/>Document: Documento do profissional (CPF)
+    /// <summary/>PhoneNumber: Número de telefone do profissional
+    /// <summary/>Specialty: Especialidade do profissional
+    /// <summary/>RegisterNumber: Número de registro profissional (CRM, CRO, etc.)
+    /// <summary/>RegisterState: Estado do registro profissional (UF)
+    /// </param>
     /// <returns>ID do profissional criado</returns>
     [HttpPost]
     [Authorize(Roles = "Admin")]

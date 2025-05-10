@@ -1,4 +1,4 @@
-﻿using Api.ApiResponses;
+﻿﻿using Api.ApiResponses;
 using Application.DTOs.Faqs.CreateFaqDTOs;
 using Application.DTOs.Faqs.CreateFaqPageDTOs;
 using Application.DTOs.Faqs.DeleteFaqDTOs;
@@ -19,10 +19,11 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// <summary>
     /// Cria um FAQ.
     /// </summary>
-    /// <param name="requestDto">Objeto com os dados para criação do FAQ</param>
-    /// <param name="requestDto.Question">Pergunta do FAQ</param>
-    /// <param name="requestDto.Answer">Resposta do FAQ</param>
-    /// <param name="requestDto.SourceId">ID da fonte (profissional) relacionada ao FAQ</param>
+    /// <param name="requestDto">Objeto com os dados para criação do FAQ:
+    /// <summary/>Question: Pergunta do FAQ
+    /// <summary/>Answer: Resposta do FAQ
+    /// <summary/>SourceId: ID da fonte (profissional) relacionada ao FAQ
+    /// </param>
     /// <returns>Informações do FAQ criado</returns>
     [HttpPost]
     [AllowAnonymous]
@@ -80,11 +81,12 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// <summary>
     /// Cria uma página de FAQ.
     /// </summary>
-    /// <param name="requestDto">Objeto com os dados para criação da página</param>
-    /// <param name="requestDto.Title">Título da página de FAQ</param>
-    /// <param name="requestDto.Description">Descrição da página de FAQ</param>
-    /// <param name="requestDto.SourceId">ID da fonte (profissional, local de trabalho) relacionada à página</param>
-    /// <param name="requestDto.CustomUrl">URL personalizada para a página (opcional)</param>
+    /// <param name="requestDto">Objeto com os dados para criação da página:
+    /// <summary/>Title: Título da página de FAQ
+    /// <summary/>Description: Descrição da página de FAQ
+    /// <summary/>SourceId: ID da fonte (profissional, local de trabalho) relacionada à página
+    /// <summary/>CustomUrl: URL personalizada para a página (opcional)
+    /// </param>
     /// <returns>Informações da página de FAQ criada</returns>
     [HttpPost("page")]
     [AllowAnonymous]
@@ -98,11 +100,12 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// <summary>
     /// Atualiza uma página de FAQ.
     /// </summary>
-    /// <param name="requestDto">Objeto com os dados para atualização da página</param>
-    /// <param name="requestDto.Id">ID da página de FAQ a ser atualizada</param>
-    /// <param name="requestDto.Title">Novo título da página de FAQ (opcional)</param>
-    /// <param name="requestDto.Description">Nova descrição da página de FAQ (opcional)</param>
-    /// <param name="requestDto.CustomUrl">Nova URL personalizada para a página (opcional)</param>
+    /// <param name="requestDto">Objeto com os dados para atualização da página:
+    /// <summary/>Id: ID da página de FAQ a ser atualizada
+    /// <summary/>Title: Novo título da página de FAQ (opcional)
+    /// <summary/>Description: Nova descrição da página de FAQ (opcional)
+    /// <summary/>CustomUrl: Nova URL personalizada para a página (opcional)
+    /// </param>
     /// <returns>Informações da página de FAQ atualizada</returns>
     [HttpPatch("page")]
     [AllowAnonymous]
@@ -116,10 +119,11 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// <summary>
     /// Edita um FAQ existente.
     /// </summary>
-    /// <param name="requestDto">Objeto com os dados para atualização do FAQ</param>
-    /// <param name="requestDto.Id">ID do FAQ a ser atualizado</param>
-    /// <param name="requestDto.Question">Nova pergunta do FAQ (opcional)</param>
-    /// <param name="requestDto.Answer">Nova resposta do FAQ (opcional)</param>
+    /// <param name="requestDto">Objeto com os dados para atualização do FAQ:
+    /// <summary/>Id: ID do FAQ a ser atualizado
+    /// <summary/>Question: Nova pergunta do FAQ (opcional)
+    /// <summary/>Answer: Nova resposta do FAQ (opcional)
+    /// </param>
     /// <returns>Informações do FAQ atualizado</returns>
     [HttpPatch]
     [AllowAnonymous]
@@ -136,8 +140,9 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// <summary>
     /// Deleta um FAQ.
     /// </summary>
-    /// <param name="requestDto">Objeto com os dados para exclusão do FAQ</param>
-    /// <param name="requestDto.Id">ID do FAQ a ser excluído</param>
+    /// <param name="requestDto">Objeto com os dados para exclusão do FAQ:
+    /// <summary/>Id: ID do FAQ a ser excluído
+    /// </param>
     /// <returns>Confirmação da exclusão do FAQ</returns>
     [HttpDelete]
     [AllowAnonymous]

@@ -17,13 +17,14 @@ public class PatientController(
     /// <summary>
     /// Cria um novo paciente no sistema.
     /// </summary>
-    /// <param name="request">Objeto com os dados do paciente</param>
-    /// <param name="request.Name">Nome completo do paciente</param>
-    /// <param name="request.Email">Email do paciente</param>
-    /// <param name="request.Document">Documento do paciente (CPF)</param>
-    /// <param name="request.PhoneNumber">Número de telefone do paciente</param>
-    /// <param name="request.Password">Senha para acesso ao sistema</param>
-    /// <param name="request.BirthDate">Data de nascimento do paciente</param>
+    /// <param name="request">Objeto com os dados do paciente:
+    /// <summary/>Name: Nome completo do paciente
+    /// <summary/>Email: Email do paciente
+    /// <summary/>Document: Documento do paciente (CPF)
+    /// <summary/>PhoneNumber: Número de telefone do paciente
+    /// <summary/>Password: Senha para acesso ao sistema
+    /// <summary/>BirthDate: Data de nascimento do paciente
+    /// </param>
     /// <returns>Informações do paciente criado</returns>
     [HttpPost]
     [ApiKey]
@@ -42,12 +43,13 @@ public class PatientController(
     /// Cria um novo lead de paciente no sistema.
     /// Um lead é um registro inicial de um potencial paciente.
     /// </summary>
-    /// <param name="request">Objeto com os dados do lead de paciente</param>
-    /// <param name="request.Name">Nome do lead</param>
-    /// <param name="request.Email">Email de contato do lead</param>
-    /// <param name="request.PhoneNumber">Número de telefone do lead</param>
-    /// <param name="request.Message">Mensagem ou informação adicional do lead (opcional)</param>
-    /// <param name="request.SourceId">ID da fonte ou origem do lead (opcional)</param>
+    /// <param name="request">Objeto com os dados do lead de paciente:
+    /// <summary/>Name: Nome do lead
+    /// <summary/>Email: Email de contato do lead
+    /// <summary/>PhoneNumber: Número de telefone do lead
+    /// <summary/>Message: Mensagem ou informação adicional do lead (opcional)
+    /// <summary/>SourceId: ID da fonte ou origem do lead (opcional)
+    /// </param>
     /// <returns>Informações do lead de paciente criado</returns>
     [HttpPost("lead")]
     [ApiKey]

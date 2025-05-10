@@ -1,4 +1,4 @@
-﻿using System.Web;
+﻿﻿using System.Web;
 using Api.ApiResponses;
 using Api.Attributes;
 using Application.DTOs.Users.CreateAdminUserDTOs;
@@ -15,13 +15,14 @@ public class UserController(IUserService userService) : ControllerBase
     /// <summary>
     /// Cria usuário com Perfil Admin. 
     /// </summary>
-    /// <param name="request">Objeto com os dados para criação do usuário administrador</param>
-    /// <param name="request.Name">Nome completo do administrador</param>
-    /// <param name="request.Email">Email do administrador</param>
-    /// <param name="request.Document">Documento do administrador (CPF ou CNPJ)</param>
-    /// <param name="request.PhoneNumber">Número de telefone do administrador</param>
-    /// <param name="request.Password">Senha para acesso ao sistema</param>
-    /// <param name="request.ManagerTypeId">Tipo do Administrador (0 = Individual, 1 = Compartilhado)</param>
+    /// <param name="request">Objeto com os dados para criação do usuário administrador:
+    /// <summary/>Name: Nome completo do administrador
+    /// <summary/>Email: Email do administrador
+    /// <summary/>Document: Documento do administrador (CPF ou CNPJ)
+    /// <summary/>PhoneNumber: Número de telefone do administrador
+    /// <summary/>Password: Senha para acesso ao sistema
+    /// <summary/>ManagerTypeId: Tipo do Administrador (0 = Individual, 1 = Compartilhado)
+    /// </param>
     /// <returns>Informações do usuário administrador criado</returns>
     [HttpPost("manager")]
     [ApiKey]

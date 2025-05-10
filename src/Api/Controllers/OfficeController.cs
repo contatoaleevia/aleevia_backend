@@ -18,10 +18,11 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// <summary>
     /// Cria um novo local de trabalho (Office). 
     /// </summary>
-    /// <param name="request">Objeto com os dados do local de trabalho</param>
-    /// <param name="request.Name">Nome do local de trabalho</param>
-    /// <param name="request.Description">Descrição do local de trabalho (opcional)</param>
-    /// <param name="request.PhoneNumber">Número de telefone do local de trabalho</param>
+    /// <param name="request">Objeto com os dados do local de trabalho:
+    /// <summary/>Name: Nome do local de trabalho
+    /// <summary/>Description: Descrição do local de trabalho (opcional)
+    /// <summary/>PhoneNumber: Número de telefone do local de trabalho
+    /// </param>
     /// <returns>ID do local de trabalho criado</returns>
     [HttpPost]
     [Authorize(Roles = "Admin")]
@@ -40,10 +41,11 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// O endereço deve ser criado previamente pelo Admin da Office.
     /// Caso o AddressId seja vazio, o endereço será considerado como Teleconsulta automaticamente.
     /// </summary>
-    /// <param name="request">Objeto com os dados de vinculação</param>
-    /// <param name="request.OfficeId">ID do local de trabalho</param>
-    /// <param name="request.AddressId">ID do endereço a ser vinculado (opcional para teleconsulta)</param>
-    /// <param name="request.IsTelemedicine">Indica se é um endereço de teleconsulta</param>
+    /// <param name="request">Objeto com os dados de vinculação:
+    /// <summary/>OfficeId: ID do local de trabalho
+    /// <summary/>AddressId: ID do endereço a ser vinculado (opcional para teleconsulta)
+    /// <summary/>IsTelemedicine: Indica se é um endereço de teleconsulta
+    /// </param>
     /// <returns>ID da relação criada entre local de trabalho e endereço</returns>
     [HttpPost("bind-address")]
     [Authorize(Roles = "Admin")]
@@ -60,8 +62,9 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// <summary>
     /// Deleta um endereço de um local de trabalho (Office) (soft delete).
     /// </summary>
-    /// <param name="request">Objeto com os dados para exclusão</param>
-    /// <param name="request.Id">ID da relação entre local de trabalho e endereço a ser excluída</param>
+    /// <param name="request">Objeto com os dados para exclusão:
+    /// <summary/>Id: ID da relação entre local de trabalho e endereço a ser excluída
+    /// </param>
     /// <returns>Confirmação da exclusão</returns>
     [HttpDelete("bind-address")]
     [Authorize(Roles = "Admin")]
@@ -79,9 +82,10 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// <summary>
     /// Vincula um profissional a um local de trabalho.
     /// </summary>
-    /// <param name="request">Objeto com os dados de vinculação</param>
-    /// <param name="request.OfficeId">ID do local de trabalho</param>
-    /// <param name="request.ProfessionalId">ID do profissional a ser vinculado</param>
+    /// <param name="request">Objeto com os dados de vinculação:
+    /// <summary/>OfficeId: ID do local de trabalho
+    /// <summary/>ProfessionalId: ID do profissional a ser vinculado
+    /// </param>
     /// <returns>Informações da vinculação criada</returns>
     [HttpPost("bind-professional")]
     [Authorize(Roles = "Admin")]

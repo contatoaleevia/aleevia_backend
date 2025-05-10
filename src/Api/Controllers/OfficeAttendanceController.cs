@@ -25,11 +25,12 @@ public class OfficeAttendanceController(IOfficeAttendanceService officeAttendanc
     /// <summary>
     /// Cria um novo registro de atendimento para um consultório.
     /// </summary>
-    /// <param name="requestDto">Objeto com os dados do atendimento</param>
-    /// <param name="requestDto.OfficeId">ID do consultório</param>
-    /// <param name="requestDto.DayOfWeek">Dia da semana (0-6, onde 0 é domingo)</param>
-    /// <param name="requestDto.StartTime">Hora de início do atendimento</param>
-    /// <param name="requestDto.EndTime">Hora de término do atendimento</param>
+    /// <param name="requestDto">Objeto com os dados do atendimento:
+    /// <summary/>OfficeId: ID do consultório
+    /// <summary/>DayOfWeek: Dia da semana (0-6, onde 0 é domingo)
+    /// <summary/>StartTime: Hora de início do atendimento
+    /// <summary/>EndTime: Hora de término do atendimento
+    /// </param>
     /// <returns>Informações do atendimento criado</returns>
     [HttpPost]
     [AllowAnonymous]
