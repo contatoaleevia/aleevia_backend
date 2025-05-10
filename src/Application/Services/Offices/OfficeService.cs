@@ -21,7 +21,7 @@ public class OfficeService(
     IProfessionalService professionalService,
     IOfficesProfessionalsRepository officesProfessionalsRepository) : IOfficeService
 {
-    public async Task<Guid> CreateOffice(CreateOfficeRequest request, Guid userId)
+    public async Task<CreateOfficeResponse> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
         var manager = await managerRepository.GetManagerByUserId(userId)
                       ?? throw new ManagerUserNotFoundException(userId);
@@ -41,7 +41,7 @@ public class OfficeService(
         try
         {
             var response = await repository.CreateAsync(office);
-            return response.Id;
+            return new CreateOfficeResponse(response.Id);
         }
         catch (Exception e)
         {
