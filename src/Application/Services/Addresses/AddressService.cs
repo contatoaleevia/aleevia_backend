@@ -1,9 +1,9 @@
 ﻿using Application.DTOs.Addresses.CreateAddressDTOs;
+using Application.DTOs.Addresses.GetAddressDTOs;
 using Application.DTOs.Adresses.GetAddressBySourceDTOs;
-using Application.DTOs.Adresses.GetAddressDTOs;
-using CrossCutting.Repositories;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Addresses;
+using Domain.Exceptions.Adresses;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,14 +11,13 @@ namespace Application.Services.Addresses;
 
 public class AddressService(IAddressRepository repository) : IAddressService
 {
-    public async Task<GetAddressByIdReponseDto> GetByIdAddress(Guid id)
+    public async Task<GetAddressByIdResponseDto> GetByIdAddress(Guid id)
     {
         var address = await repository.GetByIdAsync(id);
         if (address != null)
-            return new GetAddressByIdReponseDto(
+            return new GetAddressByIdResponseDto(
                 id: address.Id,
                 sourceId: address.SourceId,
-                source: address.Source,
                 sourceType: address.SourceType,
                 name: address.Name,
                 street: address.Street,
@@ -33,7 +32,7 @@ public class AddressService(IAddressRepository repository) : IAddressService
                 createdAt: address.CreatedAt,
                 updatedAt: address.UpdatedAt
             );
-        throw new Exception("Address not found");
+        throw new AddressNotFoundException(id);
     }
 
     public async Task<CreateAddressResponseDto> CreateAddressAsync(CreateAddressRequestDto requestDto)
@@ -81,7 +80,7 @@ public class AddressService(IAddressRepository repository) : IAddressService
                 x.ZipCode,
                 x.Complement
             )).ToListAsync();
-    
+
         return test.OrderByDescending(x => x.Name);
     }
 }

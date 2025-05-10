@@ -14,16 +14,21 @@ public class UserController(IUserService userService) : ControllerBase
     
     /// <summary>
     /// Cria usuário com Perfil Admin. 
-    /// Manager Type Id é o Tipo do Administrador. 
-    /// Exemplo: 0 = Individual. 1 = Compartilhado
     /// </summary>
-    /// <returns></returns>
+    /// <param name="request">Objeto com os dados para criação do usuário administrador</param>
+    /// <param name="request.Name">Nome completo do administrador</param>
+    /// <param name="request.Email">Email do administrador</param>
+    /// <param name="request.Document">Documento do administrador (CPF ou CNPJ)</param>
+    /// <param name="request.PhoneNumber">Número de telefone do administrador</param>
+    /// <param name="request.Password">Senha para acesso ao sistema</param>
+    /// <param name="request.ManagerTypeId">Tipo do Administrador (0 = Individual, 1 = Compartilhado)</param>
+    /// <returns>Informações do usuário administrador criado</returns>
     [HttpPost("manager")]
     [ApiKey]
     [Produces("application/json")]
     [ProducesResponseType(typeof(CreateManagerUserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(UnauthorizedResult), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateManagerUser([FromBody] CreateManagerUserRequest request)
     {
@@ -34,8 +39,8 @@ public class UserController(IUserService userService) : ControllerBase
     /// <summary>
     /// Verifica se o usuário já está cadastrado no sistema pelo documento.
     /// </summary>
-    /// <param name="document">Informar CPF ou CNPJ com ou sem pontuação para verificar</param>
-    /// <returns></returns>
+    /// <param name="document">Documento do usuário (CPF ou CNPJ) com ou sem pontuação para verificar</param>
+    /// <returns>Informações se o usuário está registrado no sistema</returns>
     [HttpGet("is-registered/{document}")]
     [ApiKey]
     [Produces("application/json")]

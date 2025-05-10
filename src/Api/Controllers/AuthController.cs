@@ -1,7 +1,5 @@
 ﻿using Api.ApiResponses;
-using Application.DTOs.HealthcareProfessionals;
 using Application.DTOs.Users.LoginDTOs;
-using Application.Services;
 using Application.Services.Authentications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +13,12 @@ public class AuthController(IAuthService authService) : ControllerBase
     /// <summary>
     /// Efetua o Login do usuário.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="loginDto">Objeto de requisição para login:
+    /// <summary/>UserName: Documento do usuário (CPF ou CNPJ), pode ser informado com ou sem pontuação
+    /// <summary/>Password: Senha do usuário
+    /// <summary/>RememberMe (opcional): Indica se o usuário deseja permanecer logado
+    /// </param>
+    /// <returns>Dados de autenticação do usuário incluindo token JWT</returns>
     [HttpPost("login")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]

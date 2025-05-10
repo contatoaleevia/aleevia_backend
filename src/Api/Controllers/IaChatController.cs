@@ -9,6 +9,10 @@ namespace Api.Controllers;
 [Route("api/chats")]
 public class IaChatController(IIaChatService iaChatService) : ControllerBase
 {
+    /// <summary>
+    /// Obtém todos os chats disponíveis.
+    /// </summary>
+    /// <returns>Lista de todos os chats</returns>
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> GetAllChats()
@@ -16,6 +20,13 @@ public class IaChatController(IIaChatService iaChatService) : ControllerBase
         return Ok(await iaChatService.GetAllChatsAsync());
     }
 
+    /// <summary>
+    /// Cria um chat de IA.
+    /// </summary>
+    /// <param name="requestDto">Objeto com os dados para criação do chat</param>
+    /// <param name="requestDto.Title">Título do chat</param>
+    /// <param name="requestDto.UserId">ID do usuário que está criando o chat</param>
+    /// <returns>Informações do chat criado</returns>
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> CreateChat([FromBody] CreateIaChatRequestDto requestDto)
@@ -25,6 +36,11 @@ public class IaChatController(IIaChatService iaChatService) : ControllerBase
         return Ok(response);
     }
 
+    /// <summary>
+    /// Obtém todas as mensagens de um chat específico.
+    /// </summary>
+    /// <param name="chatId">ID do chat para buscar as mensagens</param>
+    /// <returns>Lista de mensagens do chat</returns>
     [HttpGet("{chatId:guid}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetChatMessages(Guid chatId)
@@ -32,6 +48,14 @@ public class IaChatController(IIaChatService iaChatService) : ControllerBase
         return Ok(await iaChatService.GetChatMessagesAsync(chatId));
     }
 
+    /// <summary>
+    /// Adiciona uma nova mensagem a um chat existente.
+    /// </summary>
+    /// <param name="chatId">ID do chat para adicionar a mensagem</param>
+    /// <param name="requestDto">Objeto com os dados da mensagem</param>
+    /// <param name="requestDto.Content">Conteúdo da mensagem</param>
+    /// <param name="requestDto.Role">Papel do remetente (user, assistant, system)</param>
+    /// <returns>Informações da mensagem adicionada</returns>
     [HttpPost("{chatId:guid}/messages")]
     [AllowAnonymous]
     public async Task<IActionResult> AddMessageToChat(Guid chatId, [FromBody] CreateIaMessageRequestDto requestDto)

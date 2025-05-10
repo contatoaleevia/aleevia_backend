@@ -16,9 +16,13 @@ namespace Api.Controllers;
 public class OfficeController(IOfficeService service, IUserSession session) : ControllerBase
 {
     /// <summary>
-    /// Cria um Office. 
+    /// Cria um novo local de trabalho (Office). 
     /// </summary>
-    /// <returns></returns>
+    /// <param name="request">Objeto com os dados do local de trabalho</param>
+    /// <param name="request.Name">Nome do local de trabalho</param>
+    /// <param name="request.Description">Descrição do local de trabalho (opcional)</param>
+    /// <param name="request.PhoneNumber">Número de telefone do local de trabalho</param>
+    /// <returns>ID do local de trabalho criado</returns>
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
@@ -27,16 +31,20 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateOffice([FromBody] CreateOfficeRequest request)
     {
-        if(!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid) return BadRequest(ModelState);
         return Ok(await service.CreateOffice(request, session.UserId));
     }
 
     /// <summary>
-    /// Vincula um endereço a um Office. 
-    /// O endereço deve ser criado previamente.
+    /// Vincula um endereço a um local de trabalho (Office). 
+    /// O endereço deve ser criado previamente pelo Admin da Office.
     /// Caso o AddressId seja vazio, o endereço será considerado como Teleconsulta automaticamente.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="request">Objeto com os dados de vinculação</param>
+    /// <param name="request.OfficeId">ID do local de trabalho</param>
+    /// <param name="request.AddressId">ID do endereço a ser vinculado (opcional para teleconsulta)</param>
+    /// <param name="request.IsTelemedicine">Indica se é um endereço de teleconsulta</param>
+    /// <returns>ID da relação criada entre local de trabalho e endereço</returns>
     [HttpPost("bind-address")]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
@@ -50,9 +58,11 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     }
 
     /// <summary>
-    /// Deleta um endereço de um Office (soft delete).
+    /// Deleta um endereço de um local de trabalho (Office) (soft delete).
     /// </summary>
-    /// <returns></returns>
+    /// <param name="request">Objeto com os dados para exclusão</param>
+    /// <param name="request.Id">ID da relação entre local de trabalho e endereço a ser excluída</param>
+    /// <returns>Confirmação da exclusão</returns>
     [HttpDelete("bind-address")]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
@@ -66,7 +76,13 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
         return Ok();
     }
     
-    
+    /// <summary>
+    /// Vincula um profissional a um local de trabalho.
+    /// </summary>
+    /// <param name="request">Objeto com os dados de vinculação</param>
+    /// <param name="request.OfficeId">ID do local de trabalho</param>
+    /// <param name="request.ProfessionalId">ID do profissional a ser vinculado</param>
+    /// <returns>Informações da vinculação criada</returns>
     [HttpPost("bind-professional")]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
@@ -78,12 +94,12 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     }
 
     /// <summary>
-    /// Obtém os dados de um Office específico.
+    /// Obtém os dados de um local de trabalho (Office) específico.
     /// </summary>
-    /// <param name="id">ID do Office</param>
-    /// <returns>Dados do Office</returns>
+    /// <param name="id">ID do local de trabalho</param>
+    /// <returns>Dados do local de trabalho</returns>
     [HttpGet("{id}")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(OfficeResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]

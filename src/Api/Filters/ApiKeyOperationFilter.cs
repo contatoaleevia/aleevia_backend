@@ -1,9 +1,11 @@
 ﻿using Api.Attributes;
+using JetBrains.Annotations;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Api.Filters;
 
+[UsedImplicitly]
 public class ApiKeyOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)

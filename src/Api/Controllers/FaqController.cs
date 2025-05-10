@@ -19,7 +19,11 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// <summary>
     /// Cria um FAQ.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="requestDto">Objeto com os dados para criação do FAQ</param>
+    /// <param name="requestDto.Question">Pergunta do FAQ</param>
+    /// <param name="requestDto.Answer">Resposta do FAQ</param>
+    /// <param name="requestDto.SourceId">ID da fonte (profissional) relacionada ao FAQ</param>
+    /// <returns>Informações do FAQ criado</returns>
     [HttpPost]
     [AllowAnonymous]
     [ProducesResponseType(typeof(CreateFaqResponseDto), StatusCodes.Status200OK)]
@@ -35,7 +39,8 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// <summary>
     /// Busca uma lista de FAQs pelo Id do Profissional.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="id">ID do profissional para buscar os FAQs relacionados</param>
+    /// <returns>Lista de FAQs do profissional</returns>
     [HttpGet("{id:guid}")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(GetFaqByProfessionalIdResponseDtoList), StatusCodes.Status200OK)]
@@ -46,6 +51,11 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
         return Ok(await faqService.GetFaqsBySourceIdAsync(id));
     }
 
+    /// <summary>
+    /// Busca FAQs por URL personalizada.
+    /// </summary>
+    /// <param name="customUrl">URL personalizada para buscar os FAQs</param>
+    /// <returns>Lista de FAQs associados à URL personalizada</returns>
     [HttpGet("url/{customUrl}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetFaqsByCustomUrl(string customUrl)
@@ -54,6 +64,11 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
         return Ok(response);
     }
 
+    /// <summary>
+    /// Busca uma página de FAQ pelo ID da fonte.
+    /// </summary>
+    /// <param name="sourceId">ID da fonte (profissional) para buscar a página de FAQ</param>
+    /// <returns>Página de FAQ relacionada à fonte</returns>
     [HttpGet("page/{sourceId:guid}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetFaqPage(Guid sourceId)
@@ -62,6 +77,15 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
         return Ok(response);
     }
 
+    /// <summary>
+    /// Cria uma página de FAQ.
+    /// </summary>
+    /// <param name="requestDto">Objeto com os dados para criação da página</param>
+    /// <param name="requestDto.Title">Título da página de FAQ</param>
+    /// <param name="requestDto.Description">Descrição da página de FAQ</param>
+    /// <param name="requestDto.SourceId">ID da fonte (profissional, local de trabalho) relacionada à página</param>
+    /// <param name="requestDto.CustomUrl">URL personalizada para a página (opcional)</param>
+    /// <returns>Informações da página de FAQ criada</returns>
     [HttpPost("page")]
     [AllowAnonymous]
     public async Task<IActionResult> CreateFaqPage([FromBody] CreateFaqPageRequestDto requestDto)
@@ -71,6 +95,15 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
         return Ok(response);
     }
 
+    /// <summary>
+    /// Atualiza uma página de FAQ.
+    /// </summary>
+    /// <param name="requestDto">Objeto com os dados para atualização da página</param>
+    /// <param name="requestDto.Id">ID da página de FAQ a ser atualizada</param>
+    /// <param name="requestDto.Title">Novo título da página de FAQ (opcional)</param>
+    /// <param name="requestDto.Description">Nova descrição da página de FAQ (opcional)</param>
+    /// <param name="requestDto.CustomUrl">Nova URL personalizada para a página (opcional)</param>
+    /// <returns>Informações da página de FAQ atualizada</returns>
     [HttpPatch("page")]
     [AllowAnonymous]
     public async Task<IActionResult> UpdateFaqPage([FromBody] UpdateFaqPageRequestDto requestDto)
@@ -81,9 +114,13 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     }
 
     /// <summary>
-    /// Edita um FAQ.
+    /// Edita um FAQ existente.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="requestDto">Objeto com os dados para atualização do FAQ</param>
+    /// <param name="requestDto.Id">ID do FAQ a ser atualizado</param>
+    /// <param name="requestDto.Question">Nova pergunta do FAQ (opcional)</param>
+    /// <param name="requestDto.Answer">Nova resposta do FAQ (opcional)</param>
+    /// <returns>Informações do FAQ atualizado</returns>
     [HttpPatch]
     [AllowAnonymous]
     [ProducesResponseType(typeof(UpdateFaqResponseDto), StatusCodes.Status200OK)]
@@ -99,7 +136,9 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// <summary>
     /// Deleta um FAQ.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="requestDto">Objeto com os dados para exclusão do FAQ</param>
+    /// <param name="requestDto.Id">ID do FAQ a ser excluído</param>
+    /// <returns>Confirmação da exclusão do FAQ</returns>
     [HttpDelete]
     [AllowAnonymous]
     [ProducesResponseType(typeof(DeleteFaqResponseDto), StatusCodes.Status200OK)]
