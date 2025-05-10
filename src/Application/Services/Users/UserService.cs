@@ -89,13 +89,18 @@ public class UserService(
     {
         var user = await userManager
             .Users
+            .Include(x => x.UserRoles)
+            .ThenInclude(x => x.Role)
             .Where(x => x.Cpf.Value == request.Cpf.RemoveSpecialCharacters())
             .FirstOrDefaultAsync();
 
         if (user is not null)
         {
-            user.SetRole(Role.Professional);
-            user.SetRole(Role.Admin);
+            if (!user.UserRoles.Any(x => x.Role.Name == Role.Professional.Name))
+                user.SetRole(Role.Professional);
+            if (!user.UserRoles.Any(x => x.Role.Name == Role.Admin.Name))
+                user.SetRole(Role.Admin);
+
             var manager = await managerService.GetManagerByUserIdAsync(user.Id) ??
                           await managerService.CreateManagerWhenNotExists(user.Id, ManagerType.CreateAsIndividual(), null);
             var newProfessional = new Professional(manager.Id, request.Cpf, true);

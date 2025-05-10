@@ -21,7 +21,6 @@ public class AuthService(
     public async Task<LoginResponseDto> LoginAsync(LoginRequestDto requestDto)
     {
         var user = await userManager.Users
-            .AsNoTracking()
             .Include(x => x.UserRoles)
             .ThenInclude(x => x.Role)
             .FirstOrDefaultAsync(x => x.Cpf.Value == requestDto.Document || x.Cnpj.Value == requestDto.Document);
@@ -43,7 +42,6 @@ public class AuthService(
         var managerId = await managerRepository.GetDbContext<ApiDbContext>()
             .Managers
             .Include(x => x.User)
-            .AsNoTracking()
             .Where(x => x.UserId == user.Id)
             .Select(x => x.Id).FirstOrDefaultAsync();
         
