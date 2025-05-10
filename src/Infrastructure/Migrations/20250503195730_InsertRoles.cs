@@ -14,6 +14,7 @@ namespace Infrastructure.Migrations
             var adminRole = Role.Admin;
             var patientRole = Role.Patient;
             var employeeRole = Role.Employee;
+            var professionalRole = Role.Professional;
             
             var sql = @$"
 INSERT INTO public.role (""id"", ""name"", ""normalized_name"", ""concurrency_stamp"")
@@ -23,7 +24,10 @@ INSERT INTO public.role (""id"", ""name"", ""normalized_name"", ""concurrency_st
 VALUES ('{patientRole.Id}', '{patientRole.Name}', '{patientRole.NormalizedName}', '{patientRole.ConcurrencyStamp}');
 
 INSERT INTO public.role (""id"", ""name"", ""normalized_name"", ""concurrency_stamp"")
-VALUES ('{employeeRole.Id}', '{employeeRole.Name}', '{employeeRole.NormalizedName}', '{employeeRole.ConcurrencyStamp}');";
+VALUES ('{employeeRole.Id}', '{employeeRole.Name}', '{employeeRole.NormalizedName}', '{employeeRole.ConcurrencyStamp}');
+
+INSERT INTO public.role (""id"", ""name"", ""normalized_name"", ""concurrency_stamp"")
+VALUES ('{professionalRole.Id}', '{professionalRole.Name}', '{professionalRole.NormalizedName}', '{professionalRole.ConcurrencyStamp}');";
             
             migrationBuilder.Sql(sql);
         }
