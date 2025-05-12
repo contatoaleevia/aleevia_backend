@@ -9,4 +9,5 @@ public interface IProfessionalService
 {
     Task<Professional> PreRegisterWhenNotExists(PreRegisterProfessionalRequest request);
     Task<ProfessionalResponse> RegisterProfessional(RegisterProfessionalRequest request);
+    Task<GetProfessionalResponse> GetProfessionalByUserId(Guid userId);
 }

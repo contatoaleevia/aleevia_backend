@@ -138,4 +138,20 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
         var response = await service.GetOfficesByUserId(session.UserId);
         return Ok(response);
     }
+
+    /// <summary>
+    /// Obtém todos os profissionais vinculados a um local de trabalho (Office) específico.
+    /// </summary>
+    /// <param name="id">ID do local de trabalho</param>
+    /// <returns>Lista de profissionais do local de trabalho</returns>
+    [HttpGet("{officeId}/professionals")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(GetOfficeProfessionalsResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetOfficeProfessionals(Guid id)
+    {
+        return Ok(await service.GetOfficeProfessionals(id));
+    }
 }

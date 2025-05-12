@@ -16,6 +16,8 @@ using Application.Helpers;
 using Application.Services.Professionals;
 using Application.DTOs.Professionals;
 using Domain.Entities.Professionals;
+using Domain.Exceptions.Professionals;
+using Domain.Contracts.Repositories;
 
 namespace Application.Services.Users;
 
@@ -24,7 +26,8 @@ public class UserService(
     IIdentityNotificationHandler identityNotificationHandler,
     IManagerService managerService,
     IEmailService emailService,
-    IPatientService patientService
+    IPatientService patientService,
+    IProfessionalRepository professionalRepository
 ) : IUserService
 {
     public async Task<CreateManagerUserResponse> CreateManagerUserAsync(CreateManagerUserRequest request)
@@ -91,6 +94,7 @@ public class UserService(
             .Users
             .Include(x => x.UserRoles)
             .ThenInclude(x => x.Role)
+            .Include(x => x.Manager)
             .Where(x => x.Cpf.Value == request.Cpf.RemoveSpecialCharacters())
             .FirstOrDefaultAsync();
 
@@ -103,6 +107,11 @@ public class UserService(
 
             var manager = await managerService.GetManagerByUserIdAsync(user.Id) ??
                           await managerService.CreateManagerWhenNotExists(user.Id, ManagerType.CreateAsIndividual(), null);
+
+            var existingProfessional = await professionalRepository.GetByManagerIdAsync(manager.Id);
+            if (existingProfessional is not null)
+                throw new ProfessionalAlreadyExistsException(request.Cpf);
+                          
             var newProfessional = new Professional(manager.Id, request.Cpf, true);
             return new Tuple<Professional, string?>(newProfessional, null);
         }

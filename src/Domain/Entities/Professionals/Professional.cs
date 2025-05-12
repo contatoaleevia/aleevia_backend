@@ -17,7 +17,7 @@ public class Professional : AggregateRoot
         bool isRegistered)
     {
         ManagerId = managerId;
-        RegisterStatus = isRegistered ?  SetRegisterAsApproval() :SetRegisterAsPending();
+        RegisterStatus = isRegistered ?  SetRegisterAsApproval() : SetRegisterAsPending();
         Cpf = Document.CreateDocumentAsCpf(cpf);
         Cnpj = null;
         CreatedAt = DateTime.UtcNow;
@@ -50,7 +50,7 @@ public class Professional : AggregateRoot
     }
     private ProfessionalRegisterStatus SetRegisterAsApproval()
     {
-        IsRegistered = true;
+        IsRegistered = false;
         return ProfessionalRegisterStatus.CreateAsApproved();
     }
         

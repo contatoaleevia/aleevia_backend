@@ -26,4 +26,14 @@ public class OfficesProfessionalsRepository(ApiDbContext context) : Repository<O
             .AsNoTracking()
             .ToListAsync();
     }
+
+    public async Task<OfficesProfessional?> GetByOfficeAndProfessional(Guid officeId, Guid professionalId)
+    {
+        return await DbSet
+            .FirstOrDefaultAsync(
+                op => op.OfficeId == officeId && 
+                    op.ProfessionalId == professionalId && 
+                    op.IsActive
+            );
+    }
 }
