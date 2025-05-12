@@ -14,4 +14,13 @@ public class FaqSourceType
     {
         SourceType = (FaqSourceEnum)sourceType;
     }
+
+    public FaqSourceType(string description)
+    {
+        var result = EnumExtensions.GetEnumFromDescription<FaqSourceEnum>(description);
+        if (result == null)
+            throw new ArgumentException($"Descrição inválida: {description}");
+
+        SourceType = result.Value;
+    }
 }

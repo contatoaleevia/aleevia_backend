@@ -3,9 +3,11 @@ using Application.DTOs.Faqs.CreateFaqDTOs;
 using Application.DTOs.Faqs.CreateFaqPageDTOs;
 using Application.DTOs.Faqs.DeleteFaqDTOs;
 using Application.DTOs.Faqs.GetFaqDTOs;
+using Application.DTOs.Faqs.ImportFaqsDTOs;
 using Application.DTOs.Faqs.UpdateFaqDTOs;
 using Application.DTOs.Faqs.UpdateFaqPageDTOs;
 using Application.Services.Faqs;
+using CrossCutting.Session;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +15,7 @@ namespace Api.Controllers;
 
 [ApiController]
 [Route("api/faq")]
-public class FaqController(IFaqService faqService, IFaqPageService faqPageService) 
+public class FaqController(IFaqService faqService, IFaqPageService faqPageService, IUserSession userSession) 
     : ControllerBase
 {
     /// <summary>
@@ -94,6 +96,27 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         var response = await faqPageService.CreateFaqPageAsync(requestDto);
+        return Ok(response);
+    }
+    
+    /// <summary>
+    /// Importa uma lista de FAQs.
+    /// Aceita SOMENTE arquivos .csv ou .xlsx.
+    /// A coluna Categoria pode ser: Orientações ao cliente, Sobre o profissional ou Sobre a clínica.
+    /// Retorna quais registros foram importados e quais não.
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("import")]
+    [Consumes("multipart/form-data")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(ImportResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> ImportFaqs([FromForm] ImportFaqsFile request)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        using var stream = request.Arquivo.OpenReadStream();
+        var response = await faqService.ImportFaqs(stream, request.Arquivo.FileName, userSession.UserId);
         return Ok(response);
     }
 

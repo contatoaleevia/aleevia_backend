@@ -14,4 +14,13 @@ public class FaqCategoryType
     {
         CategoryType = (FaqCategoryEnum)categoryType;
     }
+
+    public FaqCategoryType(string description)
+    {
+        var result = EnumExtensions.GetEnumFromDescription<FaqCategoryEnum>(description);
+        if (result == null)
+            throw new ArgumentException($"Descrição inválida: {description}");
+
+        CategoryType = result.Value;
+    }
 }
