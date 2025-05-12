@@ -98,12 +98,13 @@ public class OfficeService(
         return new BindOfficeProfessionalResponse(response.Id);
     }
 
-    public async Task<OfficeResponse> GetOffice(Guid id)
+    public async Task<OfficeResponse> GetOfficeById(Guid id)
     {
         var office = await repository.GetByIdAsync(id) ?? throw new OfficeNotFoundException(id);
         var addresses = await officeAddressRepository.GetOfficeAddress(id);
+        var professionals = await officesProfessionalsRepository.GetByOfficeIdWithDetailsAsync(id);
 
-        return OfficeResponse.FromOffice(office, addresses);
+        return OfficeResponse.FromOffice(office, addresses, professionals);
     }
 
     public async Task<List<OfficeResponse>> GetOfficesByUserId(Guid userId)
@@ -117,7 +118,8 @@ public class OfficeService(
         foreach (var office in offices)
         {
             var addresses = await officeAddressRepository.GetOfficeAddress(office.Id);
-            responses.Add(OfficeResponse.FromOffice(office, addresses));
+            var professionals = await officesProfessionalsRepository.GetByOfficeIdWithDetailsAsync(office.Id);
+            responses.Add(OfficeResponse.FromOffice(office, addresses, professionals));
         }
 
         return responses;

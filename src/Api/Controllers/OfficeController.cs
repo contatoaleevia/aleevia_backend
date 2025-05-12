@@ -117,10 +117,9 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetOffice(Guid id)
+    public async Task<IActionResult> GetOfficeById(Guid id)
     {
-        var response = await service.GetOffice(id);
-        return Ok(response);
+        return Ok(await service.GetOfficeById(id));
     }
 
     /// <summary>

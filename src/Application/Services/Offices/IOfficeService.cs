@@ -12,6 +12,6 @@ public interface IOfficeService
     Task<BindOfficeAddressResponse> BindOfficeAddress(BindOfficeAddressRequest request, Guid userId);
     Task DeleteOfficeAddress(Guid officeAddressId);
     Task<BindOfficeProfessionalResponse> BindOfficeProfessional(BindOfficeProfessionalRequest request);
-    Task<OfficeResponse> GetOffice(Guid id);
+    Task<OfficeResponse> GetOfficeById(Guid id);
     Task<List<OfficeResponse>> GetOfficesByUserId(Guid userId);
 }

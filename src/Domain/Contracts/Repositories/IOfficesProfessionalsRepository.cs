@@ -2,4 +2,8 @@
 using Domain.Entities.Offices;
 
 namespace Domain.Contracts.Repositories;
-    public interface IOfficesProfessionalsRepository : IRepository<OfficesProfessional>;
+
+public interface IOfficesProfessionalsRepository : IRepository<OfficesProfessional>
+{
+    Task<List<OfficesProfessional>> GetByOfficeIdWithDetailsAsync(Guid officeId);
+}
