@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography.Xml;
 using Application.DTOs.Offices.BindOfficeAddressDTOs;
+using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
 using Application.DTOs.Professionals;
@@ -35,7 +36,8 @@ public class OfficeService(
             email: request.Email,
             site: request.Site,
             instagram: request.Instagram,
-            logo: request.Logo
+            logo: request.Logo,
+            individual: request.Individual
         );
 
         try
@@ -50,7 +52,7 @@ public class OfficeService(
         }
     }
 
-    public async Task<Guid> BindOfficeAddress(BindOfficeAddressRequest request, Guid userId)
+    public async Task<BindOfficeAddressResponse> BindOfficeAddress(BindOfficeAddressRequest request, Guid userId)
     {
         var manager = await managerRepository.GetManagerByUserId(userId)
                       ?? throw new ManagerUserNotFoundException(userId);
@@ -65,7 +67,7 @@ public class OfficeService(
         );
 
         var response = await officeAddressRepository.CreateAsync(newOfficeAddress);
-        return response.Id;
+        return new BindOfficeAddressResponse(response.Id);
     }
 
     public async Task DeleteOfficeAddress(Guid officeAddressId)
@@ -78,7 +80,7 @@ public class OfficeService(
         await officeAddressRepository.UpdateAsync(officeAddress);
     }
 
-    public async Task<Guid> BindOfficeProfessional(BindOfficeProfessionalRequest request)
+    public async Task<BindOfficeProfessionalResponse> BindOfficeProfessional(BindOfficeProfessionalRequest request)
     {
         var professional = await professionalService.PreRegisterWhenNotExists(request.Professional);
 
@@ -92,9 +94,8 @@ public class OfficeService(
             request.Professional.Active,
             request.Professional.IsPublic
         );
-        await officesProfessionalsRepository.CreateAsync(officeProfessional);
-
-        return officeProfessional.Id;
+        var response = await officesProfessionalsRepository.CreateAsync(officeProfessional);
+        return new BindOfficeProfessionalResponse(response.Id);
     }
 
     public async Task<OfficeResponse> GetOffice(Guid id)
@@ -103,5 +104,22 @@ public class OfficeService(
         var addresses = await officeAddressRepository.GetOfficeAddress(id);
 
         return OfficeResponse.FromOffice(office, addresses);
+    }
+
+    public async Task<List<OfficeResponse>> GetOfficesByUserId(Guid userId)
+    {
+        var manager = await managerRepository.GetManagerByUserId(userId)
+                      ?? throw new ManagerUserNotFoundException(userId);
+
+        var offices = await repository.GetAllByOwnerIdAsync(manager.Id);
+        var responses = new List<OfficeResponse>();
+
+        foreach (var office in offices)
+        {
+            var addresses = await officeAddressRepository.GetOfficeAddress(office.Id);
+            responses.Add(OfficeResponse.FromOffice(office, addresses));
+        }
+
+        return responses;
     }
 }

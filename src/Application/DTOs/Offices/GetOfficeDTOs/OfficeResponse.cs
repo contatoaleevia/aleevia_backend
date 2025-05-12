@@ -23,6 +23,7 @@ public record OfficeResponse
                 Site = office.Site.Value,
                 Instagram = office.Instagram.Value,
                 Logo = office.Logo.Value,
+                Individual = office.Individual,
                 Addresses = [.. addresses.Select(a => new OfficeAddressResponse
                 {
                     Id = a.Id,
@@ -64,6 +65,7 @@ public record OfficeData
     public required string Site { get; init; }
     public required string Instagram { get; init; }
     public required string Logo { get; init; }
+    public required bool Individual { get; init; }
     public required IReadOnlyList<OfficeAddressResponse> Addresses { get; init; }
 }
 
