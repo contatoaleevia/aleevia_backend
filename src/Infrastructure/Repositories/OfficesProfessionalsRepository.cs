@@ -22,6 +22,8 @@ public class OfficesProfessionalsRepository(ApiDbContext context) : Repository<O
             .Include(op => op.Professional)
                 .ThenInclude(p => p.SpecialtyDetails)
                     .ThenInclude(sd => sd.Subspeciality)
+            .Include(op => op.Professional)
+                .ThenInclude(p => p.Documents)
             .Where(op => op.OfficeId == officeId)
             .AsNoTracking()
             .ToListAsync();

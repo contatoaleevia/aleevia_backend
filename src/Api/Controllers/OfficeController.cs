@@ -144,7 +144,7 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// </summary>
     /// <param name="id">ID do local de trabalho</param>
     /// <returns>Lista de profissionais do local de trabalho</returns>
-    [HttpGet("{officeId}/professionals")]
+    [HttpGet("{id}/professionals")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(GetOfficeProfessionalsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]

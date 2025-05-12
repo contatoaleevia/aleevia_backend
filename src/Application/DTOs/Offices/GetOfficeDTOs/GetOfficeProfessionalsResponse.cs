@@ -43,6 +43,18 @@ public record GetOfficeProfessionalsResponse
                         SubspecialityId = s.SubspecialityId,
                         SubspecialityName = s.Subspeciality?.Name,
                         VideoPresentation = s.VideoPresentation
+                    })],
+                    Documents = [.. p.Professional.Documents.Select(d => new ProfessionalDocumentData
+                    {
+                        Id = d.Id,
+                        DocumentType = d.DocumentType,
+                        DocumentNumber = d.DocumentNumber,
+                        DocumentState = d.DocumentState,
+                        FrontUrl = d.FrontUrl,
+                        BackUrl = d.BackUrl,
+                        Validated = d.Validated,
+                        CreatedAt = d.CreatedAt,
+                        RemovedAt = d.RemovedAt
                     })]
                 }
             })]
@@ -73,6 +85,7 @@ public record ProfessionalData
     public required bool IsRegistered { get; init; }
     public required string RegisterStatus { get; init; }
     public required IReadOnlyList<ProfessionalSpecialtyDetailData> SpecialtyDetails { get; init; }
+    public required IReadOnlyList<ProfessionalDocumentData> Documents { get; init; }
 }
 
 public record ProfessionalSpecialtyDetailData
@@ -84,4 +97,17 @@ public record ProfessionalSpecialtyDetailData
     public Guid? SubspecialityId { get; init; }
     public string? SubspecialityName { get; init; }
     public string? VideoPresentation { get; init; }
+}
+
+public record ProfessionalDocumentData
+{
+    public required Guid Id { get; init; }
+    public required string DocumentType { get; init; }
+    public required string DocumentNumber { get; init; }
+    public required string DocumentState { get; init; }
+    public string? FrontUrl { get; init; }
+    public string? BackUrl { get; init; }
+    public required bool Validated { get; init; }
+    public required DateTime CreatedAt { get; init; }
+    public DateTime? RemovedAt { get; init; }
 } 

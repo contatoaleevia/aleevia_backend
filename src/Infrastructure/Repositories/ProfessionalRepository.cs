@@ -37,12 +37,11 @@ public class ProfessionalRepository(ApiDbContext context) : Repository<Professio
         return await DbSet
             .Include(p => p.Manager)
             .Include(p => p.RegisterStatus)
-            .Include(p => p.SpecialtyDetails)
-                .ThenInclude(sd => sd.Profession)
-            .Include(p => p.SpecialtyDetails)
-                .ThenInclude(sd => sd.Speciality)
-            .Include(p => p.SpecialtyDetails)
-                .ThenInclude(sd => sd.Subspeciality)
+            .Include(p => p.Documents)
+            .Include(p => p.SpecialtyDetails.Select(sd => sd.Profession))
+            .Include(p => p.SpecialtyDetails.Select(sd => sd.Speciality))
+            .Include(p => p.SpecialtyDetails.Select(sd => sd.Subspeciality))
+            .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Manager.UserId == userId);
     }
 
