@@ -38,9 +38,12 @@ public class ProfessionalRepository(ApiDbContext context) : Repository<Professio
             .Include(p => p.Manager)
             .Include(p => p.RegisterStatus)
             .Include(p => p.Documents)
-            .Include(p => p.SpecialtyDetails.Select(sd => sd.Profession))
-            .Include(p => p.SpecialtyDetails.Select(sd => sd.Speciality))
-            .Include(p => p.SpecialtyDetails.Select(sd => sd.Subspeciality))
+            .Include(p => p.SpecialtyDetails)
+                .ThenInclude(sd => sd.Profession)
+            .Include(p => p.SpecialtyDetails)
+                .ThenInclude(sd => sd.Speciality)
+            .Include(p => p.SpecialtyDetails)
+                .ThenInclude(sd => sd.Subspeciality)
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Manager.UserId == userId);
     }
