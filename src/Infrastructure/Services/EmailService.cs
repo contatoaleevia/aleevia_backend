@@ -19,6 +19,9 @@ public class EmailService : IEmailService
     public EmailService(IOptions<EmailSettings> emailSettings)
     {
         _emailSettings = emailSettings.Value;
+
+        ValidateEmailSettings();
+
         var credentials = new Amazon.Runtime.BasicAWSCredentials(
             _emailSettings.AwsAccessKeyId,
             _emailSettings.AwsSecretAccessKey
@@ -30,44 +33,76 @@ public class EmailService : IEmailService
         );
     }
 
+    private void ValidateEmailSettings()
+    {
+        if (string.IsNullOrEmpty(_emailSettings.AwsAccessKeyId))
+            throw new InvalidOperationException("AWS Access Key ID não configurado");
+        
+        if (string.IsNullOrEmpty(_emailSettings.AwsSecretAccessKey))
+            throw new InvalidOperationException("AWS Secret Access Key não configurado");
+        
+        if (string.IsNullOrEmpty(_emailSettings.AwsRegion))
+            throw new InvalidOperationException("AWS Region não configurada");
+        
+        if (string.IsNullOrEmpty(_emailSettings.FromEmail))
+            throw new InvalidOperationException("Email remetente não configurado");
+        
+        if (string.IsNullOrEmpty(_emailSettings.FromName))
+            throw new InvalidOperationException("Nome do remetente não configurado");
+    }
+
     public async Task SendEmailAsync(string to, string subject, string body, bool isHtml = false)
     {
-        await SendEmailAsync(new[] { to }, subject, body, isHtml);
+        await SendEmailAsync([to], subject, body, isHtml);
     }
 
     public async Task SendEmailAsync(string[] to, string subject, string body, bool isHtml = false)
     {
-        var request = new SendEmailRequest
-        {
-            Source = $"{_emailSettings.FromName} <{_emailSettings.FromEmail}>",
-            Destination = new Destination
-            {
-                ToAddresses = to.ToList()
-            },
-            Message = new Message
-            {
-                Subject = new Content(subject),
-                Body = new Body
-                {
-                    Html = isHtml ? new Content(body) : null,
-                    Text = !isHtml ? new Content(body) : null
-                }
-            }
-        };
-
         try
         {
+            var request = new SendEmailRequest
+            {
+                Source = $"{_emailSettings.FromName} <{_emailSettings.FromEmail}>",
+                Destination = new Destination
+                {
+                    ToAddresses = [.. to]
+                },
+                Message = new Message
+                {
+                    Subject = new Content(subject),
+                    Body = new Body
+                    {
+                        Html = isHtml ? new Content(body) : null,
+                        Text = !isHtml ? new Content(body) : null
+                    }
+                }
+            };
+
             await _sesClient.SendEmailAsync(request);
+        }
+        catch (AmazonSimpleEmailServiceException ex)
+        {
+            var errorMessage = ex.ErrorCode switch
+            {
+                "InvalidClientTokenId" => "Credenciais AWS inválidas. Verifique o Access Key ID.",
+                "SignatureDoesNotMatch" => "Credenciais AWS inválidas. Verifique o Secret Access Key.",
+                "InvalidSecurityToken" => "Token de segurança AWS inválido. Verifique as credenciais.",
+                _ => $"Erro ao enviar email via AWS SES: {ex.Message}"
+            };
+
+            Console.WriteLine($"AWS SES Error: {ex.ErrorCode} - {ex.Message}");
+            throw new Exception(errorMessage, ex);
         }
         catch (Exception ex)
         {
-            throw new Exception($"Failed to send email: {ex.Message}", ex);
+            Console.WriteLine($"Email Service Error: {ex.Message}");
+            throw new Exception("Erro inesperado ao enviar email.", ex);
         }
     }
 
     public async Task SendTemplatedEmailAsync(string to, string templateName, object templateData)
     {
-        await SendTemplatedEmailAsync(new[] { to }, templateName, templateData);
+        await SendTemplatedEmailAsync([to], templateName, templateData);
     }
 
     public async Task SendTemplatedEmailAsync(string[] to, string templateName, object templateData)
@@ -77,7 +112,7 @@ public class EmailService : IEmailService
             Source = $"{_emailSettings.FromName} <{_emailSettings.FromEmail}>",
             Destination = new Destination
             {
-                ToAddresses = to.ToList()
+                ToAddresses = [.. to]
             },
             Template = templateName,
             TemplateData = System.Text.Json.JsonSerializer.Serialize(templateData)
@@ -89,7 +124,8 @@ public class EmailService : IEmailService
         }
         catch (Exception ex)
         {
-            throw new Exception($"Failed to send templated email: {ex.Message}", ex);
+            Console.WriteLine($"Email Service Error: {ex.Message}");
+            throw new Exception("Erro inesperado ao enviar email.", ex);
         }
     }
 } 
