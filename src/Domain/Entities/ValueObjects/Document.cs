@@ -42,6 +42,16 @@ public class Document
             throw new CnpjNotValidException(value);
     }
 
-    private string RemoveSpecialCharacters(string value)
+    private static string RemoveSpecialCharacters(string value)
         => value.Replace(".", "").Replace("-", "").Replace("/", "").Trim();
+
+    public string GetFormattedValue()
+    {
+        return Type switch
+        {
+            DocumentType.Cpf => CpfValidator.Format(Value),
+            DocumentType.Cnpj => CnpjValidator.Format(Value),
+            _ => string.Empty
+        };
+    }
 }

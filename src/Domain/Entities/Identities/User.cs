@@ -26,7 +26,7 @@ public sealed class User : IdentityUser<Guid>
 
     public User(
         string email,
-        string phoneNumber,
+        string? phoneNumber,
         string name,
         string cpf,
         string? cnpj,
@@ -52,27 +52,40 @@ public sealed class User : IdentityUser<Guid>
         UserRoles = SetRolesByUserType(userType);
     }
 
-    public static Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
+    public Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
 
-    public static Document SetCnpj(string? cnpj)
+    public Document SetCnpj(string? cnpj)
         => string.IsNullOrEmpty(cnpj) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(cnpj);
-    public ushort GetUserTypeId() => (ushort) UserType.UserTypeId;
-    
-    public static string SetPhoneNumber(string phoneNumber)
+    public ushort GetUserTypeId() => (ushort)UserType.UserTypeId;
+
+    public string SetPhoneNumber(string? phoneNumber)
     {
+        if (phoneNumber is null) return string.Empty;
         phoneNumber = phoneNumber.Replace(" ", string.Empty).Trim();
-        if (PhoneNumberValidator.IsValid(phoneNumber))
-            throw new ArgumentException("Invalid phone number.");
+        if (!PhoneNumberValidator.IsValid(phoneNumber))
+            throw new ArgumentException("Numero de telefone inválido.");
 
         return phoneNumber;
     }
-    
-    public string GetUserTypeName() => UserType.UserTypeName;
+
     public IEnumerable<string> GetRolesNames() => UserRoles.Select(x => x.GetRoleName());
-    
+
     private ICollection<UserRole> SetRolesByUserType(UserType userType)
     {
         var roles = UserRole.GetRolesByUserType(userType);
         return [.. roles.Select(x => new UserRole(Id, x.Id))];
+    }
+
+    public void SetRole(Role role)
+    {
+        if (UserRoles.All(x => x.RoleId != role.Id))
+            UserRoles.Add(new UserRole(Id, role.Id));
+    }
+
+    public void UpdateFromRegister(string cnpj, string phone)
+    {
+        Cnpj = SetCnpj(cnpj);
+        PhoneNumber = SetPhoneNumber(phone);
+        UpdatedAt = DateTime.UtcNow;
     }
 }

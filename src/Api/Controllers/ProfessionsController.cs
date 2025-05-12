@@ -12,6 +12,10 @@ namespace Api.Controllers;
 public class ProfessionsController(IProfessionService professionService) 
     : ControllerBase
 {
+    /// <summary>
+    /// Obtém todas as profissões de saúde cadastradas no sistema.
+    /// </summary>
+    /// <returns>Lista de todas as profissões ativas</returns>
     [HttpGet]
     [Authorize(Roles = "Admin")]
     [Produces("application/json")]

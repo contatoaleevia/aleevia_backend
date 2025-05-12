@@ -2,4 +2,4 @@
 using Domain.Entities.Offices;
 
 namespace Domain.Contracts.Repositories;
-    public interface IOfficesProfessionalsRepository : IRepository<OfficesProfessionals>;
+    public interface IOfficesProfessionalsRepository : IRepository<OfficesProfessional>;

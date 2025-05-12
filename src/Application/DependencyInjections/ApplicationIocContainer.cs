@@ -13,6 +13,7 @@ using Application.Services.HealthcareProfessionals;
 using Application.Services.IaChats;
 using Application.Services.Patients;
 using Application.Services.Professionals;
+using Application.Services.PasswordResets;
 
 namespace Application.DependencyInjections;
 
@@ -22,6 +23,7 @@ public static class ApplicationIocContainer
     {
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IFaqService, FaqService>();
+        services.AddScoped<IFaqPageService, FaqPageService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IGenerateJwtTokenHelper, GenerateJwtTokenHelper>();
         services.AddScoped<IManagerService, ManagerService>();
@@ -34,5 +36,6 @@ public static class ApplicationIocContainer
         services.AddScoped<IProfessionalService, ProfessionalService>();
         services.AddScoped<IPatientService, PatientService>();
         services.AddScoped<IPatientLeadService, PatientLeadService>();
+        services.AddScoped<IPasswordResetService, PasswordResetService>();
     }
 }

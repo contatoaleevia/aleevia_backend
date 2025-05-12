@@ -1,65 +1,52 @@
 ﻿using Application.DTOs.Email;
 using Application.DTOs.Professionals;
-using Application.Helpers;
+using Application.DTOs.Professionals.GetProfessionalDTOs;
+using Application.DTOs.Users.RetrieveUserDTOs;
+using Application.Services.Users;
 using CrossCutting.Databases;
 using Domain.Contracts.Repositories;
-using Domain.Entities.Identities;
-using Domain.Entities.Offices;
+using Domain.Contracts.Services.RegisterProfessionals;
 using Domain.Entities.Professionals;
-using Domain.Entities.ValueObjects;
-using Domain.Exceptions;
-using Domain.Exceptions.Offices;
 using Domain.Exceptions.Professionals;
 using Domain.Interfaces;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.Services.Professionals;
 public class ProfessionalService(
-    IOfficesProfessionalsRepository officesProfessionalsRepository,
-    IProfessionalRepository professionalRepository, 
-    UserManager<User> userManager,
-    IOfficeRepository officeRepository,
-    IEmailService emailService) 
+    IProfessionalRepository professionalRepository,
+    IProfessionRepository professionRepository,
+    IUserService userService,
+    IEmailService emailService,
+    IConfiguration configuration,
+    IRegisterProfessional registerProfessional)
     : IProfessionalService
 {
-    public async Task<Guid> PreCreateProfessional(PreCreateProfessionalRequestDto requestDto)
+    private readonly string _frontendUrl = configuration.GetValue<string>("FrontendUrl") ?? throw new InvalidOperationException("FrontendUrl não configurada no appsettings");
+
+    public async Task<Professional> PreRegisterWhenNotExists(PreRegisterProfessionalRequest request)
     {
-        var professional = await professionalRepository.GetByCpfAsync(Document.CreateDocumentAsCpf(requestDto.Cpf));
+        var professional = await professionalRepository.GetByCpfToRegisterAsync(request.Cpf);
         if (professional is not null)
-            throw new ProfessionalAlreadyExistsException(requestDto.Cpf);
+            return professional;
 
-        var newUser = new User(
-            email: requestDto.Email,
-            phoneNumber: string.Empty,
-            name: requestDto.Nome,
-            cpf: requestDto.Cpf,
-            cnpj: null,
-            userType: UserType.HealthcareProfessional);
+        using var scope = ApiTransactionScope.RepeatableRead(true);
+        var (newProfessional, tempPassword) = await userService.CreateProfessionalUserAsync(new CreateProfessionalUserRequest
+        (
+            request.Email,
+            request.Name,
+            request.Cpf
+        ));
 
-        var tempPassword = RandomGenerator.Generate(lenght: 10);
+        await professionalRepository.CreateAsync(newProfessional);
 
-        await userManager.CreateAsync(newUser, tempPassword);
-
-        var newProfessional = new Professional(
-            user: newUser,
-            userId: newUser.Id,
-            status: new ProfessionalStatusType(0),
-            officeId: requestDto.OfficeId,
-            active: false,
-            cpf: Document.CreateDocumentAsCnpj(requestDto.Cpf),
-            createdAt: DateTime.UtcNow);
-
-
-        using (var scope = ApiTransactionScope.RepeatableRead(true))
+        if (tempPassword is not null)
         {
-            var response = await professionalRepository.CreateAsync(newProfessional);
-
             try
             {
                 await emailService.SendEmailAsync(
-                    to: newUser.Email!,
+                    to: request.Email,
                     subject: PreRegisteredEmailTemplate.GetSubject(),
-                    body: PreRegisteredEmailTemplate.GetBody(newUser.Cpf.Value, tempPassword, requestDto.Link),
+                    body: PreRegisteredEmailTemplate.GetBody(newProfessional.Cpf.GetFormattedValue(), tempPassword, _frontendUrl),
                     isHtml: true
                 );
             }
@@ -67,57 +54,72 @@ public class ProfessionalService(
             {
                 Console.WriteLine($"Falha ao enviar email de pré-cadastro: {ex.Message}");
             }
-            scope.Complete();
-            return response.Id;
         }
+        
+        scope.Complete();
+        return newProfessional;
     }
 
-    public async Task<Guid> CreateProfessional(CreateProfessionalRequestDto requestDto)
+    public async Task<ProfessionalResponse> RegisterProfessional(RegisterProfessionalRequest request)
     {
-        var user = await userManager.FindByIdAsync(requestDto.UserId.ToString());
-        if (user is null)
-            throw new UserNotFoundException(requestDto.UserId);
+        using var scope = ApiTransactionScope.RepeatableRead(true);
+        
+        var professional = await ValidateAndGetProfessionalAsync(request);
+        await ValidateProfessionDataAsync(request.ProfessionData);
 
-        var professional = new Professional(
-            user: user,
-            userId: user.Id,
-            status: new ProfessionalStatusType(requestDto.Status),
-            officeId: requestDto.OfficeId,
-            active: requestDto.Active,
-            cpf: Document.CreateDocumentAsCnpj(requestDto.Cnpj),
-            createdAt: DateTime.UtcNow
+        registerProfessional.Register(professional, request);
+
+        await professionalRepository.UpdateAsync(professional);
+        await professionalRepository.SaveChangesAsync();
+
+        var specialtyDetail = new ProfessionalSpecialtyDetail(
+            professional.Id,
+            request.ProfessionData.ProfessionId,
+            request.ProfessionData.SpecialityId,
+            request.ProfessionData.SubSpecialityId == Guid.Empty ? null : request.ProfessionData.SubSpecialityId
         );
+        await professionalRepository.CreateSpecialtyDetailAsync(specialtyDetail);
 
-        try
-        {
-            var response = await professionalRepository.CreateAsync(professional);
-            return response.Id;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw new CreateProfessionalException(user.Id);
-        }
+        var document = new ProfessionalDocument(
+            professional.Id,
+            request.DocumentData.DocumentType,
+            request.DocumentData.DocumentNumber,
+            request.DocumentData.DocumentState
+        );
+        await professionalRepository.CreateDocumentAsync(document);
+
+        professional.SpecialtyDetails.Add(specialtyDetail);
+        professional.Documents.Add(document);
+        
+        scope.Complete();
+        return ProfessionalResponse.FromProfessional(professional);
     }
 
-    public async Task<Guid> BindProfessionalOffice(BindProfessionalOfficeRequestDto requestDto)
+    private async Task<Professional> ValidateAndGetProfessionalAsync(RegisterProfessionalRequest request)
     {
-        // Caso o profissional não exista, criar um pré-registro do profissional 
-        var cpf = Document.CreateDocumentAsCpf(requestDto.Cpf);
-        var user = await professionalRepository.GetByCpfAsync(cpf);
-        if (user is null)
-            throw new ProfessionalUserNotFoundException(requestDto.Cpf);
-
-        var professional = await professionalRepository.GetByIdAsync(user.Id);
+        var professional = await professionalRepository.GetByCpfToRegisterAsync(request.Cpf);
         if (professional is null)
-            throw new ProfessionalNotFoundException(user.Id);
+            throw new ProfessionalWithCpfNotFoundException(request.Cpf);
+        if (professional.IsRegistered)
+            throw new ProfessionalAlreadyRegisteredException(request.Cpf);
+        if (request.ProfessionData is null)
+            throw new ProfessionalWithCpfNotFoundException(request.Cpf);
 
-        var office = await officeRepository.GetByIdAsync(requestDto.OfficeId);
-        if (office is null)
-            throw new OfficeNotFoundException(requestDto.OfficeId);
+        return professional;
+    }
 
-        var officeProfessional = await officesProfessionalsRepository.CreateAsync(new OfficesProfessionals(office.Id, professional.Id));
+    private async Task ValidateProfessionDataAsync(ProfessionalProfessionRequest professionData)
+    {
+        var profession = await professionRepository.GetByIdAsync(professionData.ProfessionId);
+        if (profession is null)
+            throw new ProfessionNotFoundException(professionData.ProfessionId);
 
-        return officeProfessional.Id;
+        var speciality = await professionRepository.GetSpecialityByIdAsync(professionData.SpecialityId);
+        if (speciality is null)
+            throw new SpecialityNotFoundException(professionData.SpecialityId);
+
+        var subspeciality = await professionRepository.GetSubSpecialityByIdAsync(professionData.SubSpecialityId);
+        if (subspeciality is null && professionData.SubSpecialityId.HasValue)
+            throw new SubSpecialityNotFoundException(professionData.SubSpecialityId.Value);
     }
 }

@@ -1,28 +1,38 @@
-﻿using Application.DTOs.Professionals;
+﻿﻿using Api.ApiResponses;
 using Application.Services.Professionals;
+using Domain.Contracts.Services.RegisterProfessionals;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
+
+[ApiController]
+[Route("api/professional")]
 public class ProfessionalController(IProfessionalService service) : ControllerBase
 {
+    /// <summary>
+    /// Cria um novo Profissional de Saúde.
+    /// </summary>
+    /// <param name="request">Objeto com os dados do profissional:
+    /// <summary/>Name: Nome completo do profissional
+    /// <summary/>Email: Email do profissional
+    /// <summary/>Document: Documento do profissional (CPF)
+    /// <summary/>PhoneNumber: Número de telefone do profissional
+    /// <summary/>Specialty: Especialidade do profissional
+    /// <summary/>RegisterNumber: Número de registro profissional (CRM, CRO, etc.)
+    /// <summary/>RegisterState: Estado do registro profissional (UF)
+    /// </param>
+    /// <returns>ID do profissional criado</returns>
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
-    public async Task<IActionResult> CreateProfessional([FromBody] CreateProfessionalRequestDto requestDto)
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> CreateProfessional([FromBody] RegisterProfessionalRequest request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        var response = await service.CreateProfessional(requestDto);
-        return Ok(response);
-    }
-
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
-    [Consumes("application/json")]
-    public async Task<IActionResult> BindProfessionalOffice([FromBody] BindProfessionalOfficeRequestDto requestDto)
-    {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-        var response = await service.BindProfessionalOffice(requestDto);
+        var response = await service.RegisterProfessional(request);
         return Ok(response);
     }
 }

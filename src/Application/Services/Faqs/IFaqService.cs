@@ -6,7 +6,8 @@ using Application.DTOs.Faqs.UpdateFaqDTOs;
 namespace Application.Services.Faqs;
 public interface IFaqService
 {
-    Task<GetFaqByProfessionalIdResponseDtoList> GetFaqsByProfessionalIdAsync(Guid guid);
+    Task<GetFaqWithPageResponseDto> GetFaqsBySourceIdAsync(Guid sourceId);
+    Task<GetFaqWithPageResponseDto> GetFaqsByCustomUrlAsync(string customUrl);
     Task<CreateFaqResponseDto> CreateFaqAsync(CreateFaqRequestDto requestDto);
     Task<UpdateFaqResponseDto> UpdateFaqAsync(UpdateFaqRequestDto request);
     Task<DeleteFaqResponseDto> DeleteFaqAsync(DeleteFaqRequestDto request);

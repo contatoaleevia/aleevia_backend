@@ -134,7 +134,8 @@ namespace Infrastructure.Migrations
                         .HasColumnName("question");
 
                     b.Property<Guid>("SourceId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("source_id");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -142,9 +143,45 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SourceId");
-
                     b.ToTable("faq", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Faqs.FaqPage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CustomUrl")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("custom_url");
+
+                    b.Property<Guid>("SourceId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("source_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("WelcomeMessage")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("welcome_message");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomUrl")
+                        .IsUnique();
+
+                    b.ToTable("faq_page", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Profession", b =>
@@ -583,7 +620,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("office_address", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessionals", b =>
+            modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessional", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -597,11 +634,21 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_public");
+
                     b.Property<Guid>("OfficeId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("office_id");
 
                     b.Property<Guid>("ProfessionalId")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("professional_id");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -613,7 +660,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProfessionalId");
 
-                    b.ToTable("offices_professionals", "public");
+                    b.ToTable("offices_professional", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.Patients.Patient", b =>
@@ -724,9 +771,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -735,36 +779,154 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
-                    b.Property<string>("GoogleRefreshToken")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("google_refresh_token");
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("email");
 
-                    b.Property<string>("GoogleToken")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("google_token");
+                    b.Property<bool>("IsRegistered")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_registered");
 
-                    b.Property<Guid>("OfficeId")
-                        .HasColumnType("uuid");
+                    b.Property<Guid>("ManagerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("manager_id");
 
-                    b.Property<string>("PreRegister")
-                        .HasColumnType("text");
+                    b.Property<string>("Name")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("PreferredName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("preferred_name");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
-                    b.Property<Guid>("UserId")
+                    b.HasKey("Id");
+
+                    b.HasIndex("ManagerId");
+
+                    b.ToTable("professional", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Professionals.ProfessionalDocument", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<string>("BackUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("back_url");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("DocumentNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("document_number");
+
+                    b.Property<string>("DocumentState")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("character varying(2)")
+                        .HasColumnName("document_state");
+
+                    b.Property<string>("DocumentType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("document_type");
+
+                    b.Property<string>("FrontUrl")
+                        .HasColumnType("text")
+                        .HasColumnName("front_url");
+
+                    b.Property<Guid>("ProfessionalId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("professional_id");
+
+                    b.Property<Guid?>("ProfessionalId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("RemovedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("removed_at");
+
+                    b.Property<bool>("Validated")
+                        .HasColumnType("boolean")
+                        .HasColumnName("validated");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OfficeId");
+                    b.HasIndex("ProfessionalId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ProfessionalId1");
 
-                    b.ToTable("professional", "public");
+                    b.ToTable("professional_documents", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Professionals.ProfessionalSpecialtyDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("ProfessionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("profession_id");
+
+                    b.Property<Guid>("ProfessionalId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("professional_id");
+
+                    b.Property<Guid?>("ProfessionalId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("RemovedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("removed_at");
+
+                    b.Property<Guid>("SpecialityId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("speciality_id");
+
+                    b.Property<Guid?>("SubspecialityId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("subspeciality_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("VideoPresentation")
+                        .HasColumnType("text")
+                        .HasColumnName("video_presentation");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProfessionId");
+
+                    b.HasIndex("ProfessionalId");
+
+                    b.HasIndex("ProfessionalId1");
+
+                    b.HasIndex("SpecialityId");
+
+                    b.HasIndex("SubspecialityId");
+
+                    b.ToTable("professional_specialty_details", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.ServiceTypes.ServiceType", b =>
@@ -926,11 +1088,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Faqs.Faq", b =>
                 {
-                    b.HasOne("Domain.Entities.Identities.User", "Source")
-                        .WithMany()
-                        .HasForeignKey("SourceId")
-                        .IsRequired();
-
                     b.OwnsOne("Domain.Entities.Faqs.FaqCategoryType", "FaqCategory", b1 =>
                         {
                             b1.Property<Guid>("FaqId")
@@ -967,8 +1124,6 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("FaqCategory")
                         .IsRequired();
-
-                    b.Navigation("Source");
 
                     b.Navigation("SourceType")
                         .IsRequired();
@@ -1402,7 +1557,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("Office");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessionals", b =>
+            modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessional", b =>
                 {
                     b.HasOne("Domain.Entities.Offices.Office", "Office")
                         .WithMany()
@@ -1513,14 +1668,9 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Professionals.Professional", b =>
                 {
-                    b.HasOne("Domain.Entities.Offices.Office", "Office")
+                    b.HasOne("Domain.Entities.Identities.Manager", "Manager")
                         .WithMany()
-                        .HasForeignKey("OfficeId")
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Identities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("ManagerId")
                         .IsRequired();
 
                     b.OwnsOne("Domain.Entities.ValueObjects.Url", "Biography", b1 =>
@@ -1533,6 +1683,25 @@ namespace Infrastructure.Migrations
                                 .HasMaxLength(200)
                                 .HasColumnType("character varying(200)")
                                 .HasColumnName("biography");
+
+                            b1.HasKey("ProfessionalId");
+
+                            b1.ToTable("professional", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProfessionalId");
+                        });
+
+                    b.OwnsOne("Domain.Entities.ValueObjects.Document", "Cnpj", b1 =>
+                        {
+                            b1.Property<Guid>("ProfessionalId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(14)
+                                .HasColumnType("character varying(14)")
+                                .HasColumnName("cnpj");
 
                             b1.HasKey("ProfessionalId");
 
@@ -1561,25 +1730,6 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("ProfessionalId");
                         });
 
-                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Doctoralia", b1 =>
-                        {
-                            b1.Property<Guid>("ProfessionalId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(200)
-                                .HasColumnType("character varying(200)")
-                                .HasColumnName("doctoralia");
-
-                            b1.HasKey("ProfessionalId");
-
-                            b1.ToTable("professional", "public");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProfessionalId");
-                        });
-
                     b.OwnsOne("Domain.Entities.ValueObjects.Url", "Instagram", b1 =>
                         {
                             b1.Property<Guid>("ProfessionalId")
@@ -1590,44 +1740,6 @@ namespace Infrastructure.Migrations
                                 .HasMaxLength(200)
                                 .HasColumnType("character varying(200)")
                                 .HasColumnName("instagram");
-
-                            b1.HasKey("ProfessionalId");
-
-                            b1.ToTable("professional", "public");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProfessionalId");
-                        });
-
-                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "Linkedin", b1 =>
-                        {
-                            b1.Property<Guid>("ProfessionalId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(200)
-                                .HasColumnType("character varying(200)")
-                                .HasColumnName("linkedin");
-
-                            b1.HasKey("ProfessionalId");
-
-                            b1.ToTable("professional", "public");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProfessionalId");
-                        });
-
-                    b.OwnsOne("Domain.Entities.ValueObjects.Url", "PictureUrl", b1 =>
-                        {
-                            b1.Property<Guid>("ProfessionalId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(200)
-                                .HasColumnType("character varying(200)")
-                                .HasColumnName("picture_url");
 
                             b1.HasKey("ProfessionalId");
 
@@ -1656,7 +1768,7 @@ namespace Infrastructure.Migrations
                                 .HasForeignKey("ProfessionalId");
                         });
 
-                    b.OwnsOne("Domain.Entities.Professionals.ProfessionalStatusType", "Status", b1 =>
+                    b.OwnsOne("Domain.Entities.Professionals.ProfessionalRegisterStatus", "RegisterStatus", b1 =>
                         {
                             b1.Property<Guid>("ProfessionalId")
                                 .HasColumnType("uuid");
@@ -1676,25 +1788,67 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Biography");
 
+                    b.Navigation("Cnpj");
+
                     b.Navigation("Cpf")
                         .IsRequired();
 
-                    b.Navigation("Doctoralia");
-
                     b.Navigation("Instagram");
 
-                    b.Navigation("Linkedin");
+                    b.Navigation("Manager");
 
-                    b.Navigation("Office");
-
-                    b.Navigation("PictureUrl");
-
-                    b.Navigation("Status")
+                    b.Navigation("RegisterStatus")
                         .IsRequired();
 
-                    b.Navigation("User");
-
                     b.Navigation("Website");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Professionals.ProfessionalDocument", b =>
+                {
+                    b.HasOne("Domain.Entities.Professionals.Professional", "Professional")
+                        .WithMany()
+                        .HasForeignKey("ProfessionalId")
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Professionals.Professional", null)
+                        .WithMany("Documents")
+                        .HasForeignKey("ProfessionalId1");
+
+                    b.Navigation("Professional");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Professionals.ProfessionalSpecialtyDetail", b =>
+                {
+                    b.HasOne("Domain.Entities.HealthcareProfessionals.Profession", "Profession")
+                        .WithMany()
+                        .HasForeignKey("ProfessionId")
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Professionals.Professional", "Professional")
+                        .WithMany()
+                        .HasForeignKey("ProfessionalId")
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Professionals.Professional", null)
+                        .WithMany("SpecialtyDetails")
+                        .HasForeignKey("ProfessionalId1");
+
+                    b.HasOne("Domain.Entities.HealthcareProfessionals.Specialty", "Speciality")
+                        .WithMany()
+                        .HasForeignKey("SpecialityId")
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.HealthcareProfessionals.SubSpecialty", "Subspeciality")
+                        .WithMany()
+                        .HasForeignKey("SubspecialityId");
+
+                    b.Navigation("Profession");
+
+                    b.Navigation("Professional");
+
+                    b.Navigation("Speciality");
+
+                    b.Navigation("Subspeciality");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -1754,6 +1908,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
                 {
                     b.Navigation("Addresses");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Professionals.Professional", b =>
+                {
+                    b.Navigation("Documents");
+
+                    b.Navigation("SpecialtyDetails");
                 });
 #pragma warning restore 612, 618
         }

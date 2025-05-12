@@ -41,4 +41,18 @@ public static class CpfValidator
         digito += resto;
         return cpf.EndsWith(digito);
     }
+
+    public static string Format(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return string.Empty;
+
+        if (value.Length != 11)
+            value = value.Replace(".", "").Replace("-", "").Trim();
+        
+        if (value.Length != 11)
+            throw new ArgumentException("O CPF deve conter 11 dígitos.");
+        
+        return $"{value[..3]}.{value[3..6]}.{value[6..9]}-{value[9..]}";
+    }
 }

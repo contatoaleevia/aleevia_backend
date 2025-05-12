@@ -1,17 +1,34 @@
-﻿using CrossCutting.Repositories;
+﻿using CrossCutting.Extensions;
+using CrossCutting.Repositories;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Professionals;
-using Domain.Entities.ValueObjects;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 public class ProfessionalRepository(ApiDbContext context) : Repository<Professional>(context), IProfessionalRepository
 {
-    public async Task<Professional?> GetByCpfAsync(Document cpf)
+    private readonly DbSet<ProfessionalSpecialtyDetail> specialtyDetailsDB = context.Set<ProfessionalSpecialtyDetail>();
+    private readonly DbSet<ProfessionalDocument> documentsDB = context.Set<ProfessionalDocument>();
+
+    public async Task<Professional?> GetByCpfToRegisterAsync(string cpf)
+        => await DbSet
+            .AsNoTracking()
+            .Include(x => x.Manager)
+            .ThenInclude(x => x.User)
+            .Include(x => x.SpecialtyDetails)
+            .Include(x => x.Documents)
+            .FirstOrDefaultAsync(x => x.Cpf.Value == cpf.RemoveSpecialCharacters());
+
+    public async Task CreateSpecialtyDetailAsync(ProfessionalSpecialtyDetail specialtyDetail)
     {
-        return await DbSet
-            .Include(x => x.User)
-            .FirstOrDefaultAsync(x => x.User.Cpf == cpf);
+        await specialtyDetailsDB.AddAsync(specialtyDetail);
+        await SaveChangesAsync();
+    }
+
+    public async Task CreateDocumentAsync(ProfessionalDocument document)
+    {
+        await documentsDB.AddAsync(document);
+        await SaveChangesAsync();
     }
 }

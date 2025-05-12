@@ -7,16 +7,19 @@ public class FaqConfiguration : IEntityTypeConfiguration<Faq>
 {
     public void Configure(EntityTypeBuilder<Faq> builder)
     {
-        builder.ToTable("faq");
+        builder.ToTable("faq", "public");
+        
         builder.HasKey(x => x.Id);
+        
         builder.Property(x => x.Id)
             .IsRequired()
             .HasColumnName("id");
 
-        builder.HasOne(x => x.Source)
-            .WithMany()
-            .HasForeignKey(x => x.SourceId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(x => x.SourceId)
+            .IsRequired()
+            .HasColumnName("source_id");
+
+        builder.Ignore(x => x.Source);
 
         builder.OwnsOne(x => x.SourceType, sourceType =>
         {

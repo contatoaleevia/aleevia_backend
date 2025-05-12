@@ -11,29 +11,49 @@ public static class ApiServiceCollectionsExtensions
     public static void AddApiServices(this IServiceCollection services)
     {
         services
-            .AddControllers(opt => 
+            .AddControllers(opt =>
                 opt.Filters.Add(typeof(NotificationFilter)))
             .AddApplicationPart(ApplicationAssemblyRef.Assembly);
-        
+
         services.AddEndpointsApiExplorer();
-        
+
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Aleevia API", Version = "v1" });
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            c.IncludeXmlComments(xmlPath);
+
+            var apiXmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var apiXmlPath = Path.Combine(AppContext.BaseDirectory, apiXmlFile);
+            c.IncludeXmlComments(apiXmlPath);
+
             c.OperationFilter<ApiKeyOperationFilter>();
-            c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+            c.OperationFilter<AuthorizeCheckOperationFilter>();
+
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = "API Key must be provided in header",
-                Type = SecuritySchemeType.ApiKey,
-                Name = "X-Api-Key",
+                Description = "Baerer token deve ser fornecido no seu header",
+                Name = "Authorization",
                 In = ParameterLocation.Header,
-                Scheme = "ApiKeyScheme"
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    []
+                }
             });
         });
-        
+
         services.AddCors(options =>
         {
             options.AddPolicy("AllowAllOrigins",

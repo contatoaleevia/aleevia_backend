@@ -27,7 +27,7 @@ public sealed class UserRole : IdentityUserRole<Guid>
     {
         { UserTypeEnum.Manager, [Role.Admin] },
         { UserTypeEnum.Employee, [Role.Employee] },
-        { UserTypeEnum.HealthcareProfessional, [Role.Admin] },
+        { UserTypeEnum.HealthcareProfessional, [Role.Admin, Role.Professional] },
         { UserTypeEnum.Patient, [Role.Patient] }
     };
 }

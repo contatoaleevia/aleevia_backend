@@ -25,4 +25,23 @@ public class ManagerService(IManagerRepository repository) : IManagerService
             throw new CreateManagerException(userId);
         }
     }
+
+    public async Task<Manager> CreateManagerWhenNotExists(Guid userId, ManagerType managerType, string? corporateName)
+    {
+        var manager = await repository.GetManagerByUserId(userId);
+        if (manager is not null)
+            return manager;
+
+        manager = new Manager(
+            userId,
+            managerType,
+            corporateName);
+        await repository.CreateAsync(manager);
+        return manager;
+    }
+
+    public async Task<Manager?> GetManagerByUserIdAsync(Guid userId)
+    {
+        return await repository.GetManagerByUserId(userId);
+    }
 }
