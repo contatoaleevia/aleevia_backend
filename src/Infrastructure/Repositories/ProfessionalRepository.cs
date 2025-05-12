@@ -31,4 +31,24 @@ public class ProfessionalRepository(ApiDbContext context) : Repository<Professio
         await documentsDB.AddAsync(document);
         await SaveChangesAsync();
     }
+
+    public async Task<Professional?> GetByUserIdWithDetailsAsync(Guid userId)
+    {
+        return await DbSet
+            .Include(p => p.Manager)
+            .Include(p => p.RegisterStatus)
+            .Include(p => p.Documents)
+            .Include(p => p.SpecialtyDetails.Select(sd => sd.Profession))
+            .Include(p => p.SpecialtyDetails.Select(sd => sd.Speciality))
+            .Include(p => p.SpecialtyDetails.Select(sd => sd.Subspeciality))
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Manager.UserId == userId);
+    }
+
+    public async Task<Professional?> GetByManagerIdAsync(Guid managerId)
+    {
+        return await DbSet
+            .Include(p => p.Manager)
+            .FirstOrDefaultAsync(p => p.ManagerId == managerId);
+    }
 }

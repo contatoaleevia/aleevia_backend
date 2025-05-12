@@ -79,6 +79,18 @@ public record OfficeResponse
                             ProfessionName = s.Profession.Name,
                             SubspecialityName = s.Subspeciality?.Name,
                             VideoPresentation = s.VideoPresentation
+                        })],
+                        Documents = [.. p.Professional.Documents.Select(d => new ProfessionalDocumentResponse
+                        {
+                            Id = d.Id,
+                            DocumentType = d.DocumentType,
+                            DocumentNumber = d.DocumentNumber,
+                            DocumentState = d.DocumentState,
+                            FrontUrl = d.FrontUrl,
+                            BackUrl = d.BackUrl,
+                            Validated = d.Validated,
+                            CreatedAt = d.CreatedAt,
+                            RemovedAt = d.RemovedAt
                         })]
                     }
                 })]
@@ -154,6 +166,7 @@ public record ProfessionalResponse
     public required bool IsRegistered { get; init; }
     public required string RegisterStatus { get; init; }
     public required IReadOnlyList<ProfessionalSpecialtyDetailResponse> SpecialtyDetails { get; init; }
+    public required IReadOnlyList<ProfessionalDocumentResponse> Documents { get; init; }
 }
 
 public record ProfessionalSpecialtyDetailResponse
@@ -162,6 +175,19 @@ public record ProfessionalSpecialtyDetailResponse
     public required string ProfessionName { get; init; }
     public string? SubspecialityName { get; init; }
     public string? VideoPresentation { get; init; }
+}
+
+public record ProfessionalDocumentResponse
+{
+    public required Guid Id { get; init; }
+    public required string DocumentType { get; init; }
+    public required string DocumentNumber { get; init; }
+    public required string DocumentState { get; init; }
+    public string? FrontUrl { get; init; }
+    public string? BackUrl { get; init; }
+    public required bool Validated { get; init; }
+    public required DateTime CreatedAt { get; init; }
+    public DateTime? RemovedAt { get; init; }
 }
 
 public record ProfessionResponse

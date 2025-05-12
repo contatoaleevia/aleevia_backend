@@ -14,4 +14,5 @@ public interface IOfficeService
     Task<BindOfficeProfessionalResponse> BindOfficeProfessional(BindOfficeProfessionalRequest request);
     Task<OfficeResponse> GetOfficeById(Guid id);
     Task<List<OfficeSimplifiedResponse>> GetOfficesByUserId(Guid userId);
+    Task<GetOfficeProfessionalsResponse> GetOfficeProfessionals(Guid officeId);
 }

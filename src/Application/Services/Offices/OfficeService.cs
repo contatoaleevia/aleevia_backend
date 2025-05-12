@@ -88,6 +88,10 @@ public class OfficeService(
         if (office is null)
             throw new OfficeNotFoundException(request.OfficeId);
 
+        var alreadyBinded = await officesProfessionalsRepository.GetByOfficeAndProfessional(request.OfficeId, professional.Id);
+        if (alreadyBinded != null)
+            throw new OfficeProfessionalAlreadyExistsException(request.OfficeId, professional.Id);
+
         var officeProfessional = new OfficesProfessional(
             request.OfficeId,
             professional.Id,
@@ -122,5 +126,13 @@ public class OfficeService(
         }
 
         return responses;
+    }
+
+    public async Task<GetOfficeProfessionalsResponse> GetOfficeProfessionals(Guid officeId)
+    {
+        var office = await repository.GetByIdAsync(officeId) ?? throw new OfficeNotFoundException(officeId);
+        var professionals = await officesProfessionalsRepository.GetByOfficeIdWithDetailsAsync(officeId);
+
+        return GetOfficeProfessionalsResponse.FromOffice(office, professionals);
     }
 }
