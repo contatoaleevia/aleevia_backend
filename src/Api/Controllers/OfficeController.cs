@@ -1,5 +1,6 @@
 ﻿using Api.ApiResponses;
 using Application.DTOs.Offices.BindOfficeAddressDTOs;
+using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
 using Application.DTOs.Offices.DeleteOfficeAddressDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
@@ -20,14 +21,20 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// </summary>
     /// <param name="request">Objeto com os dados do local de trabalho:
     /// <summary/>Name: Nome do local de trabalho
-    /// <summary/>Description: Descrição do local de trabalho (opcional)
+    /// <summary/>Cnpj: CNPJ do local de trabalho
     /// <summary/>PhoneNumber: Número de telefone do local de trabalho
+    /// <summary/>Whatsapp: Número de whatsapp do local de trabalho
+    /// <summary/>Email: Email do local de trabalho
+    /// <summary/>Site: Site do local de trabalho
+    /// <summary/>Instagram: Instagram do local de trabalho
+    /// <summary/>Logo: Logo do local de trabalho
+    /// <summary/>Individual: Indica se o local de trabalho é individual ou Clínica/Hospital
     /// </param>
     /// <returns>ID do local de trabalho criado</returns>
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CreateOfficeResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateOffice([FromBody] CreateOfficeRequest request)
@@ -50,7 +57,7 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     [HttpPost("bind-address")]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
-    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(BindOfficeAddressResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> BindOfficeAddress([FromBody] BindOfficeAddressRequest request)
@@ -90,11 +97,13 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     [HttpPost("bind-professional")]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
+    [ProducesResponseType(typeof(BindOfficeProfessionalResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> BindProfessionalOffice([FromBody] BindOfficeProfessionalRequest request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        var response = await service.BindOfficeProfessional(request);
-        return Ok(response);
+        return Ok(await service.BindOfficeProfessional(request));
     }
 
     /// <summary>
@@ -108,9 +117,25 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetOffice(Guid id)
+    public async Task<IActionResult> GetOfficeById(Guid id)
     {
-        var response = await service.GetOffice(id);
+        return Ok(await service.GetOfficeById(id));
+    }
+
+    /// <summary>
+    /// Obtém todos os locais de trabalho (Offices) do usuário logado.
+    /// Retorna uma lista simplificada contendo apenas informações básicas e endereços.
+    /// </summary>
+    /// <returns>Lista simplificada de locais de trabalho</returns>
+    [HttpGet("my-offices")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(List<OfficeSimplifiedResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetMyOffices()
+    {
+        var response = await service.GetOfficesByUserId(session.UserId);
         return Ok(response);
     }
 }

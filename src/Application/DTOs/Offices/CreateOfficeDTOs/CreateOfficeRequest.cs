@@ -14,4 +14,5 @@ public record CreateOfficeRequest
     public string? Site { get; set; }
     public string? Instagram { get; set; }
     public string? Logo { get; set; }
+    public bool Individual { get; set; }
 }

@@ -71,6 +71,7 @@ public class AddressService(IAddressRepository repository) : IAddressService
             .AsNoTracking()
             .Where(x => x.SourceId == userId && !addressIdsNotIn.Contains(x.Id))
             .Select(x => new GetAddressBySourceResponse(
+                x.Id,
                 x.Name,
                 x.Street,
                 x.Neighborhood,

@@ -25,6 +25,11 @@ public class OfficeConfiguration : IEntityTypeConfiguration<Office>
             .IsRequired()
             .HasColumnName("name")
             .HasMaxLength(100);
+
+        builder.Property(x => x.Individual)
+            .IsRequired()
+            .HasDefaultValue(false)
+            .HasColumnName("individual");
         
         builder.OwnsOne(x => x.Cnpj, cnpj => 
         {

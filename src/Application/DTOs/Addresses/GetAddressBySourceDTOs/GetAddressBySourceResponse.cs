@@ -1,6 +1,7 @@
 ﻿namespace Application.DTOs.Adresses.GetAddressBySourceDTOs;
 
 public record GetAddressBySourceResponse(
+    Guid Id,
     string? Name,
     string Street,
     string Neighborhood,
@@ -10,6 +11,7 @@ public record GetAddressBySourceResponse(
     string ZipCode,
     string? Complement)
 {
+    public Guid Id { get; private set; } = Id;
     public string? Name { get; private set; } = Name;
     public string Street { get; private set; } = Street;
     public string Neighborhood { get; private set; } = Neighborhood;
