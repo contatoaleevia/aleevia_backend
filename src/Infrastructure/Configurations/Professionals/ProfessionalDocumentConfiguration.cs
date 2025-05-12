@@ -17,7 +17,7 @@ public class ProfessionalDocumentConfiguration : IEntityTypeConfiguration<Profes
             .HasColumnName("professional_id");
 
         builder.HasOne(x => x.Professional)
-            .WithMany()
+            .WithMany(p => p.Documents)
             .HasForeignKey(x => x.ProfessionalId);
 
         builder.Property(x => x.DocumentType)

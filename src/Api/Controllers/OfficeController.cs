@@ -124,11 +124,12 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
 
     /// <summary>
     /// Obtém todos os locais de trabalho (Offices) do usuário logado.
+    /// Retorna uma lista simplificada contendo apenas informações básicas e endereços.
     /// </summary>
-    /// <returns>Lista de locais de trabalho</returns>
+    /// <returns>Lista simplificada de locais de trabalho</returns>
     [HttpGet("my-offices")]
     [Authorize(Roles = "Admin")]
-    [ProducesResponseType(typeof(List<OfficeResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<OfficeSimplifiedResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]

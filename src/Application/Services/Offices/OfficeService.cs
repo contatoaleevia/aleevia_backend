@@ -107,19 +107,18 @@ public class OfficeService(
         return OfficeResponse.FromOffice(office, addresses, professionals);
     }
 
-    public async Task<List<OfficeResponse>> GetOfficesByUserId(Guid userId)
+    public async Task<List<OfficeSimplifiedResponse>> GetOfficesByUserId(Guid userId)
     {
         var manager = await managerRepository.GetManagerByUserId(userId)
                       ?? throw new ManagerUserNotFoundException(userId);
 
         var offices = await repository.GetAllByOwnerIdAsync(manager.Id);
-        var responses = new List<OfficeResponse>();
+        var responses = new List<OfficeSimplifiedResponse>();
 
         foreach (var office in offices)
         {
             var addresses = await officeAddressRepository.GetOfficeAddress(office.Id);
-            var professionals = await officesProfessionalsRepository.GetByOfficeIdWithDetailsAsync(office.Id);
-            responses.Add(OfficeResponse.FromOffice(office, addresses, professionals));
+            responses.Add(OfficeSimplifiedResponse.FromOffice(office, addresses));
         }
 
         return responses;

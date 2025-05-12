@@ -75,10 +75,9 @@ public record OfficeResponse
                         RegisterStatus = p.Professional.RegisterStatus.StatusTypeName,
                         SpecialtyDetails = [.. p.Professional.SpecialtyDetails.Select(s => new ProfessionalSpecialtyDetailResponse
                         {
-                            Id = s.Id,
-                            SpecialtyId = s.SpecialityId,
-                            ProfessionId = s.ProfessionId,
-                            SubspecialtyId = s.SubspecialityId,
+                            SpecialityName = s.Speciality.Name,
+                            ProfessionName = s.Profession.Name,
+                            SubspecialityName = s.Subspeciality?.Name,
                             VideoPresentation = s.VideoPresentation
                         })]
                     }
@@ -159,9 +158,29 @@ public record ProfessionalResponse
 
 public record ProfessionalSpecialtyDetailResponse
 {
-    public required Guid Id { get; init; }
-    public required Guid SpecialtyId { get; init; }
-    public required Guid ProfessionId { get; init; }
-    public Guid? SubspecialtyId { get; init; }
+    public required string SpecialityName { get; init; }
+    public required string ProfessionName { get; init; }
+    public string? SubspecialityName { get; init; }
     public string? VideoPresentation { get; init; }
+}
+
+public record ProfessionResponse
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
+    public required bool Active { get; init; }
+}
+
+public record SpecialtyResponse
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
+    public required bool Active { get; init; }
+}
+
+public record SubspecialtyResponse
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
+    public required bool Active { get; init; }
 } 
