@@ -41,4 +41,18 @@ public static class EnumExtensions
             throw new InvalidEnumArgumentException($"Enum value '{value}' does not have an attribute of type '{typeof(TAttribute).Name}'.");
         }
     }
+
+    public static TEnum? GetEnumFromDescription<TEnum>(string description) where TEnum : struct, Enum
+    {
+        foreach (var field in typeof(TEnum).GetFields())
+        {
+            var attr = field.GetCustomAttributes(typeof(DescriptionAttribute), false)
+                            .Cast<DescriptionAttribute>()
+                            .FirstOrDefault();
+
+            if ((attr != null && attr.Description == description) || field.Name == description)
+                return (TEnum)field.GetValue(null);
+        }
+        return null;
+    }
 }

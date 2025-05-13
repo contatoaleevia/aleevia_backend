@@ -100,8 +100,6 @@ public class ProfessionalService(
         var professional = await professionalRepository.GetByCpfToRegisterAsync(request.Cpf);
         if (professional is null)
             throw new ProfessionalWithCpfNotFoundException(request.Cpf);
-        if (professional.IsRegistered)
-            throw new ProfessionalAlreadyRegisteredException(request.Cpf);
         if (request.ProfessionData is null)
             throw new ProfessionalWithCpfNotFoundException(request.Cpf);
 
@@ -121,5 +119,13 @@ public class ProfessionalService(
         var subspeciality = await professionRepository.GetSubSpecialityByIdAsync(professionData.SubSpecialityId);
         if (subspeciality is null && professionData.SubSpecialityId.HasValue)
             throw new SubSpecialityNotFoundException(professionData.SubSpecialityId.Value);
+    }
+
+    public async Task<GetProfessionalResponse> GetProfessionalByUserId(Guid userId)
+    {
+        var professional = await professionalRepository.GetByUserIdWithDetailsAsync(userId)
+            ?? throw new ProfessionalNotFoundException(userId);
+
+        return GetProfessionalResponse.FromProfessional(professional);
     }
 }

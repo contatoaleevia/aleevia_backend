@@ -14,13 +14,12 @@ public sealed class Faq : AggregateRoot
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
 
-    private Faq()
+    public Faq()
     {
     }
 
-    public Faq(Guid id, Guid sourceId, ushort sourceType, string question, string answer, ushort faqCategory, DateTime createdAt, DateTime? updatedAt, DateTime? deletedAt)
+    public Faq(Guid sourceId, ushort sourceType, string question, string answer, ushort faqCategory, DateTime createdAt, DateTime? updatedAt, DateTime? deletedAt)
     {
-        Id = id;
         SourceId = sourceId;
         SourceType = new FaqSourceType(sourceType);
         Question = question;

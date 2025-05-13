@@ -17,7 +17,7 @@ public class ProfessionalSpecialtyDetailConfiguration : IEntityTypeConfiguration
             .HasColumnName("professional_id");
 
         builder.HasOne(x => x.Professional)
-            .WithMany()
+            .WithMany(p => p.SpecialtyDetails)
             .HasForeignKey(x => x.ProfessionalId);
 
         builder.Property(x => x.ProfessionId)

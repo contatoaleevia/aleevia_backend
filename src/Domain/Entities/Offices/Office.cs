@@ -16,6 +16,7 @@ public class Office : AggregateRoot
     public Url Site { get; private set; }
     public Url Instagram { get; private set; }
     public Url Logo { get; private set; }
+    public bool Individual { get; private set; }
 
     public Manager Owner { get; set; } = null!;
     public ICollection<OfficeAddress> Addresses { get; set; } = [];
@@ -25,7 +26,7 @@ public class Office : AggregateRoot
     }
 
     public Office(Manager owner, string name, string? cnpj, string? phoneNumber, string? whatsapp, string? email,
-        string? site, string? instagram, string? logo)
+        string? site, string? instagram, string? logo, bool individual = false)
     {
         OwnerId = owner.Id;
         Name = name;
@@ -36,6 +37,7 @@ public class Office : AggregateRoot
         Site = SetSite(site);
         Instagram = SetInstagram(instagram);
         Logo = SetLogo(logo);
+        Individual = individual;
     }
 
     private Document SetDocument(string? document)

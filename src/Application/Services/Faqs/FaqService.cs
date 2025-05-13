@@ -6,6 +6,9 @@ using Application.DTOs.Faqs.CreateFaqPageDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Faqs;
 using Domain.Exceptions;
+using Application.DTOs.Faqs.ImportFaqsDTOs;
+using Application.Helpers;
+using Domain.Exceptions.Faq;
 
 namespace Application.Services.Faqs;
 public class FaqService(
@@ -71,7 +74,6 @@ public class FaqService(
         await ValidateSourceAsync(request.SourceId, request.SourceType);
 
         var faq = new Faq(
-            Guid.NewGuid(),
             request.SourceId,
             request.SourceType,
             request.Question,
@@ -90,6 +92,53 @@ public class FaqService(
             answer: result.Answer,
             sourceId: result.SourceId
         );
+    }
+
+    public async Task<ImportResult> ImportFaqs(Stream arquivo, string nomeArquivo, Guid userId)
+    {
+        if (arquivo is null)
+            throw new AnyItemsToImportException();
+
+        var registros = FileToDtoParser.ParseFile<ImportFaqsRequest>(arquivo, nomeArquivo);
+
+        if (registros == null || registros.Count == 0)
+            throw new AnyItemsToImportException();
+
+        var faqsImportadas = new List<ImportFaqsRequest>();
+        var erros = new List<ImportError>();
+
+        foreach (var dto in registros)
+        {
+            try
+            {
+                var entidade = new Faq
+                {
+                    SourceId = userId,
+                    SourceType = new FaqSourceType(0),
+                    Question = dto.Question,
+                    Answer = dto.Answer,
+                    FaqCategory = new FaqCategoryType(dto.FaqCategory),
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = null,
+                    DeletedAt = null
+                };
+                await repository.CreateAsync(entidade);
+                faqsImportadas.Add(dto);
+            }
+            catch (Exception)
+            {
+                erros.Add(new ImportError
+                {
+                    Item = dto,
+                    ErrorMessage = "Não foi possível importar o registro"
+                });
+            }
+        }
+        return new ImportResult
+        {
+            Sucesso = faqsImportadas,
+            Erros = erros
+        };
     }
 
     public async Task<UpdateFaqResponseDto> UpdateFaqAsync(UpdateFaqRequestDto request)

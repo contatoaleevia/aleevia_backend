@@ -11,6 +11,7 @@ public class OfficeAddressRepository(ApiDbContext context) : Repository<OfficeAd
     {
         return await DbSet
             .Where(x => x.OfficeId == officeId && x.IsActive)
+            .Include(x => x.Address)
             .AsNoTracking()
             .ToListAsync();
     }
