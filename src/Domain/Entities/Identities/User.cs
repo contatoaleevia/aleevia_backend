@@ -88,4 +88,9 @@ public sealed class User : IdentityUser<Guid>
         PhoneNumber = SetPhoneNumber(phone);
         UpdatedAt = DateTime.UtcNow;
     }
+
+    public void SetUserType(UserType userType)
+    {
+        UserType = userType;
+    }
 }

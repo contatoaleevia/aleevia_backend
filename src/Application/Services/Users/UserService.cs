@@ -100,6 +100,7 @@ public class UserService(
 
         if (user is not null)
         {
+            user.SetUserType(UserType.CreateAsHealthcareProfessional());
             if (!user.UserRoles.Any(x => x.Role.Name == Role.Professional.Name))
                 user.SetRole(Role.Professional);
             if (!user.UserRoles.Any(x => x.Role.Name == Role.Admin.Name))
