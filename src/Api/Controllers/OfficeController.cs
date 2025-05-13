@@ -1,6 +1,7 @@
 ﻿using Api.ApiResponses;
 using Application.DTOs.Offices.BindOfficeAddressDTOs;
 using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
+using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
 using Application.DTOs.Offices.DeleteOfficeAddressDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
@@ -104,6 +105,26 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         return Ok(await service.BindOfficeProfessional(request));
+    }
+
+    /// <summary>
+    /// Vincula uma especialidade a um local de trabalho (Office).
+    /// </summary>
+    /// <param name="request">Objeto com os dados de vinculação:
+    /// <summary/>OfficeId: ID do local de trabalho
+    /// <summary/>SpecialtyId: ID da especialidade a ser vinculada
+    /// </param>
+    /// <returns>Informações da vinculação criada</returns>
+    [HttpPost("bind-specialty")]
+    [Authorize(Roles = "Admin")]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(BindOfficeSpecialtyResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> BindOfficeSpecialty([FromBody] BindOfficeSpecialtyRequest request)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        return Ok(await service.BindOfficeSpecialty(request));
     }
 
     /// <summary>

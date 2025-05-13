@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography.Xml;
 using Application.DTOs.Offices.BindOfficeAddressDTOs;
 using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
+using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
 using Application.DTOs.Professionals;
@@ -11,6 +12,7 @@ using Domain.Entities.ValueObjects;
 using Domain.Exceptions.Managers;
 using Domain.Exceptions.Offices;
 using Domain.Exceptions.Professionals;
+using Domain.Exceptions.Professions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Offices;
@@ -20,7 +22,9 @@ public class OfficeService(
     IManagerRepository managerRepository,
     IOfficeAddressRepository officeAddressRepository,
     IProfessionalService professionalService,
-    IOfficesProfessionalsRepository officesProfessionalsRepository) : IOfficeService
+    IOfficesProfessionalsRepository officesProfessionalsRepository,
+    IOfficeSpecialtyRepository officeSpecialtyRepository,
+    ISpecialtyRepository specialtyRepository) : IOfficeService
 {
     public async Task<CreateOfficeResponse> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
@@ -134,5 +138,22 @@ public class OfficeService(
         var professionals = await officesProfessionalsRepository.GetByOfficeIdWithDetailsAsync(officeId);
 
         return GetOfficeProfessionalsResponse.FromOffice(office, professionals);
+    }
+
+    public async Task<BindOfficeSpecialtyResponse> BindOfficeSpecialty(BindOfficeSpecialtyRequest request)
+    {
+        var office = await repository.GetByIdAsync(request.OfficeId) ?? throw new OfficeNotFoundException(request.OfficeId);
+        var specialty = await specialtyRepository.GetByIdAsync(request.SpecialtyId) ?? throw new SpecialtyNotFoundException(request.SpecialtyId);
+        
+        var alreadyBinded = await officeSpecialtyRepository.GetByOfficeAndSpecialty(request.OfficeId, request.SpecialtyId);
+        if (alreadyBinded != null)
+            throw new OfficeSpecialtyAlreadyExistsException(request.OfficeId, request.SpecialtyId);
+
+        var officeSpecialty = new OfficeSpecialty(
+            request.OfficeId,
+            request.SpecialtyId
+        );
+        var response = await officeSpecialtyRepository.CreateAsync(officeSpecialty);
+        return new BindOfficeSpecialtyResponse(response.Id);
     }
 }
