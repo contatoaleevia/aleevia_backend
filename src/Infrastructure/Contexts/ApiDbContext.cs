@@ -21,6 +21,8 @@ using Infrastructure.Configurations.ServiceTypes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Infrastructure.Configurations.Agreements;
+using Domain.Entities.Agreements;
 
 namespace Infrastructure.Contexts;
 
@@ -55,6 +57,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public DbSet<OfficesProfessional> OfficesProfessionals { get; set; }
     public DbSet<Patient> Patients { get; set; }
     public DbSet<PatientLead> PatientLeads { get; set; }
+    public DbSet<Agreement> Agreements { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -89,6 +92,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new FaqPageConfiguration());
         builder.ApplyConfiguration(new ProfessionalDocumentConfiguration());
         builder.ApplyConfiguration(new ProfessionalSpecialtyDetailConfiguration());
+        builder.ApplyConfiguration(new AgreementConfiguration());
 
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {

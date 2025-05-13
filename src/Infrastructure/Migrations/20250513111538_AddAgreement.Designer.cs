@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    partial class ApiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250513111538_AddAgreement")]
+    partial class AddAgreement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -618,12 +621,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<bool>("Individual")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("individual");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -907,6 +904,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("professional_id");
 
+                    b.Property<Guid?>("ProfessionalId1")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime?>("RemovedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("removed_at");
@@ -918,6 +918,8 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProfessionalId");
+
+                    b.HasIndex("ProfessionalId1");
 
                     b.ToTable("professional_documents", "public");
                 });
@@ -939,6 +941,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("ProfessionalId")
                         .HasColumnType("uuid")
                         .HasColumnName("professional_id");
+
+                    b.Property<Guid?>("ProfessionalId1")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("RemovedAt")
                         .HasColumnType("timestamp with time zone")
@@ -965,6 +970,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ProfessionId");
 
                     b.HasIndex("ProfessionalId");
+
+                    b.HasIndex("ProfessionalId1");
 
                     b.HasIndex("SpecialityId");
 
@@ -1860,9 +1867,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Professionals.ProfessionalDocument", b =>
                 {
                     b.HasOne("Domain.Entities.Professionals.Professional", "Professional")
-                        .WithMany("Documents")
+                        .WithMany()
                         .HasForeignKey("ProfessionalId")
                         .IsRequired();
+
+                    b.HasOne("Domain.Entities.Professionals.Professional", null)
+                        .WithMany("Documents")
+                        .HasForeignKey("ProfessionalId1");
 
                     b.Navigation("Professional");
                 });
@@ -1875,9 +1886,13 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Professionals.Professional", "Professional")
-                        .WithMany("SpecialtyDetails")
+                        .WithMany()
                         .HasForeignKey("ProfessionalId")
                         .IsRequired();
+
+                    b.HasOne("Domain.Entities.Professionals.Professional", null)
+                        .WithMany("SpecialtyDetails")
+                        .HasForeignKey("ProfessionalId1");
 
                     b.HasOne("Domain.Entities.HealthcareProfessionals.Specialty", "Speciality")
                         .WithMany()
