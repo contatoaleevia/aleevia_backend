@@ -13,8 +13,8 @@ public class PasswordResetController(IPasswordResetService passwordResetService)
     public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetDTO request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        await passwordResetService.RequestPasswordResetAsync(request);
-        return Ok("Se existe um usuário com o documento informado, você receberá um e-mail com instruções para redefinir sua senha.");
+        var response = await passwordResetService.RequestPasswordResetAsync(request);
+        return Ok(response);
     }
 
     [HttpPost("reset")]
