@@ -1,5 +1,5 @@
 namespace Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
-
+ 
 public class BindOfficeSpecialtyRequest
 {
     public required Guid OfficeId { get; set; }

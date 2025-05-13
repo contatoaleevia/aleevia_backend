@@ -106,13 +106,19 @@ public class OfficeService(
         return new BindOfficeProfessionalResponse(response.Id);
     }
 
+    public async Task DeactivateOfficeProfessional(DeactivateOfficeProfessionalRequest request)
+    {
+        var officeProfessional = await officesProfessionalsRepository.GetByIdAsync(request.Id)
+            ?? throw new OfficeProfessionalNotFoundException(request.Id);
+
+        officeProfessional.IsActive = false;
+        await officesProfessionalsRepository.UpdateAsync(officeProfessional);
+    }
+
     public async Task<OfficeResponse> GetOfficeById(Guid id)
     {
-        var office = await repository.GetByIdAsync(id) ?? throw new OfficeNotFoundException(id);
-        var addresses = await officeAddressRepository.GetOfficeAddress(id);
-        var professionals = await officesProfessionalsRepository.GetByOfficeIdWithDetailsAsync(id);
-
-        return OfficeResponse.FromOffice(office, addresses, professionals);
+        var office = await repository.GetByIdWithDetailsAsync(id) ?? throw new OfficeNotFoundException(id);
+        return OfficeResponse.FromOffice(office, office.Addresses, office.Professionals, office.Specialties);
     }
 
     public async Task<List<OfficeSimplifiedResponse>> GetOfficesByUserId(Guid userId)
@@ -120,16 +126,10 @@ public class OfficeService(
         var manager = await managerRepository.GetManagerByUserId(userId)
                       ?? throw new ManagerUserNotFoundException(userId);
 
-        var offices = await repository.GetAllByOwnerIdAsync(manager.Id);
-        var responses = new List<OfficeSimplifiedResponse>();
-
-        foreach (var office in offices)
-        {
-            var addresses = await officeAddressRepository.GetOfficeAddress(office.Id);
-            responses.Add(OfficeSimplifiedResponse.FromOffice(office, addresses));
-        }
-
-        return responses;
+        var offices = await repository.GetAllByOwnerIdWithDetailsAsync(manager.Id);
+        return [.. offices.Select(office => 
+            OfficeSimplifiedResponse.FromOffice(office, office.Addresses, office.Specialties)
+        )];
     }
 
     public async Task<GetOfficeProfessionalsResponse> GetOfficeProfessionals(Guid officeId)
@@ -145,15 +145,31 @@ public class OfficeService(
         var office = await repository.GetByIdAsync(request.OfficeId) ?? throw new OfficeNotFoundException(request.OfficeId);
         var specialty = await specialtyRepository.GetByIdAsync(request.SpecialtyId) ?? throw new SpecialtyNotFoundException(request.SpecialtyId);
         
-        var alreadyBinded = await officeSpecialtyRepository.GetByOfficeAndSpecialty(request.OfficeId, request.SpecialtyId);
-        if (alreadyBinded != null)
-            throw new OfficeSpecialtyAlreadyExistsException(request.OfficeId, request.SpecialtyId);
+        var officeSpecialty = await officeSpecialtyRepository.GetByOfficeAndSpecialty(request.OfficeId, request.SpecialtyId);
+        if (officeSpecialty != null)
+        {
+            if (officeSpecialty.IsActive)
+                throw new OfficeSpecialtyAlreadyExistsException(request.OfficeId, request.SpecialtyId);
 
-        var officeSpecialty = new OfficeSpecialty(
+            officeSpecialty.Activate();
+            await officeSpecialtyRepository.UpdateAsync(officeSpecialty);
+            return new BindOfficeSpecialtyResponse(officeSpecialty.Id);
+        }
+
+        var newOfficeSpecialty = new OfficeSpecialty(
             request.OfficeId,
             request.SpecialtyId
         );
-        var response = await officeSpecialtyRepository.CreateAsync(officeSpecialty);
+        var response = await officeSpecialtyRepository.CreateAsync(newOfficeSpecialty);
         return new BindOfficeSpecialtyResponse(response.Id);
+    }
+
+    public async Task DeactivateOfficeSpecialty(DeactivateOfficeSpecialtyRequest request)
+    {
+        var officeSpecialty = await officeSpecialtyRepository.GetByIdAsync(request.Id)
+            ?? throw new OfficeSpecialtyNotFoundException(request.Id);
+
+        officeSpecialty.Deactivate();
+        await officeSpecialtyRepository.UpdateAsync(officeSpecialty);
     }
 }

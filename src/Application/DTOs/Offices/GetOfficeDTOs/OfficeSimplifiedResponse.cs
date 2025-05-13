@@ -8,10 +8,12 @@ public record OfficeSimplifiedResponse
 
     public static OfficeSimplifiedResponse FromOffice(
         Office office, 
-        IEnumerable<OfficeAddress> addresses)
+        IEnumerable<OfficeAddress> addresses,
+        IEnumerable<OfficeSpecialty> specialties)
     {
         ArgumentNullException.ThrowIfNull(office);
         ArgumentNullException.ThrowIfNull(addresses);
+        ArgumentNullException.ThrowIfNull(specialties);
 
         return new OfficeSimplifiedResponse
         {
@@ -51,6 +53,12 @@ public record OfficeSimplifiedResponse
                         CreatedAt = a.Address.CreatedAt,
                         UpdatedAt = a.Address.UpdatedAt
                     }
+                })],
+                Specialties = [.. specialties.Select(s => new OfficeSpecialtyResponse
+                {
+                    Id = s.Id,
+                    SpecialtyId = s.SpecialtyId,
+                    Name = s.Specialty?.Name ?? string.Empty
                 })]
             }
         };
@@ -71,4 +79,5 @@ public record OfficeSimplifiedData
     public required string Logo { get; init; }
     public required bool Individual { get; init; }
     public required IReadOnlyList<OfficeAddressResponse> Addresses { get; init; }
+    public required IReadOnlyList<OfficeSpecialtyResponse> Specialties { get; init; }
 } 

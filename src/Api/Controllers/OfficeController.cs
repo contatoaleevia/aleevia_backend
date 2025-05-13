@@ -108,6 +108,27 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     }
 
     /// <summary>
+    /// Desativa um profissional vinculado a um local de trabalho (Office).
+    /// </summary>
+    /// <param name="request">Objeto com os dados para desativação:
+    /// <summary/>Id: ID do vínculo entre local de trabalho e profissional a ser desativado
+    /// </param>
+    /// <returns>Confirmação da desativação</returns>
+    [HttpDelete("bind-professional")]
+    [Authorize(Roles = "Admin")]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeactivateOfficeProfessional([FromBody] DeactivateOfficeProfessionalRequest request)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        await service.DeactivateOfficeProfessional(request);
+        return Ok();
+    }
+
+    /// <summary>
     /// Vincula uma especialidade a um local de trabalho (Office).
     /// </summary>
     /// <param name="request">Objeto com os dados de vinculação:
@@ -125,6 +146,27 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         return Ok(await service.BindOfficeSpecialty(request));
+    }
+
+    /// <summary>
+    /// Desativa uma especialidade vinculada a um local de trabalho (Office).
+    /// </summary>
+    /// <param name="request">Objeto com os dados para desativação:
+    /// <summary/>Id: ID do vínculo entre local de trabalho e especialidade a ser desativado
+    /// </param>
+    /// <returns>Confirmação da desativação</returns>
+    [HttpDelete("bind-specialty")]
+    [Authorize(Roles = "Admin")]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeactivateOfficeSpecialty([FromBody] DeactivateOfficeSpecialtyRequest request)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        await service.DeactivateOfficeSpecialty(request);
+        return Ok();
     }
 
     /// <summary>
