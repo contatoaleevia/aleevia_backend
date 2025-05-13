@@ -9,11 +9,13 @@ public record OfficeResponse
     public static OfficeResponse FromOffice(
         Domain.Entities.Offices.Office office, 
         IEnumerable<Domain.Entities.Offices.OfficeAddress> addresses,
-        IEnumerable<Domain.Entities.Offices.OfficesProfessional> professionals)
+        IEnumerable<Domain.Entities.Offices.OfficesProfessional> professionals,
+        IEnumerable<Domain.Entities.Offices.OfficeSpecialty> specialties)
     {
         ArgumentNullException.ThrowIfNull(office);
         ArgumentNullException.ThrowIfNull(addresses);
         ArgumentNullException.ThrowIfNull(professionals);
+        ArgumentNullException.ThrowIfNull(specialties);
 
         return new OfficeResponse
         {
@@ -93,6 +95,12 @@ public record OfficeResponse
                             RemovedAt = d.RemovedAt
                         })]
                     }
+                })],
+                Specialties = [.. specialties.Select(s => new OfficeSpecialtyResponse
+                {
+                    Id = s.Id,
+                    SpecialtyId = s.SpecialtyId,
+                    Name = s.Specialty?.Name ?? string.Empty
                 })]
             }
         };
@@ -114,6 +122,7 @@ public record OfficeData
     public required bool Individual { get; init; }
     public required IReadOnlyList<OfficeAddressResponse> Addresses { get; init; }
     public required IReadOnlyList<OfficeProfessionalResponse> Professionals { get; init; }
+    public required IReadOnlyList<OfficeSpecialtyResponse> Specialties { get; init; }
 }
 
 public record OfficeAddressResponse
@@ -209,4 +218,11 @@ public record SubspecialtyResponse
     public required Guid Id { get; init; }
     public required string Name { get; init; }
     public required bool Active { get; init; }
+}
+
+public record OfficeSpecialtyResponse
+{
+    public required Guid Id { get; init; }
+    public required Guid SpecialtyId { get; init; }
+    public required string Name { get; init; }
 } 

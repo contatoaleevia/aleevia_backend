@@ -26,4 +26,19 @@ public class ProfessionsController(IProfessionService professionService)
     {
         return Ok(await professionService.GetAllActiveAsync());
     }
+
+    /// <summary>
+    /// Obtém todas as especialidades de saúde cadastradas no sistema.
+    /// </summary>
+    /// <returns>Lista de todas as especialidades ativas com suas subespecialidades</returns>
+    [HttpGet("specialties")]
+    [Authorize(Roles = "Admin")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(GetSpecialtiesResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAllSpecialties()
+    {
+        return Ok(await professionService.GetAllActiveSpecialtiesAsync());
+    }
 } 
