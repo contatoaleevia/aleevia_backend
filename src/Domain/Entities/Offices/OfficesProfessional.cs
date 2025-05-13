@@ -32,4 +32,16 @@ public class OfficesProfessional : AggregateRoot
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
+
+    public void Deactivate()
+    {
+        IsActive = false;
+        DeletedAt = DateTime.UtcNow;
+    }
+
+    public void Activate()
+    {
+        IsActive = true;
+        DeletedAt = null;
+    }
 }

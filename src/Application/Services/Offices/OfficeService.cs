@@ -88,21 +88,27 @@ public class OfficeService(
     {
         var professional = await professionalService.PreRegisterWhenNotExists(request.Professional);
 
-        var office = await repository.GetByIdAsync(request.OfficeId);
-        if (office is null)
-            throw new OfficeNotFoundException(request.OfficeId);
+        var office = await repository.GetByIdAsync(request.OfficeId)
+            ?? throw new OfficeNotFoundException(request.OfficeId);
 
-        var alreadyBinded = await officesProfessionalsRepository.GetByOfficeAndProfessional(request.OfficeId, professional.Id);
-        if (alreadyBinded != null)
-            throw new OfficeProfessionalAlreadyExistsException(request.OfficeId, professional.Id);
+        var officeProfessional = await officesProfessionalsRepository.GetByOfficeAndProfessional(request.OfficeId, professional.Id);
+        if (officeProfessional != null)
+        {
+            if (officeProfessional.IsActive)
+                throw new OfficeProfessionalAlreadyExistsException(request.OfficeId, professional.Id);
 
-        var officeProfessional = new OfficesProfessional(
+            officeProfessional.Activate();
+            await officesProfessionalsRepository.UpdateAsync(officeProfessional);
+            return new BindOfficeProfessionalResponse(officeProfessional.Id);
+        }
+
+        var newOfficeProfessional = new OfficesProfessional(
             request.OfficeId,
             professional.Id,
             request.Professional.Active,
             request.Professional.IsPublic
         );
-        var response = await officesProfessionalsRepository.CreateAsync(officeProfessional);
+        var response = await officesProfessionalsRepository.CreateAsync(newOfficeProfessional);
         return new BindOfficeProfessionalResponse(response.Id);
     }
 
@@ -111,7 +117,7 @@ public class OfficeService(
         var officeProfessional = await officesProfessionalsRepository.GetByIdAsync(request.Id)
             ?? throw new OfficeProfessionalNotFoundException(request.Id);
 
-        officeProfessional.IsActive = false;
+        officeProfessional.Deactivate();
         await officesProfessionalsRepository.UpdateAsync(officeProfessional);
     }
 
