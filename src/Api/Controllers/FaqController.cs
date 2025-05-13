@@ -1,4 +1,4 @@
-﻿﻿using Api.ApiResponses;
+﻿using Api.ApiResponses;
 using Application.DTOs.Faqs.CreateFaqDTOs;
 using Application.DTOs.Faqs.CreateFaqPageDTOs;
 using Application.DTOs.Faqs.DeleteFaqDTOs;

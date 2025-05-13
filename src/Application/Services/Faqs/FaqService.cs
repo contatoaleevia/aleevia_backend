@@ -38,7 +38,9 @@ public class FaqService(
                 SourceId = x.SourceId,
                 SourceType = x.SourceType,
                 CreatedAt = x.CreatedAt,
-                UpdatedAt = x.UpdatedAt
+                UpdatedAt = x.UpdatedAt,
+                FaqCategory = x.FaqCategory,
+                DeletedAt = x.DeletedAt
             })]
         };
     }

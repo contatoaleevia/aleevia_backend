@@ -7,7 +7,6 @@ public class GetFaqByProfessionalIdResponseDto
     public GetFaqByProfessionalIdResponseDto(
         Guid id, 
         Guid sourceId, 
-        User? source, 
         FaqSourceType sourceType, 
         string question, 
         string answer,
@@ -18,7 +17,6 @@ public class GetFaqByProfessionalIdResponseDto
     {
         Id = id;
         SourceId = sourceId;
-        Source = source;
         SourceType = sourceType;
         Question = question;
         Answer = answer;
@@ -34,7 +32,6 @@ public class GetFaqByProfessionalIdResponseDto
 
     public Guid Id { get; set; }
     public Guid SourceId { get; set; }
-    public User? Source { get; set; }
     public FaqSourceType SourceType { get; set; }
     public string Question { get; set; }
     public string Answer { get; set; }
