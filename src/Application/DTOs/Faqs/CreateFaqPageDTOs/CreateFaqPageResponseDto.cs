@@ -7,4 +7,6 @@ public record CreateFaqPageResponseDto(
     Guid SourceId,
     string CustomUrl,
     string? WelcomeMessage,
-    DateTime CreatedAt); 
+    string SourceType,
+    DateTime CreatedAt
+); 

@@ -5,8 +5,7 @@ namespace Domain.Entities.IaChats;
 
 public sealed class IaChat : AggregateRoot
 {
-    public Guid SourceId { get; private set; }
-    public User Source { get; private set; }
+    public Guid? SourceId { get; private set; }
     public IaChatSourceType SourceType { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public ICollection<IaMessage> Messages { get; private set; } = [];
@@ -15,7 +14,7 @@ public sealed class IaChat : AggregateRoot
     {
     }
 
-    public IaChat(Guid sourceId, ushort sourceType)
+    public IaChat(Guid? sourceId, ushort sourceType)
     {
         Id = Guid.NewGuid();
         SourceId = sourceId;
