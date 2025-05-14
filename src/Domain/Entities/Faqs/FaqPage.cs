@@ -4,6 +4,7 @@ namespace Domain.Entities.Faqs;
 public sealed class FaqPage : AggregateRoot
 {
     public Guid SourceId { get; private set; }
+    public FaqSourceEnum SourceType { get; private set; }
     public string CustomUrl { get; private set; }
     public string? WelcomeMessage { get; private set; }
     public DateTime CreatedAt { get; private set; }
@@ -15,13 +16,15 @@ public sealed class FaqPage : AggregateRoot
 
     public FaqPage(
         Guid sourceId,
+        FaqSourceEnum sourceType,
         string customUrl,
         string? welcomeMessage,
         DateTime createdAt)
     {
         Id = Guid.NewGuid();
         SourceId = sourceId;
-        CustomUrl = customUrl.ToLower().Trim();
+        SourceType = sourceType;
+        CustomUrl = customUrl.Trim();
         WelcomeMessage = welcomeMessage;
         CreatedAt = createdAt;
     }
@@ -34,7 +37,7 @@ public sealed class FaqPage : AggregateRoot
 
     public void UpdateCustomUrl(string customUrl)
     {
-        CustomUrl = customUrl.ToLower().Trim();
+        CustomUrl = customUrl.Trim();
         UpdatedAt = DateTime.UtcNow;
     }
 } 

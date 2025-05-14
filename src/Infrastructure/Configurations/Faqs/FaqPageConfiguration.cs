@@ -19,6 +19,10 @@ public class FaqPageConfiguration : IEntityTypeConfiguration<FaqPage>
             .IsRequired()
             .HasColumnName("source_id");
 
+        builder.Property(x => x.SourceType)
+            .IsRequired()
+            .HasColumnName("source_type");
+
         builder.Property(x => x.CustomUrl)
             .IsRequired()
             .HasMaxLength(100)
