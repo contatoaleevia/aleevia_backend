@@ -4,11 +4,11 @@ namespace Application.DTOs.Users.PasswordResetDTOs;
 
 public class ResetPasswordDTO
 {
-    [Required(ErrorMessage = "O documento é obrigatório")]
-    public required string Document { get; set; }
-
     [Required(ErrorMessage = "O token é obrigatório")]
     public required string Token { get; set; }
+
+    [Required(ErrorMessage = "O documento é obrigatório")]
+    public required string Document { get; set; }
 
     [Required(ErrorMessage = "A nova senha é obrigatória")]
     [MinLength(6, ErrorMessage = "A senha deve ter no mínimo 6 caracteres")]

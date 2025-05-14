@@ -15,10 +15,8 @@ public class IaChatConfiguration : IEntityTypeConfiguration<IaChat>
             .IsRequired()
             .HasColumnName("id");
 
-        builder.HasOne(x => x.Source)
-            .WithMany()
-            .HasForeignKey(x => x.SourceId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(x => x.SourceId)
+            .HasColumnName("source_id");
 
         builder.OwnsOne(x => x.SourceType, sourceType =>
         {
