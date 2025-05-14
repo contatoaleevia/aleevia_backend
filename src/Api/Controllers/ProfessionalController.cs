@@ -1,4 +1,4 @@
-﻿﻿using Api.ApiResponses;
+﻿using Api.ApiResponses;
 using Application.DTOs.Professionals.GetProfessionalDTOs;
 using Application.Services.Professionals;
 using CrossCutting.Session;

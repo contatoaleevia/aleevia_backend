@@ -25,7 +25,7 @@ public record OfficeResponse
                 OwnerId = office.OwnerId,
                 Name = office.Name,
                 Cnpj = office.Cnpj.Value,
-                Phone = office.Phone.Value,
+                PhoneNumber = office.Phone.Value,
                 Whatsapp = office.Whatsapp.Value,
                 Email = office.Email.Value,
                 Site = office.Site.Value,
@@ -113,7 +113,7 @@ public record OfficeData
     public required Guid OwnerId { get; init; }
     public required string Name { get; init; }
     public required string Cnpj { get; init; }
-    public required string Phone { get; init; }
+    public required string PhoneNumber { get; init; }
     public required string Whatsapp { get; init; }
     public required string Email { get; init; }
     public required string Site { get; init; }

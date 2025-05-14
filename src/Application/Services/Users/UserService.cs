@@ -100,6 +100,7 @@ public class UserService(
 
         if (user is not null)
         {
+            user.SetUserType(UserType.CreateAsHealthcareProfessional());
             if (!user.UserRoles.Any(x => x.Role.Name == Role.Professional.Name))
                 user.SetRole(Role.Professional);
             if (!user.UserRoles.Any(x => x.Role.Name == Role.Admin.Name))
@@ -112,7 +113,7 @@ public class UserService(
             if (existingProfessional is not null)
                 throw new ProfessionalAlreadyExistsException(request.Cpf);
                           
-            var newProfessional = new Professional(manager.Id, request.Cpf, true);
+            var newProfessional = new Professional(manager.Id, request.Cpf, true, request.Name, request.Email);
             return new Tuple<Professional, string?>(newProfessional, null);
         }
         else
@@ -130,7 +131,7 @@ public class UserService(
 
             var manager =
                 await managerService.CreateManagerWhenNotExists(user.Id, ManagerType.CreateAsIndividual(), null);
-            var newProfessional = new Professional(manager.Id, request.Cpf, false);
+            var newProfessional = new Professional(manager.Id, request.Cpf, false, request.Name, request.Email);
             return new Tuple<Professional, string?>(newProfessional, tempPassword);
         }
     }
