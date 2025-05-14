@@ -13,6 +13,7 @@ using Domain.Exceptions.Managers;
 using Domain.Exceptions.Offices;
 using Domain.Exceptions.Professionals;
 using Domain.Exceptions.Professions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Offices;
@@ -24,13 +25,17 @@ public class OfficeService(
     IProfessionalService professionalService,
     IOfficesProfessionalsRepository officesProfessionalsRepository,
     IOfficeSpecialtyRepository officeSpecialtyRepository,
-    ISpecialtyRepository specialtyRepository) : IOfficeService
+    ISpecialtyRepository specialtyRepository,
+    IOfficeFileSender fileSender) : IOfficeService
 {
     public async Task<CreateOfficeResponse> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
         var manager = await managerRepository.GetManagerByUserId(userId)
                       ?? throw new ManagerUserNotFoundException(userId);
 
+        var logoId = Guid.NewGuid();
+        var logoUrl = await UploadLogo(logoId, request.Logo);
+        
         var office = new Office(
             owner: manager,
             name: request.Name,
@@ -40,7 +45,7 @@ public class OfficeService(
             email: request.Email,
             site: request.Site,
             instagram: request.Instagram,
-            logo: request.Logo,
+            logo: FileS3.Create(logoId, logoUrl),
             individual: request.Individual
         );
 
@@ -177,5 +182,14 @@ public class OfficeService(
 
         officeSpecialty.Deactivate();
         await officeSpecialtyRepository.UpdateAsync(officeSpecialty);
+    }
+    
+    private async Task<string?> UploadLogo(Guid id, IFormFile? formFile)
+    {
+        if (formFile == null)
+            return null;
+        using var memoryStream = new MemoryStream();
+        await formFile.CopyToAsync(memoryStream);
+        return await fileSender.UploadLogoAsync(id.ToString(), memoryStream);
     }
 }

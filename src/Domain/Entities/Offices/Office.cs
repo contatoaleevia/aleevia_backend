@@ -15,7 +15,7 @@ public class Office : AggregateRoot
     public Email Email { get; private set; }
     public Url Site { get; private set; }
     public Url Instagram { get; private set; }
-    public Url Logo { get; private set; }
+    public FileS3 Logo { get; private set; }
     public bool Individual { get; private set; }
     public ICollection<OfficeAddress> Addresses { get; set; } = [];
     public ICollection<OfficesProfessional> Professionals { get; private set; } = [];
@@ -28,7 +28,7 @@ public class Office : AggregateRoot
     }
 
     public Office(Manager owner, string name, string? cnpj, string? phoneNumber, string? whatsapp, string? email,
-        string? site, string? instagram, string? logo, bool individual = false)
+        string? site, string? instagram, FileS3 logo, bool individual = false)
     {
         OwnerId = owner.Id;
         Name = name;
@@ -38,7 +38,7 @@ public class Office : AggregateRoot
         Email = SetEmail(email);
         Site = SetSite(site);
         Instagram = SetInstagram(instagram);
-        Logo = SetLogo(logo);
+        Logo = logo;
         Individual = individual;
         Addresses = [];
         Professionals = [];
@@ -62,7 +62,4 @@ public class Office : AggregateRoot
 
     private Url SetInstagram(string? instagram)
         => instagram is null ? Url.CreateAsEmpty() : Url.Create(instagram);
-
-    private Url SetLogo(string? logo)
-        => logo is null ? Url.CreateAsEmpty() : Url.Create(logo);
 }

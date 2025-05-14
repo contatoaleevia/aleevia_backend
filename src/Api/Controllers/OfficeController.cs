@@ -38,7 +38,7 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     [ProducesResponseType(typeof(CreateOfficeResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateOffice([FromBody] CreateOfficeRequest request)
+    public async Task<IActionResult> CreateOffice([FromForm] CreateOfficeRequest request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         return Ok(await service.CreateOffice(request, session.UserId));

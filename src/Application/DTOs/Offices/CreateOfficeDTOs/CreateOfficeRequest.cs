@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.DTOs.Offices.CreateOfficeDTOs;
 
@@ -13,6 +14,6 @@ public record CreateOfficeRequest
     public string? Email { get; set; }
     public string? Site { get; set; }
     public string? Instagram { get; set; }
-    public string? Logo { get; set; }
+    public IFormFile? Logo { get; set; }
     public bool Individual { get; set; }
 }

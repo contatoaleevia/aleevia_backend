@@ -87,11 +87,16 @@ public class OfficeConfiguration : IEntityTypeConfiguration<Office>
         
         builder.OwnsOne(x => x.Logo, logo => 
         {
-            logo.Property(x => x.Value)
+            logo.Property(x => x.Url)
                 .IsRequired()
                 .HasDefaultValue(string.Empty)
                 .HasColumnName("logo")
                 .HasMaxLength(100);
+            
+            logo.Property(x => x.Id)
+                .IsRequired(false)
+                .HasDefaultValue(null)
+                .HasColumnName("logo_id");
         });
         
         builder.HasOne(x => x.Owner)

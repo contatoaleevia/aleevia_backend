@@ -28,7 +28,7 @@ public record OfficeSimplifiedResponse
                 Email = office.Email.Value,
                 Site = office.Site.Value,
                 Instagram = office.Instagram.Value,
-                Logo = office.Logo.Value,
+                Logo = office.Logo.Url,
                 Individual = office.Individual,
                 Addresses = [.. addresses.Select(a => new OfficeAddressResponse
                 {

@@ -7,7 +7,7 @@ using Infrastructure.DependencyInjections;
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 
-builder.Services.AddCrossCuttingServices();
+builder.Services.AddCrossCuttingServices(configuration);
 builder.Services.AddInfrastructureServices(configuration);
 builder.Services.AddDomainServices();
 builder.Services.AddApiServices();

@@ -42,5 +42,6 @@ public static class ApplicationIocContainer
         services.AddScoped<IPatientService, PatientService>();
         services.AddScoped<IPatientLeadService, PatientLeadService>();
         services.AddScoped<IPasswordResetService, PasswordResetService>();
+        services.AddScoped<IOfficeFileSender, OfficeFileSender>();
     }
 }
