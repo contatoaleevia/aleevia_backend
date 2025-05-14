@@ -80,7 +80,8 @@ public class IaChatService(
             SourceId = chat.SourceId,
             SourceType = chat.SourceType.SourceTypeName,
             CreatedAt = chat.CreatedAt,
-            Message = message.Message
+            Message = message.Message,
+            Content = JsonDocument.Parse(message.Content)
         };
     }
 
