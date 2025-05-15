@@ -32,13 +32,13 @@ public class HealthCareConfiguration : IEntityTypeConfiguration<HealthCare>
             .HasColumnName("ans_number")
             .HasMaxLength(20);
 
-        builder.Property(x => x.Registration)
-            .HasColumnName("registration")
+        builder.Property(x => x.Registry)
+            .HasColumnName("registry")
             .HasMaxLength(20);
 
-        builder.Property(x => x.Active)
+        builder.Property(x => x.IsActive)
             .IsRequired()
-            .HasColumnName("active")
+            .HasColumnName("is_active")
             .HasDefaultValue(true);
 
         builder.Property(x => x.CreatedAt)
