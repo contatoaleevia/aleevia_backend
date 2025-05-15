@@ -43,4 +43,17 @@ public sealed class Address : AggregateRoot
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = null;
     }
+
+    public void Update(string? name, string? street, string? neighborhood, string? number, string? city, string? state, string? zipCode, string? complement)
+    {
+        Name = name ?? Name;
+        Street = street ?? Street;
+        Neighborhood = neighborhood ?? Neighborhood;
+        Number = number ?? Number;
+        City = city ?? City;
+        State = state ?? State;
+        ZipCode = zipCode ?? ZipCode;
+        Complement = complement ?? Complement;
+        UpdatedAt = DateTime.UtcNow;
+    }
 }
