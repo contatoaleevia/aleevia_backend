@@ -1,25 +1,44 @@
 ﻿using Domain.Entities.Faqs;
 
 namespace Application.DTOs.Faqs.UpdateFaqDTOs;
-public class UpdateFaqResponseDto
+
+public record UpdateFaqResponseDto
 {
-    public UpdateFaqResponseDto(Guid id, Guid sourceId, FaqSourceType sourceType, string question, string answer, FaqCategoryType faqCategory, DateTime createdAt, DateTime? updateAt)
+    public required UpdateFaqData Faq { get; init; }
+
+    public static UpdateFaqResponseDto FromFaq(Faq faq)
     {
-        Id = id;
-        SourceId = sourceId;
-        SourceType = sourceType;
-        Question = question;
-        Answer = answer;
-        FaqCategory = faqCategory;
-        CreatedAt = createdAt;
-        UpdatedAt = updateAt;
+        ArgumentNullException.ThrowIfNull(faq);
+
+        return new UpdateFaqResponseDto
+        {
+            Faq = new UpdateFaqData
+            {
+                Id = faq.Id,
+                SourceId = faq.SourceId,
+                SourceType = faq.SourceType,
+                Question = faq.Question,
+                Answer = faq.Answer,
+                Link = faq.Link,
+                FaqCategory = faq.FaqCategory,
+                IsActive = faq.IsActive,
+                CreatedAt = faq.CreatedAt,
+                UpdatedAt = faq.UpdatedAt
+            }
+        };
     }
-    public Guid Id { get; set; }
-    public Guid SourceId { get; set; }
-    public FaqSourceType SourceType { get; set; }
-    public string Question { get; set; } = string.Empty;
-    public string Answer { get; set; } = string.Empty;
-    public FaqCategoryType FaqCategory { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
+}
+
+public record UpdateFaqData
+{
+    public required Guid Id { get; init; }
+    public required Guid SourceId { get; init; }
+    public required FaqSourceType SourceType { get; init; }
+    public required string Question { get; init; }
+    public required string Answer { get; init; }
+    public string? Link { get; init; }
+    public required FaqCategoryType FaqCategory { get; init; }
+    public required bool IsActive { get; init; }
+    public required DateTime CreatedAt { get; init; }
+    public DateTime? UpdatedAt { get; init; }
 }

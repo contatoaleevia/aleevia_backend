@@ -22,10 +22,12 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// Cria um FAQ.
     /// </summary>
     /// <param name="requestDto">Objeto com os dados para criação do FAQ:
-    /// <summary/>Question: Pergunta do FAQ
-    /// <summary/>Answer: Resposta do FAQ
     /// <summary/>SourceId: ID da fonte (profissional) relacionada ao FAQ
     /// <summary/>SourceType: Tipo de fonte (profissional = 0, local de trabalho = 1)
+    /// <summary/>Question: Pergunta do FAQ
+    /// <summary/>Answer: Resposta do FAQ
+    /// <summary/>Link: Link para um video ou pagina web relacionada ao profissional ou clínica
+    /// <summary/>FaqCategory: Categoria do FAQ (Orientações ao cliente = 0, Sobre o profissional = 1, Sobre a clínica = 2)
     /// </param>
     /// <returns>Informações do FAQ criado</returns>
     [HttpPost]
@@ -131,6 +133,8 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// <summary/>Id: ID do FAQ a ser atualizado
     /// <summary/>Question: Nova pergunta do FAQ (opcional)
     /// <summary/>Answer: Nova resposta do FAQ (opcional)
+    /// <summary/>Link: Novo link do FAQ (opcional)
+    /// <summary/>FaqCategory: Nova categoria do FAQ (opcional)
     /// </param>
     /// <returns>Informações do FAQ atualizado</returns>
     [HttpPatch]
