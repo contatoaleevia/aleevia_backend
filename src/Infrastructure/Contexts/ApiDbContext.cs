@@ -8,6 +8,7 @@ using Domain.Entities.Offices;
 using Domain.Entities.Patients;
 using Domain.Entities.Professionals;
 using Domain.Entities.ServiceTypes;
+using Domain.Entities.HealthCares;
 using Infrastructure.Configurations.Addresses;
 using Infrastructure.Configurations.Faqs;
 using Infrastructure.Configurations.HealthcareProfessionals;
@@ -18,11 +19,10 @@ using Infrastructure.Configurations.Offices;
 using Infrastructure.Configurations.Patients;
 using Infrastructure.Configurations.Professionals;
 using Infrastructure.Configurations.ServiceTypes;
+using Infrastructure.Configurations.HealthCares;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Configurations.Agreements;
-using Domain.Entities.Agreements;
 
 namespace Infrastructure.Contexts;
 
@@ -57,7 +57,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public DbSet<OfficesProfessional> OfficesProfessionals { get; set; }
     public DbSet<Patient> Patients { get; set; }
     public DbSet<PatientLead> PatientLeads { get; set; }
-    public DbSet<Agreement> Agreements { get; set; }
+    public DbSet<HealthCare> HealthCares { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -92,7 +92,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new FaqPageConfiguration());
         builder.ApplyConfiguration(new ProfessionalDocumentConfiguration());
         builder.ApplyConfiguration(new ProfessionalSpecialtyDetailConfiguration());
-        builder.ApplyConfiguration(new AgreementConfiguration());
+        builder.ApplyConfiguration(new HealthCareConfiguration());
 
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {

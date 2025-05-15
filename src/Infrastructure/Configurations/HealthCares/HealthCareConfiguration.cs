@@ -1,13 +1,13 @@
-﻿using Domain.Entities.Agreements;
+﻿using Domain.Entities.HealthCares;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configurations.Agreements;
-public class AgreementConfiguration : IEntityTypeConfiguration<Agreement>
+namespace Infrastructure.Configurations.HealthCares;
+public class HealthCareConfiguration : IEntityTypeConfiguration<HealthCare>
 {
-    public void Configure(EntityTypeBuilder<Agreement> builder)
+    public void Configure(EntityTypeBuilder<HealthCare> builder)
     {
-        builder.ToTable("agreement");
+        builder.ToTable("healthcare");
 
         builder.HasKey(x => x.Id);
 

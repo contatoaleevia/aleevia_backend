@@ -1,9 +1,9 @@
-﻿namespace Application.DTOs.Agreements.CreateAgreementDTOs;
-public class CreateAgreementRequest
+﻿namespace Application.DTOs.HealthCares.CreateHealthCareDTOs;
+public class CreateHealthCareRequest
 {
     public Guid OfficeId { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     public string? AnsNumber { get; set; }
     public string? Registration { get; set; }
-    public bool Active { get; set; } = true;
+    public bool Active { get; set; }
 }

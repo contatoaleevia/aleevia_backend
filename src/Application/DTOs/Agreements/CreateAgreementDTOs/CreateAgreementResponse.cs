@@ -1,5 +1,5 @@
-﻿namespace Application.DTOs.Agreements.CreateAgreementDTOs;
-public class CreateAgreementResponse
+﻿namespace Application.DTOs.HealthCares.CreateHealthCareDTOs;
+public class CreateHealthCareResponse
 {
     public Guid Id { get; set; }
 }

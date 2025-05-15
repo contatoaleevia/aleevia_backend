@@ -1,8 +1,8 @@
 ﻿using CrossCutting.Entities;
 using Domain.Entities.Offices;
 
-namespace Domain.Entities.Agreements;
-public class Agreement : AggregateRoot
+namespace Domain.Entities.HealthCares;
+public class HealthCare : AggregateRoot
 {
     public Office Office { get; private set; } = null!;
     public Guid OfficeId { get; private set; }
@@ -13,7 +13,7 @@ public class Agreement : AggregateRoot
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
-    public Agreement(Guid officeId, string name, string? ansNumber, string? registration, bool active)
+    public HealthCare(Guid officeId, string name, string? ansNumber, string? registration, bool active)
     {
         OfficeId = officeId;
         Name = name;
@@ -23,7 +23,7 @@ public class Agreement : AggregateRoot
         CreatedAt = DateTime.UtcNow;
     }
 
-    protected Agreement() { }
+    protected HealthCare() { }
 
     public void Update(string name)
     {

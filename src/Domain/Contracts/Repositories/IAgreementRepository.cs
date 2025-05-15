@@ -1,5 +1,5 @@
 ﻿using CrossCutting.Repositories;
-using Domain.Entities.Agreements;
+using Domain.Entities.HealthCares;
 
 namespace Domain.Contracts.Repositories;
-public interface IAgreementRepository : IRepository<Agreement>;
+public interface IHealthCareRepository : IRepository<HealthCare>;
