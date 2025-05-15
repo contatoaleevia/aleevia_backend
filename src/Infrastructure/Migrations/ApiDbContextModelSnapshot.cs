@@ -106,54 +106,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("address", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Agreements.Agreement", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<bool>("Active")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true)
-                        .HasColumnName("active");
-
-                    b.Property<string>("AnsNumber")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("ans_number");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<Guid>("OfficeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("office_id");
-
-                    b.Property<string>("Registration")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("registration");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OfficeId");
-
-                    b.ToTable("agreement", "public");
-                });
-
             modelBuilder.Entity("Domain.Entities.Faqs.Faq", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1160,16 +1112,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Source");
 
                     b.Navigation("SourceType");
-                });
-
-            modelBuilder.Entity("Domain.Entities.Agreements.Agreement", b =>
-                {
-                    b.HasOne("Domain.Entities.Offices.Office", "Office")
-                        .WithMany()
-                        .HasForeignKey("OfficeId")
-                        .IsRequired();
-
-                    b.Navigation("Office");
                 });
 
             modelBuilder.Entity("Domain.Entities.Faqs.Faq", b =>
