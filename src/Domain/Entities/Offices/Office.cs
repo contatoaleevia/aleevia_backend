@@ -45,31 +45,17 @@ public class Office : AggregateRoot
         Specialties = [];
     }
 
-    public void Update(string name, string? cnpj = null, string? phoneNumber = null, string? whatsapp = null, 
+    public void Update(string? name = null, string? cnpj = null, string? phoneNumber = null, string? whatsapp = null, 
         string? email = null, string? site = null, string? instagram = null, string? logo = null)
     {
-        Name = name;
-        
-        if (cnpj != null)
-            Cnpj = SetDocument(cnpj);
-            
-        if (phoneNumber != null)
-            Phone = SetPhoneNumber(phoneNumber);
-            
-        if (whatsapp != null)
-            Whatsapp = SetWhatsapp(whatsapp);
-            
-        if (email != null)
-            Email = SetEmail(email);
-            
-        if (site != null)
-            Site = SetSite(site);
-            
-        if (instagram != null)
-            Instagram = SetInstagram(instagram);
-            
-        if (logo != null)
-            Logo = SetLogo(logo);
+        Name = name ?? Name;
+        Cnpj = cnpj != null ? SetDocument(cnpj) : Cnpj;
+        Phone = phoneNumber != null ? SetPhoneNumber(phoneNumber) : Phone;
+        Whatsapp = whatsapp != null ? SetWhatsapp(whatsapp) : Whatsapp;
+        Email = email != null ? SetEmail(email) : Email;
+        Site = site != null ? SetSite(site) : Site;
+        Instagram = instagram != null ? SetInstagram(instagram) : Instagram;
+        Logo = logo != null ? SetLogo(logo) : Logo;
     }
 
     private Document SetDocument(string? document)
