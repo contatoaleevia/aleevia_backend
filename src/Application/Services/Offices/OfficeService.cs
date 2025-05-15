@@ -28,7 +28,8 @@ public class OfficeService(
     IOfficeSpecialtyRepository officeSpecialtyRepository,
     ISpecialtyRepository specialtyRepository,
     IFaqRepository faqRepository,
-    IOfficeAttendanceRepository officeAttendanceRepository) : IOfficeService
+    IOfficeAttendanceRepository officeAttendanceRepository,
+    IHealthCareRepository healthCareRepository) : IOfficeService
 {
     public async Task<CreateOfficeResponse> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
@@ -128,7 +129,14 @@ public class OfficeService(
     public async Task<OfficeResponse> GetOfficeById(Guid id)
     {
         var office = await repository.GetByIdWithDetailsAsync(id) ?? throw new OfficeNotFoundException(id);
-        return OfficeResponse.FromOffice(office, office.Addresses, office.Professionals, office.Specialties);
+        
+        return OfficeResponse.FromOffice(
+            office,
+            [.. office.Addresses], 
+            [.. office.Professionals], 
+            [.. office.Specialties],
+            [.. office.HealthCares]
+        );
     }
 
     public async Task<List<OfficeSimplifiedResponse>> GetOfficesByUserId(Guid userId)
@@ -224,14 +232,14 @@ public class OfficeService(
         var totalProfessionals = await officesProfessionalsRepository.CountByOfficeIdAsync(officeId);
         var totalServices = await officeAttendanceRepository.CountByOfficeIdAsync(officeId);
         var totalFaqs = await faqRepository.CountBySourceIdAsync(officeId);
-        // TODO: Implementar total de planos de saúde
-        // var totalHealthInsurances = await healthInsuranceRepository.CountByOfficeIdAsync(officeId);
+        var totalHealthCares = await healthCareRepository.CountByOfficeIdAsync(officeId);
 
         return GetOfficeAnalyticsResponse.FromOffice(
             office,
             totalProfessionals,
             totalServices,
-            totalFaqs
+            totalFaqs,
+            totalHealthCares
         );
     }
 }

@@ -2,6 +2,7 @@
 using Domain.Entities.Addresses;
 using Domain.Entities.Identities;
 using Domain.Entities.ValueObjects;
+using Domain.Entities.HealthCares;
 
 namespace Domain.Entities.Offices;
 
@@ -17,9 +18,10 @@ public class Office : AggregateRoot
     public Url Instagram { get; private set; }
     public Url Logo { get; private set; }
     public bool Individual { get; private set; }
-    public ICollection<OfficeAddress> Addresses { get; set; } = [];
+    public ICollection<OfficeAddress> Addresses { get; private set; } = [];
     public ICollection<OfficesProfessional> Professionals { get; private set; } = [];
     public ICollection<OfficeSpecialty> Specialties { get; private set; } = [];
+    public ICollection<HealthCare> HealthCares { get; private set; } = [];
 
     public Manager Owner { get; set; } = null!;
 
