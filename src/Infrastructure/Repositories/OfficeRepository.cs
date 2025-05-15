@@ -30,6 +30,7 @@ public class OfficeRepository(ApiDbContext context) : Repository<Office>(context
                     .ThenInclude(x => x.Documents)
             .Include(x => x.Specialties.Where(s => s.IsActive))
                 .ThenInclude(x => x.Specialty)
+            .Include(x => x.HealthCares.Where(h => h.IsActive))
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 

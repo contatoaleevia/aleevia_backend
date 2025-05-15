@@ -14,6 +14,8 @@ using Application.Services.IaChats;
 using Application.Services.Patients;
 using Application.Services.Professionals;
 using Application.Services.PasswordResets;
+using Application.Services.HealthCares;
+
 using System.Net.Http.Headers;
 namespace Application.DependencyInjections;
 
@@ -42,5 +44,6 @@ public static class ApplicationIocContainer
         services.AddScoped<IPatientService, PatientService>();
         services.AddScoped<IPatientLeadService, PatientLeadService>();
         services.AddScoped<IPasswordResetService, PasswordResetService>();
+        services.AddScoped<IHealthCareService, HealthCareService>();
     }
 }
