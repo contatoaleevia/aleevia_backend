@@ -5,6 +5,7 @@ using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
 using Application.DTOs.Offices.DeleteOfficeAddressDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
+using Application.DTOs.Offices.UpdateOfficeDTOs;
 using Application.DTOs.Professionals;
 using Application.Services.Offices;
 using CrossCutting.Session;
@@ -216,5 +217,33 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     public async Task<IActionResult> GetOfficeProfessionals(Guid id)
     {
         return Ok(await service.GetOfficeProfessionals(id));
+    }
+
+    /// <summary>
+    /// Atualiza um local de trabalho (Office) existente.
+    /// </summary>
+    /// <param name="request">Objeto com os dados atualizados do local de trabalho:
+    /// <summary/>Id: ID do local de trabalho a ser atualizado
+    /// <summary/>Name: Nome do local de trabalho
+    /// <summary/>PhoneNumber: Número de telefone do local de trabalho
+    /// <summary/>Whatsapp: Número de whatsapp do local de trabalho
+    /// <summary/>Email: Email do local de trabalho
+    /// <summary/>Site: Site do local de trabalho
+    /// <summary/>Instagram: Instagram do local de trabalho
+    /// <summary/>Logo: Logo do local de trabalho
+    /// </param>
+    /// <returns>Dados atualizados do local de trabalho</returns>
+    [HttpPatch]
+    [Authorize(Roles = "Admin")]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(UpdateOfficeResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateOffice([FromBody] UpdateOfficeRequest request)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        return Ok(await service.UpdateOffice(request, session.UserId));
     }
 }

@@ -4,6 +4,7 @@ using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
 using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
+using Application.DTOs.Offices.UpdateOfficeDTOs;
 using Application.DTOs.Professionals;
 using Application.Services.Professionals;
 using Domain.Contracts.Repositories;
@@ -177,5 +178,31 @@ public class OfficeService(
 
         officeSpecialty.Deactivate();
         await officeSpecialtyRepository.UpdateAsync(officeSpecialty);
+    }
+
+    public async Task<UpdateOfficeResponse> UpdateOffice(UpdateOfficeRequest request, Guid userId)
+    {
+        var manager = await managerRepository.GetManagerByUserId(userId)
+                      ?? throw new ManagerUserNotFoundException(userId);
+
+        var office = await repository.GetByIdAsync(request.Id)
+                     ?? throw new OfficeNotFoundException(request.Id);
+
+        if (office.OwnerId != manager.Id)
+            throw new UnauthorizedOfficeAccessException(request.Id, userId);
+
+        office.Update(
+            name: request.Name,
+            phoneNumber: request.PhoneNumber,
+            whatsapp: request.Whatsapp,
+            email: request.Email,
+            site: request.Site,
+            instagram: request.Instagram,
+            logo: request.Logo
+        );
+
+        await repository.UpdateAsync(office);
+        
+        return UpdateOfficeResponse.FromOffice(office);
     }
 }
