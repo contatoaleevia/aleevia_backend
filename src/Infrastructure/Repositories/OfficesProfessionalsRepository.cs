@@ -37,4 +37,11 @@ public class OfficesProfessionalsRepository(ApiDbContext context) : Repository<O
                     op.ProfessionalId == professionalId
             );
     }
+
+    public async Task<int> CountByOfficeIdAsync(Guid officeId)
+    {
+        return await DbSet
+            .Where(op => op.OfficeId == officeId && op.IsActive)
+            .CountAsync();
+    }
 }

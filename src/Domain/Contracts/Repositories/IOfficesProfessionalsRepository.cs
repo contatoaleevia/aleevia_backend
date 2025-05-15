@@ -7,4 +7,5 @@ public interface IOfficesProfessionalsRepository : IRepository<OfficesProfession
 {
     Task<List<OfficesProfessional>> GetByOfficeIdWithDetailsAsync(Guid officeId);
     Task<OfficesProfessional?> GetByOfficeAndProfessional(Guid officeId, Guid professionalId);
+    Task<int> CountByOfficeIdAsync(Guid officeId);
 }

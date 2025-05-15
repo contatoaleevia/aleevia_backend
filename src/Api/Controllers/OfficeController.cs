@@ -4,6 +4,7 @@ using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
 using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
 using Application.DTOs.Offices.DeleteOfficeAddressDTOs;
+using Application.DTOs.Offices.GetOfficeAnalyticsDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
 using Application.DTOs.Offices.UpdateOfficeDTOs;
 using Application.DTOs.Professionals;
@@ -245,5 +246,27 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         return Ok(await service.UpdateOffice(request, session.UserId));
+    }
+
+    /// <summary>
+    /// Obtém métricas e análises de um local de trabalho (Office) específico.
+    /// </summary>
+    /// <param name="id">ID do local de trabalho</param>
+    /// <returns>Dados analíticos do local de trabalho, incluindo:
+    /// - Total de profissionais
+    /// - Total de serviços
+    /// - Total de FAQs
+    /// - Total de convênios
+    /// </returns>
+    [HttpGet("{id}/analytics")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(GetOfficeAnalyticsResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetOfficeAnalytics(Guid id)
+    {
+        return Ok(await service.GetOfficeAnalytics(id, session.UserId));
     }
 }

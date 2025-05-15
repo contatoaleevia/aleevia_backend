@@ -13,4 +13,11 @@ public class FaqRepository(ApiDbContext context) : Repository<Faq>(context), IFa
             .Where(x => x.SourceId == guid)
             .ToListAsync();
     }
+
+    public async Task<int> CountBySourceIdAsync(Guid sourceId)
+    {
+        return await DbSet
+            .Where(f => f.SourceId == sourceId && f.DeletedAt == null)
+            .CountAsync();
+    }
 }
