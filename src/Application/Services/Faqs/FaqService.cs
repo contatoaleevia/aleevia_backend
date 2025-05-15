@@ -31,18 +31,18 @@ public class FaqService(
                 faqPage.WelcomeMessage,
                 faqPage.CreatedAt,
                 faqPage.UpdatedAt) : null,
-            Faqs = [.. faqs.Select(x => new GetFaqByProfessionalIdResponseDto
-            {
-                Id = x.Id,
-                Question = x.Question,
-                Answer = x.Answer,
-                SourceId = x.SourceId,
-                SourceType = x.SourceType,
-                CreatedAt = x.CreatedAt,
-                UpdatedAt = x.UpdatedAt,
-                FaqCategory = x.FaqCategory,
-                DeletedAt = x.DeletedAt
-            })]
+            Faqs = [.. faqs.Select(x => new GetFaqByProfessionalIdResponseDto(
+                x.Id,
+                x.SourceId,
+                x.SourceType,
+                x.Question,
+                x.Answer,
+                x.Link,
+                x.FaqCategory,
+                x.CreatedAt,
+                x.UpdatedAt,
+                x.DeletedAt
+            ))]
         };
     }
 
@@ -60,16 +60,18 @@ public class FaqService(
                 faqPage.WelcomeMessage,
                 faqPage.CreatedAt,
                 faqPage.UpdatedAt) : null,
-            Faqs = [.. faqs.Select(x => new GetFaqByProfessionalIdResponseDto
-            {
-                Id = x.Id,
-                Question = x.Question,
-                Answer = x.Answer,
-                SourceId = x.SourceId,
-                SourceType = x.SourceType,
-                CreatedAt = x.CreatedAt,
-                UpdatedAt = x.UpdatedAt
-            })]
+            Faqs = [.. faqs.Select(x => new GetFaqByProfessionalIdResponseDto(
+                x.Id,
+                x.SourceId,
+                x.SourceType,
+                x.Question,
+                x.Answer,
+                x.Link,
+                x.FaqCategory,
+                x.CreatedAt,
+                x.UpdatedAt,
+                x.DeletedAt
+            ))]
         };
     }
 
@@ -78,23 +80,18 @@ public class FaqService(
         await ValidateSourceAsync(request.SourceId, request.SourceType);
 
         var faq = new Faq(
-            request.SourceId,
-            request.SourceType,
-            request.Question,
-            request.Answer,
-            request.FaqCategory,
-            DateTime.UtcNow
+            sourceId: request.SourceId,
+            sourceType: request.SourceType,
+            question: request.Question,
+            answer: request.Answer,
+            link: request.Link,
+            faqCategory: request.FaqCategory,
+            createdAt: DateTime.UtcNow
         );
 
-        var result = await repository.CreateAsync(faq);
+        await repository.CreateAsync(faq);
 
-        return new CreateFaqResponseDto(
-            id: result.Id,
-            question: result.Question,
-            answer: result.Answer,
-            sourceId: result.SourceId,
-            createdAt: result.CreatedAt
-        );
+        return CreateFaqResponseDto.FromFaq(faq);
     }
 
     public async Task<ImportResult> ImportFaqs(Stream arquivo, string nomeArquivo, Guid userId)
@@ -114,15 +111,16 @@ public class FaqService(
         {
             try
             {
-                var entidade = new Faq
-                {
-                    SourceId = userId,
-                    SourceType = new FaqSourceType(0),
-                    Question = dto.Question,
-                    Answer = dto.Answer,
-                    FaqCategory = new FaqCategoryType(dto.FaqCategory),
-                    CreatedAt = DateTime.UtcNow
-                };
+                var entidade = new Faq(
+                    sourceId: userId,
+                    sourceType: 0,
+                    question: dto.Question,
+                    answer: dto.Answer,
+                    link: dto.Link,
+                    faqCategory: ushort.Parse(dto.FaqCategory),
+                    createdAt: DateTime.UtcNow
+                );
+
                 await repository.CreateAsync(entidade);
                 faqsImportadas.Add(dto);
             }
@@ -146,43 +144,26 @@ public class FaqService(
     {
         var faq = await repository.GetByIdAsync(request.Id) ?? throw new FaqNotFoundException(request.Id);
 
-        faq.Question = request.Question;
-        faq.Answer = request.Answer;
-        faq.UpdatedAt = DateTime.UtcNow;
-        faq.FaqCategory = new FaqCategoryType(request.FaqCategory);
+        faq.Update(
+            question: request.Question,
+            answer: request.Answer,
+            link: request.Link,
+            faqCategory: request.FaqCategory
+        );
 
         await repository.UpdateAsync(faq);
-        return new UpdateFaqResponseDto(
-            id: faq.Id,
-            sourceId: faq.SourceId,
-            sourceType: faq.SourceType,
-            question: faq.Question,
-            answer: faq.Answer,
-            faqCategory: faq.FaqCategory,
-            createdAt: faq.CreatedAt,
-            updateAt: faq.UpdatedAt
-        );
+
+        return UpdateFaqResponseDto.FromFaq(faq);
     }
 
     public async Task<DeleteFaqResponseDto> DeleteFaqAsync(DeleteFaqRequestDto request)
     {
         var faq = await repository.GetByIdAsync(request.Id) ?? throw new FaqNotFoundException(request.Id);
 
-        faq.DeletedAt = DateTime.UtcNow;
-
+        faq.Delete();
         await repository.UpdateAsync(faq);
 
-        return new DeleteFaqResponseDto(
-            id: faq.Id,
-            sourceId: faq.SourceId,
-            sourceType: faq.SourceType,
-            question: faq.Question,
-            answer: faq.Answer,
-            faqCategory: faq.FaqCategory,
-            createdAt: faq.CreatedAt,
-            updatedAt: faq.UpdatedAt,
-            deletedAt: faq.DeletedAt
-        );
+        return DeleteFaqResponseDto.FromFaq(faq);
     }
 
     private async Task ValidateSourceAsync(Guid sourceId, ushort sourceType)
