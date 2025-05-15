@@ -33,7 +33,7 @@ public class AddressController(IAddressService addressService, IUserSession user
     /// <summary>
     /// Cria um Endereço vinculado ao usuário logado.
     /// </summary>
-    /// <param name="requestDto">Objeto com os dados do endereço</param>
+    /// <param name="requestDto">Objeto com os dados do endereço
     /// <summary/>Street: Nome da rua
     /// <summary/>Number: Número do endereço
     /// <summary/>Complement: Complemento (opcional)
@@ -42,6 +42,7 @@ public class AddressController(IAddressService addressService, IUserSession user
     /// <summary/>State: Estado (UF)
     /// <summary/>ZipCode: CEP
     /// <summary/>Country: País
+    /// </param>
     /// <returns>Informações do endereço criado</returns>
     [HttpPost]
     [Authorize(Roles = "Admin")]
@@ -74,7 +75,7 @@ public class AddressController(IAddressService addressService, IUserSession user
     /// <summary>
     /// Atualiza um endereço existente.
     /// </summary>
-    /// <param name="requestDto">Objeto com os dados do endereço a ser atualizado</param>
+    /// <param name="requestDto">Objeto com os dados do endereço a ser atualizado
     /// <summary/>Id: ID do endereço a ser atualizado
     /// <summary/>Name: Nome do endereço
     /// <summary/>Street: Nome da rua
@@ -82,6 +83,9 @@ public class AddressController(IAddressService addressService, IUserSession user
     /// <summary/>Complement: Complemento (opcional)
     /// <summary/>Neighborhood: Bairro
     /// <summary/>City: Cidade
+    /// <summary/>State: Estado (UF)
+    /// <summary/>ZipCode: CEP
+    /// </param>
     /// <returns>Informações do endereço atualizado</returns>
     [HttpPatch]
     [Authorize(Roles = "Admin")]
