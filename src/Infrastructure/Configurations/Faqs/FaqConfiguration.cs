@@ -38,6 +38,16 @@ public class FaqConfiguration : IEntityTypeConfiguration<Faq>
             .HasMaxLength(1000)
             .HasColumnName("answer");
 
+        builder.Property(x => x.Link)
+            .IsRequired(false)
+            .HasMaxLength(500)
+            .HasColumnName("link");
+
+        builder.Property(x => x.IsActive)
+            .IsRequired()
+            .HasDefaultValue(true)
+            .HasColumnName("is_active");
+
         builder.OwnsOne(x => x.FaqCategory, faqCategory =>
         {
             faqCategory.Property(x => x.CategoryType)
