@@ -2,6 +2,7 @@
 using Api.Attributes;
 using Application.DTOs.Addresses.CreateAddressDTOs;
 using Application.DTOs.Addresses.GetAddressDTOs;
+using Application.DTOs.Addresses.UpdateAddressDTOs;
 using Application.DTOs.Adresses.GetAddressBySourceDTOs;
 using Application.Services.Addresses;
 using CrossCutting.Session;
@@ -32,15 +33,16 @@ public class AddressController(IAddressService addressService, IUserSession user
     /// <summary>
     /// Cria um Endereço vinculado ao usuário logado.
     /// </summary>
-    /// <param name="requestDto">Objeto com os dados do endereço</param>
-    /// <param name="requestDto.Street">Nome da rua</param>
-    /// <param name="requestDto.Number">Número do endereço</param>
-    /// <param name="requestDto.Complement">Complemento (opcional)</param>
-    /// <param name="requestDto.Neighborhood">Bairro</param>
-    /// <param name="requestDto.City">Cidade</param>
-    /// <param name="requestDto.State">Estado (UF)</param>
-    /// <param name="requestDto.ZipCode">CEP</param>
-    /// <param name="requestDto.Country">País</param>
+    /// <param name="requestDto">Objeto com os dados do endereço
+    /// <summary/>Street: Nome da rua
+    /// <summary/>Number: Número do endereço
+    /// <summary/>Complement: Complemento (opcional)
+    /// <summary/>Neighborhood: Bairro
+    /// <summary/>City: Cidade
+    /// <summary/>State: Estado (UF)
+    /// <summary/>ZipCode: CEP
+    /// <summary/>Country: País
+    /// </param>
     /// <returns>Informações do endereço criado</returns>
     [HttpPost]
     [Authorize(Roles = "Admin")]
@@ -68,5 +70,32 @@ public class AddressController(IAddressService addressService, IUserSession user
         if (userSession.ManagerId is null)
             return BadRequest(new ManagerIdNotExistsException());
         return Ok(await addressService.GetAddressBySourceId(userSession.UserId, userSession.ManagerId.Value));
+    }
+
+    /// <summary>
+    /// Atualiza um endereço existente.
+    /// </summary>
+    /// <param name="requestDto">Objeto com os dados do endereço a ser atualizado
+    /// <summary/>Id: ID do endereço a ser atualizado
+    /// <summary/>Name: Nome do endereço
+    /// <summary/>Street: Nome da rua
+    /// <summary/>Number: Número do endereço
+    /// <summary/>Complement: Complemento (opcional)
+    /// <summary/>Neighborhood: Bairro
+    /// <summary/>City: Cidade
+    /// <summary/>State: Estado (UF)
+    /// <summary/>ZipCode: CEP
+    /// </param>
+    /// <returns>Informações do endereço atualizado</returns>
+    [HttpPatch]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(typeof(UpdateAddressResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateAddress([FromBody] UpdateAddressRequestDto requestDto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var response = await addressService.UpdateAddressAsync(requestDto);
+        return Ok(response);
     }
 }

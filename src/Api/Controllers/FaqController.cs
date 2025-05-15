@@ -22,9 +22,12 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// Cria um FAQ.
     /// </summary>
     /// <param name="requestDto">Objeto com os dados para criação do FAQ:
+    /// <summary/>SourceId: ID da fonte (profissional) relacionada ao FAQ
+    /// <summary/>SourceType: Tipo de fonte (profissional = 0, local de trabalho = 1)
     /// <summary/>Question: Pergunta do FAQ
     /// <summary/>Answer: Resposta do FAQ
-    /// <summary/>SourceId: ID da fonte (profissional) relacionada ao FAQ
+    /// <summary/>Link: Link para um video ou pagina web relacionada ao profissional ou clínica
+    /// <summary/>FaqCategory: Categoria do FAQ (Orientações ao cliente = 0, Sobre o profissional = 1, Sobre a clínica = 2)
     /// </param>
     /// <returns>Informações do FAQ criado</returns>
     [HttpPost]
@@ -55,19 +58,6 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     }
 
     /// <summary>
-    /// Busca FAQs por URL personalizada.
-    /// </summary>
-    /// <param name="customUrl">URL personalizada para buscar os FAQs</param>
-    /// <returns>Lista de FAQs associados à URL personalizada</returns>
-    [HttpGet("url/{customUrl}")]
-    [AllowAnonymous]
-    public async Task<IActionResult> GetFaqsByCustomUrl(string customUrl)
-    {
-        var response = await faqService.GetFaqsByCustomUrlAsync(customUrl);
-        return Ok(response);
-    }
-
-    /// <summary>
     /// Busca uma página de FAQ pelo ID da fonte.
     /// </summary>
     /// <param name="sourceId">ID da fonte (profissional) para buscar a página de FAQ</param>
@@ -84,10 +74,9 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// Cria uma página de FAQ.
     /// </summary>
     /// <param name="requestDto">Objeto com os dados para criação da página:
-    /// <summary/>Title: Título da página de FAQ
-    /// <summary/>Description: Descrição da página de FAQ
     /// <summary/>SourceId: ID da fonte (profissional, local de trabalho) relacionada à página
-    /// <summary/>CustomUrl: URL personalizada para a página (opcional)
+    /// <summary/>SourceType: Tipo de fonte (profissional = 0, local de trabalho = 1)
+    /// <summary/>WelcomeMessage: Mensagem de boas-vindas da IA para a página de FAQ
     /// </param>
     /// <returns>Informações da página de FAQ criada</returns>
     [HttpPost("page")]
@@ -125,9 +114,7 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// </summary>
     /// <param name="requestDto">Objeto com os dados para atualização da página:
     /// <summary/>Id: ID da página de FAQ a ser atualizada
-    /// <summary/>Title: Novo título da página de FAQ (opcional)
-    /// <summary/>Description: Nova descrição da página de FAQ (opcional)
-    /// <summary/>CustomUrl: Nova URL personalizada para a página (opcional)
+    /// <summary/>WelcomeMessage: Nova mensagem de boas-vindas da IA para a página de FAQ
     /// </param>
     /// <returns>Informações da página de FAQ atualizada</returns>
     [HttpPatch("page")]
@@ -146,6 +133,8 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     /// <summary/>Id: ID do FAQ a ser atualizado
     /// <summary/>Question: Nova pergunta do FAQ (opcional)
     /// <summary/>Answer: Nova resposta do FAQ (opcional)
+    /// <summary/>Link: Novo link do FAQ (opcional)
+    /// <summary/>FaqCategory: Nova categoria do FAQ (opcional)
     /// </param>
     /// <returns>Informações do FAQ atualizado</returns>
     [HttpPatch]

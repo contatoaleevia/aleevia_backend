@@ -14,13 +14,20 @@ using Application.Services.IaChats;
 using Application.Services.Patients;
 using Application.Services.Professionals;
 using Application.Services.PasswordResets;
+using Application.Services.HealthCares;
 
+using System.Net.Http.Headers;
 namespace Application.DependencyInjections;
 
 public static class ApplicationIocContainer
 {
     public static void AddApplicationServices(this IServiceCollection services)
     {
+        services.AddHttpClient("AiPython", client =>
+        {
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        });
+
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IFaqService, FaqService>();
         services.AddScoped<IFaqPageService, FaqPageService>();
@@ -37,5 +44,6 @@ public static class ApplicationIocContainer
         services.AddScoped<IPatientService, PatientService>();
         services.AddScoped<IPatientLeadService, PatientLeadService>();
         services.AddScoped<IPasswordResetService, PasswordResetService>();
+        services.AddScoped<IHealthCareService, HealthCareService>();
     }
 }

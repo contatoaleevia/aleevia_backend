@@ -1,4 +1,5 @@
 using Domain.Entities.Offices;
+using Domain.Entities.Professionals;
 
 namespace Application.DTOs.Offices.GetOfficeDTOs;
 
@@ -8,106 +9,68 @@ public record GetOfficeProfessionalsResponse
 
     public static GetOfficeProfessionalsResponse FromOffice(
         Office office,
-        IEnumerable<OfficesProfessional> professionals)
+        IEnumerable<OfficesProfessional> officeProfessional)
     {
         ArgumentNullException.ThrowIfNull(office);
-        ArgumentNullException.ThrowIfNull(professionals);
+        ArgumentNullException.ThrowIfNull(officeProfessional);
 
         return new GetOfficeProfessionalsResponse
         {
-            Professionals = [.. professionals.Select(p => new OfficeProfessionalData
-            {
-                Id = p.Id,
-                ProfessionalId = p.ProfessionalId,
-                IsPublic = p.IsPublic,
-                IsActive = p.IsActive,
-                Professional = p.Professional == null ? null : new ProfessionalData
-                {
-                    Id = p.Professional.Id,
-                    Name = p.Professional.Name ?? string.Empty,
-                    PreferredName = p.Professional.PreferredName ?? string.Empty,
-                    Email = p.Professional.Email ?? string.Empty,
-                    Cpf = p.Professional.Cpf.Value,
-                    Cnpj = p.Professional.Cnpj?.Value,
-                    Website = p.Professional.Website?.Value,
-                    Instagram = p.Professional.Instagram?.Value,
-                    Biography = p.Professional.Biography?.Value,
-                    IsRegistered = p.Professional.IsRegistered,
-                    RegisterStatus = p.Professional.RegisterStatus.StatusTypeName,
-                    SpecialtyDetails = [.. p.Professional.SpecialtyDetails.Select(s => new ProfessionalSpecialtyDetailData
-                    {
-                        ProfessionId = s.ProfessionId,
-                        ProfessionName = s.Profession.Name,
-                        SpecialityId = s.SpecialityId,
-                        SpecialityName = s.Speciality.Name,
-                        SubspecialityId = s.SubspecialityId,
-                        SubspecialityName = s.Subspeciality?.Name,
-                        VideoPresentation = s.VideoPresentation
-                    })],
-                    Documents = [.. p.Professional.Documents.Select(d => new ProfessionalDocumentData
-                    {
-                        Id = d.Id,
-                        DocumentType = d.DocumentType,
-                        DocumentNumber = d.DocumentNumber,
-                        DocumentState = d.DocumentState,
-                        FrontUrl = d.FrontUrl,
-                        BackUrl = d.BackUrl,
-                        Validated = d.Validated,
-                        CreatedAt = d.CreatedAt,
-                        RemovedAt = d.RemovedAt
-                    })]
-                }
-            })]
+            Professionals = [.. officeProfessional.Select(x => new OfficeProfessionalData(x))]
         };
     }
 }
 
-public record OfficeProfessionalData
+public class OfficeProfessionalData(OfficesProfessional officeProfessional)
 {
-    public required Guid Id { get; init; }
-    public required Guid ProfessionalId { get; init; }
-    public required bool IsPublic { get; init; }
-    public required bool IsActive { get; init; }
-    public ProfessionalData? Professional { get; init; }
+    public Guid Id { get; private set; } = officeProfessional.Id;
+    public Guid ProfessionalId { get; private set; } = officeProfessional.ProfessionalId;
+    public bool IsPublic { get; private set; } = officeProfessional.IsPublic;
+    public bool IsActive { get; private set; } = officeProfessional.IsActive;
+    public ProfessionalData? Professional { get; private set; } = new(officeProfessional.Professional);
 }
 
-public record ProfessionalData
+public class ProfessionalData(Professional professional)
 {
-    public required Guid Id { get; init; }
-    public required string Name { get; init; }
-    public required string PreferredName { get; init; }
-    public required string Email { get; init; }
-    public required string Cpf { get; init; }
-    public string? Cnpj { get; init; }
-    public string? Website { get; init; }
-    public string? Instagram { get; init; }
-    public string? Biography { get; init; }
-    public required bool IsRegistered { get; init; }
-    public required string RegisterStatus { get; init; }
-    public required IReadOnlyList<ProfessionalSpecialtyDetailData> SpecialtyDetails { get; init; }
-    public required IReadOnlyList<ProfessionalDocumentData> Documents { get; init; }
+    public Guid Id { get; private set; } = professional.Id;
+    public string Name { get; private set; } = professional.Name ?? string.Empty;
+    public string PreferredName { get; private set; } = professional.PreferredName ?? string.Empty;
+    public string Email { get; private set; } = professional.Email ?? string.Empty;
+    public string Cpf { get; private set; } = professional.Cpf.Value;
+    public string? Cnpj { get; private set; } = professional.Cnpj?.Value;
+    public string? Website { get; private set; } = professional.Website?.Value;
+    public string? Instagram { get; private set; } = professional.Instagram?.Value;
+    public string? Biography { get; private set; } = professional.Biography?.Value;
+    public bool IsRegistered { get; private set; } = professional.IsRegistered;
+    public string RegisterStatus { get; private set; } = professional.RegisterStatus.StatusTypeName;
+
+    public IEnumerable<ProfessionalSpecialtyDetailData> SpecialtyDetails { get; private set; }
+        = professional.SpecialtyDetails.Select(specialityDetail => new ProfessionalSpecialtyDetailData(specialityDetail));
+
+    public IEnumerable<ProfessionalDocumentData> Documents { get; private set; }
+        = professional.Documents.Select(document => new ProfessionalDocumentData(document));
 }
 
-public record ProfessionalSpecialtyDetailData
+public class ProfessionalSpecialtyDetailData(ProfessionalSpecialtyDetail specialtyDetail)
 {
-    public required Guid ProfessionId { get; init; }
-    public required string ProfessionName { get; init; }
-    public required Guid SpecialityId { get; init; }
-    public required string SpecialityName { get; init; }
-    public Guid? SubspecialityId { get; init; }
-    public string? SubspecialityName { get; init; }
-    public string? VideoPresentation { get; init; }
+    public Guid ProfessionId { get; set; } = specialtyDetail.ProfessionId;
+    public string ProfessionName { get; set; } = specialtyDetail.Profession.Name;
+    public Guid SpecialityId { get; set; } = specialtyDetail.SpecialityId;
+    public string SpecialityName { get; set; } = specialtyDetail.Speciality.Name;
+    public Guid? SubspecialityId { get; set; } = specialtyDetail.SubspecialityId;
+    public string? SubspecialityName { get; set; } = specialtyDetail.Subspeciality?.Name;
+    public string? VideoPresentation { get; set; } = specialtyDetail.VideoPresentation;
 }
 
-public record ProfessionalDocumentData
+public class ProfessionalDocumentData(ProfessionalDocument document)
 {
-    public required Guid Id { get; init; }
-    public required string DocumentType { get; init; }
-    public required string DocumentNumber { get; init; }
-    public required string DocumentState { get; init; }
-    public string? FrontUrl { get; init; }
-    public string? BackUrl { get; init; }
-    public required bool Validated { get; init; }
-    public required DateTime CreatedAt { get; init; }
-    public DateTime? RemovedAt { get; init; }
+    public Guid Id { get; set; } = document.Id;
+    public string DocumentType { get; set; } = document.DocumentType;
+    public string DocumentNumber { get; set; } = document.DocumentNumber;
+    public string DocumentState { get; set; } = document.DocumentState;
+    public string? FrontUrl { get; set; } = document.FrontUrl;
+    public string? BackUrl { get; set; } = document.BackUrl;
+    public bool Validated { get; set; } = document.Validated;
+    public DateTime CreatedAt { get; set; } = document.CreatedAt;
+    public DateTime? RemovedAt { get; set; } = document.RemovedAt;
 } 

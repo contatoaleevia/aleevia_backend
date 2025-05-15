@@ -10,7 +10,14 @@ public class FaqRepository(ApiDbContext context) : Repository<Faq>(context), IFa
     public async Task<List<Faq>> GetAllAsync(Guid guid)
     {
         return await context.Set<Faq>()
-            .Where(x => x.SourceId == guid)
+            .Where(x => x.SourceId == guid && x.IsActive)
             .ToListAsync();
+    }
+
+    public async Task<int> CountBySourceIdAsync(Guid sourceId)
+    {
+        return await DbSet
+            .Where(f => f.SourceId == sourceId && f.IsActive)
+            .CountAsync();
     }
 }

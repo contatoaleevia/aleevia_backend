@@ -1,6 +1,10 @@
+using Domain.Entities.Faqs;
+
 namespace Application.DTOs.Faqs.CreateFaqPageDTOs;
 
-public record CreateFaqPageRequestDto(
-    Guid SourceId,
-    string? CustomUrl,
-    string? WelcomeMessage); 
+public class CreateFaqPageRequestDto
+{
+    public required Guid SourceId { get; set; }
+    public required FaqSourceEnum SourceType { get; set; }
+    public required string WelcomeMessage { get; set; }
+} 

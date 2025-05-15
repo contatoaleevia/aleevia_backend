@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Addresses.CreateAddressDTOs;
 using Application.DTOs.Addresses.GetAddressDTOs;
+using Application.DTOs.Addresses.UpdateAddressDTOs;
 using Application.DTOs.Adresses.GetAddressBySourceDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Addresses;
@@ -83,5 +84,25 @@ public class AddressService(IAddressRepository repository) : IAddressService
             )).ToListAsync();
 
         return test.OrderByDescending(x => x.Name);
+    }
+
+    public async Task<UpdateAddressResponseDto> UpdateAddressAsync(UpdateAddressRequestDto requestDto)
+    {
+        var address = await repository.GetByIdAsync(requestDto.Id)
+            ?? throw new AddressNotFoundException(requestDto.Id);
+
+        address.Update(
+            name: requestDto.Name,
+            street: requestDto.Street,
+            neighborhood: requestDto.Neighborhood,
+            number: requestDto.Number,
+            city: requestDto.City,
+            state: requestDto.State,
+            zipCode: requestDto.ZipCode,
+            complement: requestDto.Complement);
+
+        await repository.UpdateAsync(address);
+
+        return UpdateAddressResponseDto.FromAddress(address);
     }
 }

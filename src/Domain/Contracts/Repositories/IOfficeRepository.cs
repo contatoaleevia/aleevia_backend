@@ -5,5 +5,6 @@ namespace Domain.Contracts.Repositories;
 
 public interface IOfficeRepository : IRepository<Office>
 {
-    Task<List<Office>> GetAllByOwnerIdAsync(Guid ownerId);
+    Task<Office?> GetByIdWithDetailsAsync(Guid id);
+    Task<List<Office>> GetAllByOwnerIdWithDetailsAsync(Guid ownerId);
 }
