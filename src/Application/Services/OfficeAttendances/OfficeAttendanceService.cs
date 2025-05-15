@@ -17,11 +17,6 @@ public class OfficeAttendanceService(
         if (serviceType is null || !serviceType.Active)
             throw new ServiceTypeNotFoundException(requestDto.ServiceTypeId);
 
-        var serviceTypeExists = await officeAttendanceRepository.ExistsByOfficeIdAndServiceTypeIdAsync(
-            requestDto.OfficeId, requestDto.ServiceTypeId);
-        if (serviceTypeExists)
-            throw new OfficeServiceAlreadyChainedException(requestDto.OfficeId, requestDto.ServiceTypeId);
-
         var officeAttendance = new OfficeAttendance(
             officeId: requestDto.OfficeId,
             serviceTypeId: requestDto.ServiceTypeId,

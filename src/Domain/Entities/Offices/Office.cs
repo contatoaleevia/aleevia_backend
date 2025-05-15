@@ -17,9 +17,11 @@ public class Office : AggregateRoot
     public Url Instagram { get; private set; }
     public Url Logo { get; private set; }
     public bool Individual { get; private set; }
+    public ICollection<OfficeAddress> Addresses { get; set; } = [];
+    public ICollection<OfficesProfessional> Professionals { get; private set; } = [];
+    public ICollection<OfficeSpecialty> Specialties { get; private set; } = [];
 
     public Manager Owner { get; set; } = null!;
-    public ICollection<OfficeAddress> Addresses { get; set; } = [];
 
     private Office()
     {
@@ -38,6 +40,9 @@ public class Office : AggregateRoot
         Instagram = SetInstagram(instagram);
         Logo = SetLogo(logo);
         Individual = individual;
+        Addresses = [];
+        Professionals = [];
+        Specialties = [];
     }
 
     private Document SetDocument(string? document)

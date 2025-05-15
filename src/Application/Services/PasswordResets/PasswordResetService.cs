@@ -8,6 +8,8 @@ using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Text;
+using System.Web;
 namespace Application.Services.PasswordResets;
 
 public class PasswordResetService(
@@ -19,14 +21,19 @@ public class PasswordResetService(
 {
     private readonly string _frontendUrl = configuration.GetValue<string>("FrontendUrl") ?? throw new InvalidOperationException("FrontendUrl não configurada no appsettings");
 
-    public async Task RequestPasswordResetAsync(RequestPasswordResetDTO request)
+    public async Task<RequestPasswordResetResponseDTO> RequestPasswordResetAsync(RequestPasswordResetDTO request)
     {
-        // TODO: Verificar o Type do User
         var user = await FindUserByDocumentAsync(request.Document);
-        if (user == null) return;
+        if (user == null)
+        {
+            return new RequestPasswordResetResponseDTO{Message = "Não foi possível encontrar um usuário com o documento informado." };
+        }
 
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
-        var resetLink = $"{_frontendUrl}/reset-password?token={Uri.EscapeDataString(token)}";
+        var encodedToken = HttpUtility.UrlEncode(token);
+        var documentBytes = Encoding.UTF8.GetBytes(user.Cpf.Value);
+        var encodedDocument = Convert.ToBase64String(documentBytes);
+        var resetLink = $"{_frontendUrl}/reset-password?token={encodedToken}&document={encodedDocument}";
 
         await emailService.SendEmailAsync(
             to: user.Email!,
@@ -34,12 +41,32 @@ public class PasswordResetService(
             body: PasswordResetEmailTemplate.GetBody(user.Name, resetLink),
             isHtml: true
         );
+
+        return new RequestPasswordResetResponseDTO
+        {
+            Email = user.Email!,
+            Message = "Um e-mail com instruções para redefinição de senha foi enviado para o endereço cadastrado."
+        };
     }
 
     public async Task ResetPasswordAsync(ResetPasswordDTO request)
     {
-        var user = await FindUserByDocumentAsync(request.Document) ?? throw new InvalidPasswordResetTokenException();
-        var result = await userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+        var decodedToken = HttpUtility.UrlDecode(request.Token);
+        var documentBytes = Convert.FromBase64String(request.Document);
+        var decodedDocument = Encoding.UTF8.GetString(documentBytes);
+
+        var user = await FindUserByDocumentAsync(decodedDocument) ?? throw new InvalidPasswordResetTokenException();
+
+        var isValidToken = await userManager.VerifyUserTokenAsync(
+            user, 
+            userManager.Options.Tokens.PasswordResetTokenProvider,
+            UserManager<User>.ResetPasswordTokenPurpose, 
+            decodedToken);
+
+        if (!isValidToken)
+            throw new InvalidPasswordResetTokenException();
+
+        var result = await userManager.ResetPasswordAsync(user, decodedToken, request.NewPassword);
 
         if (!result.Succeeded)
         {

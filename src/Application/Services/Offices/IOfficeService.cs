@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Offices.BindOfficeAddressDTOs;
 using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
+using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
 using Application.DTOs.Professionals;
@@ -12,6 +13,9 @@ public interface IOfficeService
     Task<BindOfficeAddressResponse> BindOfficeAddress(BindOfficeAddressRequest request, Guid userId);
     Task DeleteOfficeAddress(Guid officeAddressId);
     Task<BindOfficeProfessionalResponse> BindOfficeProfessional(BindOfficeProfessionalRequest request);
+    Task DeactivateOfficeProfessional(DeactivateOfficeProfessionalRequest request);
+    Task<BindOfficeSpecialtyResponse> BindOfficeSpecialty(BindOfficeSpecialtyRequest request);
+    Task DeactivateOfficeSpecialty(DeactivateOfficeSpecialtyRequest request);
     Task<OfficeResponse> GetOfficeById(Guid id);
     Task<List<OfficeSimplifiedResponse>> GetOfficesByUserId(Guid userId);
     Task<GetOfficeProfessionalsResponse> GetOfficeProfessionals(Guid officeId);

@@ -24,12 +24,12 @@ public class IaChatController(IIaChatService iaChatService) : ControllerBase
     /// Cria um chat de IA.
     /// </summary>
     /// <param name="requestDto">Objeto com os dados para criação do chat:
-    /// <summary/>Title: Título do chat
-    /// <summary/>UserId: ID do usuário que está criando o chat
+    /// <summary/>Hash: Hash em base64 contendo sourceId e sourceType (opcional)
+    /// Formato do hash antes da codificação: {"sourceId": "guid", "sourceType": "number"}
     /// </param>
     /// <returns>Informações do chat criado</returns>
     [HttpPost]
-    [Authorize]
+    [AllowAnonymous]
     public async Task<IActionResult> CreateChat([FromBody] CreateIaChatRequestDto requestDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);

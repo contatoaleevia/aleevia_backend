@@ -11,17 +11,21 @@ public class IaChatRepository(ApiDbContext context) : Repository<IaChat>(context
     public async Task<List<IaChat>> GetAllAsync()
     {
         return await DbSet
-            .Include(x => x.Source)
             .AsNoTracking()
             .ToListAsync();
     }
 
     public async Task<IaChat?> GetByIdWithMessagesAsync(Guid id)
     {
-        return await DbSet
-            .Include(x => x.Source)
-            .Include(x => x.Messages)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id);
+        return await context.IaChats
+            .Include(c => c.Messages)
+            .ThenInclude(m => m.SenderType)
+            .FirstOrDefaultAsync(c => c.Id == id);
+    }
+
+    public async Task CreateMessageAsync(IaMessage message)
+    {
+        await context.IaMessages.AddAsync(message);
+        await context.SaveChangesAsync();
     }
 } 

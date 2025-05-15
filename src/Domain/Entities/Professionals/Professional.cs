@@ -14,7 +14,9 @@ public class Professional : AggregateRoot
     public Professional(
         Guid managerId,
         string cpf,
-        bool isRegistered)
+        bool isRegistered,
+        string name,
+        string email)
     {
         ManagerId = managerId;
         RegisterStatus = isRegistered ?  SetRegisterAsApproval() : SetRegisterAsPending();
@@ -23,6 +25,8 @@ public class Professional : AggregateRoot
         CreatedAt = DateTime.UtcNow;
         DeletedAt = null;
         UpdatedAt = null;
+        Name = name;
+        Email = email;
     }
 
     public string? Name { get; private set; } = string.Empty;

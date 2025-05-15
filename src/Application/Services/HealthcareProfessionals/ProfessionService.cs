@@ -31,4 +31,23 @@ public class ProfessionService(IProfessionRepository professionRepository) : IPr
 
         return result;
     }
+
+    public async Task<GetSpecialtiesResponseDto> GetAllActiveSpecialtiesAsync()
+    {
+        var professions = await professionRepository.GetAllActiveAsync();
+        
+        var result = new GetSpecialtiesResponseDto
+        {
+            Specialties = [.. professions
+                .SelectMany(p => p.Specialties ?? [])
+                .Where(s => s.Active)
+                .Select(specialty => new SimpleSpecialtyDto
+                {
+                    Id = specialty.Id,
+                    Name = specialty.Name
+                })]
+        };
+
+        return result;
+    }
 } 

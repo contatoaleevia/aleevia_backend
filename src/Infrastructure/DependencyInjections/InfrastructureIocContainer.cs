@@ -53,6 +53,8 @@ public static class InfrastructureIocContainer
         services.AddScoped<IPatientRepository, PatientRepository>();
         services.AddScoped<IPatientLeadRepository, PatientLeadRepository>();
         services.AddScoped<IOfficeAddressRepository, OfficeAddressRepository>();
+        services.AddScoped<IOfficeSpecialtyRepository, OfficeSpecialtyRepository>();
+        services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
         services.AddScoped<IHealthCareRepository, HealthCareRepository>();
     }
     

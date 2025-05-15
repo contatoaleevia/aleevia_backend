@@ -1,8 +1,8 @@
 ﻿using Application.DTOs.Faqs.CreateFaqDTOs;
 using Application.DTOs.Faqs.DeleteFaqDTOs;
 using Application.DTOs.Faqs.GetFaqDTOs;
+using Application.DTOs.Faqs.GetFaqPageDTOs;
 using Application.DTOs.Faqs.UpdateFaqDTOs;
-using Application.DTOs.Faqs.CreateFaqPageDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Faqs;
 using Domain.Exceptions;
@@ -24,12 +24,13 @@ public class FaqService(
 
         return new GetFaqWithPageResponseDto
         {
-            FaqPage = faqPage is not null ? new CreateFaqPageResponseDto(
+            FaqPage = faqPage is not null ? new GetFaqPageResponseDto(
                 faqPage.Id,
                 faqPage.SourceId,
                 faqPage.CustomUrl,
                 faqPage.WelcomeMessage,
-                faqPage.CreatedAt) : null,
+                faqPage.CreatedAt,
+                faqPage.UpdatedAt) : null,
             Faqs = [.. faqs.Select(x => new GetFaqByProfessionalIdResponseDto
             {
                 Id = x.Id,
@@ -38,7 +39,9 @@ public class FaqService(
                 SourceId = x.SourceId,
                 SourceType = x.SourceType,
                 CreatedAt = x.CreatedAt,
-                UpdatedAt = x.UpdatedAt
+                UpdatedAt = x.UpdatedAt,
+                FaqCategory = x.FaqCategory,
+                DeletedAt = x.DeletedAt
             })]
         };
     }
@@ -50,12 +53,13 @@ public class FaqService(
 
         return new GetFaqWithPageResponseDto
         {
-            FaqPage = new CreateFaqPageResponseDto(
+            FaqPage = faqPage is not null ? new GetFaqPageResponseDto(
                 faqPage.Id,
                 faqPage.SourceId,
                 faqPage.CustomUrl,
                 faqPage.WelcomeMessage,
-                faqPage.CreatedAt),
+                faqPage.CreatedAt,
+                faqPage.UpdatedAt) : null,
             Faqs = [.. faqs.Select(x => new GetFaqByProfessionalIdResponseDto
             {
                 Id = x.Id,
@@ -79,9 +83,7 @@ public class FaqService(
             request.Question,
             request.Answer,
             request.FaqCategory,
-            DateTime.UtcNow,
-            null,
-            null
+            DateTime.UtcNow
         );
 
         var result = await repository.CreateAsync(faq);
@@ -90,7 +92,8 @@ public class FaqService(
             id: result.Id,
             question: result.Question,
             answer: result.Answer,
-            sourceId: result.SourceId
+            sourceId: result.SourceId,
+            createdAt: result.CreatedAt
         );
     }
 
@@ -118,9 +121,7 @@ public class FaqService(
                     Question = dto.Question,
                     Answer = dto.Answer,
                     FaqCategory = new FaqCategoryType(dto.FaqCategory),
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = null,
-                    DeletedAt = null
+                    CreatedAt = DateTime.UtcNow
                 };
                 await repository.CreateAsync(entidade);
                 faqsImportadas.Add(dto);
@@ -148,6 +149,7 @@ public class FaqService(
         faq.Question = request.Question;
         faq.Answer = request.Answer;
         faq.UpdatedAt = DateTime.UtcNow;
+        faq.FaqCategory = new FaqCategoryType(request.FaqCategory);
 
         await repository.UpdateAsync(faq);
         return new UpdateFaqResponseDto(

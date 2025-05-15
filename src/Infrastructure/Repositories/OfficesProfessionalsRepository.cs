@@ -24,7 +24,7 @@ public class OfficesProfessionalsRepository(ApiDbContext context) : Repository<O
                     .ThenInclude(sd => sd.Subspeciality)
             .Include(op => op.Professional)
                 .ThenInclude(p => p.Documents)
-            .Where(op => op.OfficeId == officeId)
+            .Where(op => op.OfficeId == officeId && op.IsActive)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -34,8 +34,7 @@ public class OfficesProfessionalsRepository(ApiDbContext context) : Repository<O
         return await DbSet
             .FirstOrDefaultAsync(
                 op => op.OfficeId == officeId && 
-                    op.ProfessionalId == professionalId && 
-                    op.IsActive
+                    op.ProfessionalId == professionalId
             );
     }
 }

@@ -92,6 +92,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new FaqPageConfiguration());
         builder.ApplyConfiguration(new ProfessionalDocumentConfiguration());
         builder.ApplyConfiguration(new ProfessionalSpecialtyDetailConfiguration());
+        builder.ApplyConfiguration(new OfficeSpecialtyConfiguration());
         builder.ApplyConfiguration(new HealthCareConfiguration());
 
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))

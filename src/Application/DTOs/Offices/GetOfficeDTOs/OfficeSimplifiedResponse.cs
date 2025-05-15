@@ -8,10 +8,12 @@ public record OfficeSimplifiedResponse
 
     public static OfficeSimplifiedResponse FromOffice(
         Office office, 
-        IEnumerable<OfficeAddress> addresses)
+        IEnumerable<OfficeAddress> addresses,
+        IEnumerable<OfficeSpecialty> specialties)
     {
         ArgumentNullException.ThrowIfNull(office);
         ArgumentNullException.ThrowIfNull(addresses);
+        ArgumentNullException.ThrowIfNull(specialties);
 
         return new OfficeSimplifiedResponse
         {
@@ -21,7 +23,7 @@ public record OfficeSimplifiedResponse
                 OwnerId = office.OwnerId,
                 Name = office.Name,
                 Cnpj = office.Cnpj.Value,
-                Phone = office.Phone.Value,
+                PhoneNumber = office.Phone.Value,
                 Whatsapp = office.Whatsapp.Value,
                 Email = office.Email.Value,
                 Site = office.Site.Value,
@@ -51,6 +53,12 @@ public record OfficeSimplifiedResponse
                         CreatedAt = a.Address.CreatedAt,
                         UpdatedAt = a.Address.UpdatedAt
                     }
+                })],
+                Specialties = [.. specialties.Select(s => new OfficeSpecialtyResponse
+                {
+                    Id = s.Id,
+                    SpecialtyId = s.SpecialtyId,
+                    Name = s.Specialty?.Name ?? string.Empty
                 })]
             }
         };
@@ -63,7 +71,7 @@ public record OfficeSimplifiedData
     public required Guid OwnerId { get; init; }
     public required string Name { get; init; }
     public required string Cnpj { get; init; }
-    public required string Phone { get; init; }
+    public required string PhoneNumber { get; init; }
     public required string Whatsapp { get; init; }
     public required string Email { get; init; }
     public required string Site { get; init; }
@@ -71,4 +79,5 @@ public record OfficeSimplifiedData
     public required string Logo { get; init; }
     public required bool Individual { get; init; }
     public required IReadOnlyList<OfficeAddressResponse> Addresses { get; init; }
+    public required IReadOnlyList<OfficeSpecialtyResponse> Specialties { get; init; }
 } 

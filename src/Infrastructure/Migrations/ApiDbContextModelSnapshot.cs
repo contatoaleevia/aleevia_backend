@@ -215,6 +215,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("source_id");
 
+                    b.Property<int>("SourceType")
+                        .HasColumnType("integer")
+                        .HasColumnName("source_type");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
@@ -342,12 +346,11 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<Guid>("SourceId")
-                        .HasColumnType("uuid");
+                    b.Property<Guid?>("SourceId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("source_id");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SourceId");
 
                     b.ToTable("ia_chat", "public");
                 });
@@ -672,6 +675,35 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("office_address", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Offices.OfficeSpecialty", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<Guid>("OfficeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("office_id");
+
+                    b.Property<Guid>("SpecialtyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("specialty_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpecialtyId");
+
+                    b.HasIndex("OfficeId", "SpecialtyId")
+                        .IsUnique();
+
+                    b.ToTable("office_specialty", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessional", b =>
@@ -1205,11 +1237,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.IaChats.IaChat", b =>
                 {
-                    b.HasOne("Domain.Entities.Identities.User", "Source")
-                        .WithMany()
-                        .HasForeignKey("SourceId")
-                        .IsRequired();
-
                     b.OwnsOne("Domain.Entities.IaChats.IaChatSourceType", "SourceType", b1 =>
                         {
                             b1.Property<Guid>("IaChatId")
@@ -1226,8 +1253,6 @@ namespace Infrastructure.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("IaChatId");
                         });
-
-                    b.Navigation("Source");
 
                     b.Navigation("SourceType")
                         .IsRequired();
@@ -1611,10 +1636,27 @@ namespace Infrastructure.Migrations
                     b.Navigation("Office");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Offices.OfficeSpecialty", b =>
+                {
+                    b.HasOne("Domain.Entities.Offices.Office", "Office")
+                        .WithMany("Specialties")
+                        .HasForeignKey("OfficeId")
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.HealthcareProfessionals.Specialty", "Specialty")
+                        .WithMany()
+                        .HasForeignKey("SpecialtyId")
+                        .IsRequired();
+
+                    b.Navigation("Office");
+
+                    b.Navigation("Specialty");
+                });
+
             modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessional", b =>
                 {
                     b.HasOne("Domain.Entities.Offices.Office", "Office")
-                        .WithMany()
+                        .WithMany("Professionals")
                         .HasForeignKey("OfficeId")
                         .IsRequired();
 
@@ -1954,6 +1996,10 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("Professionals");
+
+                    b.Navigation("Specialties");
                 });
 
             modelBuilder.Entity("Domain.Entities.Professionals.Professional", b =>

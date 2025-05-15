@@ -16,12 +16,18 @@ using Application.Services.Professionals;
 using Application.Services.PasswordResets;
 using Application.Services.HealthCares;
 
+using System.Net.Http.Headers;
 namespace Application.DependencyInjections;
 
 public static class ApplicationIocContainer
 {
     public static void AddApplicationServices(this IServiceCollection services)
     {
+        services.AddHttpClient("AiPython", client =>
+        {
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        });
+
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IFaqService, FaqService>();
         services.AddScoped<IFaqPageService, FaqPageService>();

@@ -20,7 +20,7 @@ public class OfficesProfessionalsConfiguration : IEntityTypeConfiguration<Office
             .HasColumnName("professional_id");
         
         builder.HasOne(x => x.Office)
-            .WithMany()
+            .WithMany(o => o.Professionals)
             .HasForeignKey(x => x.OfficeId);
 
         builder.Property(x => x.OfficeId)
