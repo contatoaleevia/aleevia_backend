@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20250515164549_AddHealthCareTable")]
+    [Migration("20250515173954_AddHealthCareTable")]
     partial class AddHealthCareTable
     {
         /// <inheritdoc />
@@ -1222,7 +1222,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.HealthCares.HealthCare", b =>
                 {
                     b.HasOne("Domain.Entities.Offices.Office", "Office")
-                        .WithMany()
+                        .WithMany("HealthCares")
                         .HasForeignKey("OfficeId")
                         .IsRequired();
 
@@ -2010,6 +2010,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("HealthCares");
 
                     b.Navigation("Professionals");
 

@@ -1219,7 +1219,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.HealthCares.HealthCare", b =>
                 {
                     b.HasOne("Domain.Entities.Offices.Office", "Office")
-                        .WithMany()
+                        .WithMany("HealthCares")
                         .HasForeignKey("OfficeId")
                         .IsRequired();
 
@@ -2007,6 +2007,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("HealthCares");
 
                     b.Navigation("Professionals");
 

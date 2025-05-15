@@ -17,7 +17,7 @@ public class HealthCareConfiguration : IEntityTypeConfiguration<HealthCare>
             .IsRequired();
 
         builder.HasOne(x => x.Office)
-            .WithMany()
+            .WithMany(x => x.HealthCares)
             .HasForeignKey(x => x.OfficeId);
 
         builder.Property(x => x.OfficeId)

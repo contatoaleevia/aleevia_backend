@@ -129,7 +129,14 @@ public class OfficeService(
     public async Task<OfficeResponse> GetOfficeById(Guid id)
     {
         var office = await repository.GetByIdWithDetailsAsync(id) ?? throw new OfficeNotFoundException(id);
-        return OfficeResponse.FromOffice(office, office.Addresses, office.Professionals, office.Specialties);
+        
+        return OfficeResponse.FromOffice(
+            office,
+            [.. office.Addresses], 
+            [.. office.Professionals], 
+            [.. office.Specialties],
+            [.. office.HealthCares]
+        );
     }
 
     public async Task<List<OfficeSimplifiedResponse>> GetOfficesByUserId(Guid userId)
