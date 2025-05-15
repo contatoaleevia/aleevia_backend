@@ -3,7 +3,9 @@ using Application.DTOs.Offices.BindOfficeAddressDTOs;
 using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
 using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
+using Application.DTOs.Offices.GetOfficeAnalyticsDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
+using Application.DTOs.Offices.UpdateOfficeDTOs;
 using Application.DTOs.Professionals;
 using Application.Services.Professionals;
 using Domain.Contracts.Repositories;
@@ -24,7 +26,9 @@ public class OfficeService(
     IProfessionalService professionalService,
     IOfficesProfessionalsRepository officesProfessionalsRepository,
     IOfficeSpecialtyRepository officeSpecialtyRepository,
-    ISpecialtyRepository specialtyRepository) : IOfficeService
+    ISpecialtyRepository specialtyRepository,
+    IFaqRepository faqRepository,
+    IOfficeAttendanceRepository officeAttendanceRepository) : IOfficeService
 {
     public async Task<CreateOfficeResponse> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
@@ -152,6 +156,7 @@ public class OfficeService(
         var specialty = await specialtyRepository.GetByIdAsync(request.SpecialtyId) ?? throw new SpecialtyNotFoundException(request.SpecialtyId);
         
         var officeSpecialty = await officeSpecialtyRepository.GetByOfficeAndSpecialty(request.OfficeId, request.SpecialtyId);
+        Console.WriteLine(officeSpecialty);
         if (officeSpecialty != null)
         {
             if (officeSpecialty.IsActive)
@@ -177,5 +182,56 @@ public class OfficeService(
 
         officeSpecialty.Deactivate();
         await officeSpecialtyRepository.UpdateAsync(officeSpecialty);
+    }
+
+    public async Task<UpdateOfficeResponse> UpdateOffice(UpdateOfficeRequest request, Guid userId)
+    {
+        var manager = await managerRepository.GetManagerByUserId(userId)
+                      ?? throw new ManagerUserNotFoundException(userId);
+
+        var office = await repository.GetByIdAsync(request.Id)
+                     ?? throw new OfficeNotFoundException(request.Id);
+
+        if (office.OwnerId != manager.Id)
+            throw new UnauthorizedOfficeAccessException(request.Id, userId);
+
+        office.Update(
+            name: request.Name,
+            phoneNumber: request.PhoneNumber,
+            whatsapp: request.Whatsapp,
+            email: request.Email,
+            site: request.Site,
+            instagram: request.Instagram,
+            logo: request.Logo
+        );
+
+        await repository.UpdateAsync(office);
+        
+        return UpdateOfficeResponse.FromOffice(office);
+    }
+
+    public async Task<GetOfficeAnalyticsResponse> GetOfficeAnalytics(Guid officeId, Guid userId)
+    {
+        var manager = await managerRepository.GetManagerByUserId(userId)
+                      ?? throw new ManagerUserNotFoundException(userId);
+
+        var office = await repository.GetByIdAsync(officeId)
+                     ?? throw new OfficeNotFoundException(officeId);
+
+        if (office.OwnerId != manager.Id)
+            throw new UnauthorizedOfficeAccessException(officeId, userId);
+
+        var totalProfessionals = await officesProfessionalsRepository.CountByOfficeIdAsync(officeId);
+        var totalServices = await officeAttendanceRepository.CountByOfficeIdAsync(officeId);
+        var totalFaqs = await faqRepository.CountBySourceIdAsync(officeId);
+        // TODO: Implementar total de planos de saúde
+        // var totalHealthInsurances = await healthInsuranceRepository.CountByOfficeIdAsync(officeId);
+
+        return GetOfficeAnalyticsResponse.FromOffice(
+            office,
+            totalProfessionals,
+            totalServices,
+            totalFaqs
+        );
     }
 }

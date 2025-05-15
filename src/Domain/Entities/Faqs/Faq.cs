@@ -4,29 +4,55 @@ using Domain.Entities.Identities;
 namespace Domain.Entities.Faqs;
 public sealed class Faq : AggregateRoot
 {
-    public Guid SourceId { get; set; }
-    public User? Source { get; set; }
-    public FaqSourceType SourceType { get; set; }
-    public string Question { get; set; }
-    public string Answer { get; set; }
-    public FaqCategoryType FaqCategory { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
-    public DateTime? DeletedAt { get; set; }
+    public Guid SourceId { get; private set; }
+    public User? Source { get; private set; }
+    public FaqSourceType SourceType { get; private set; }
+    public string Question { get; private set; }
+    public string Answer { get; private set; }
+    public string? Link { get; private set; }
+    public FaqCategoryType FaqCategory { get; private set; }
+    public bool IsActive { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public DateTime? UpdatedAt { get; private set; }
+    public DateTime? DeletedAt { get; private set; }
 
     public Faq()
     {
     }
 
-    public Faq(Guid sourceId, ushort sourceType, string question, string answer, ushort faqCategory, DateTime createdAt, DateTime? updatedAt = null, DateTime? deletedAt = null)
+    public Faq(Guid sourceId, ushort sourceType, string question, string answer, string? link, ushort faqCategory, DateTime createdAt, DateTime? updatedAt = null, DateTime? deletedAt = null)
     {
         SourceId = sourceId;
         SourceType = new FaqSourceType(sourceType);
         Question = question;
         Answer = answer;
+        Link = link;
         FaqCategory = new FaqCategoryType(faqCategory);
+        IsActive = true;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
         DeletedAt = deletedAt;
+    }
+
+    public void Update(string? question = null, string? answer = null, string? link = null, ushort? faqCategory = null)
+    {
+        Question = question ?? Question;
+        Answer = answer ?? Answer;
+        Link = link ?? Link;
+        if (faqCategory.HasValue)
+            FaqCategory = new FaqCategoryType(faqCategory.Value);
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void Delete()
+    {
+        IsActive = false;
+        DeletedAt = DateTime.UtcNow;
+    }
+
+    public void SetSourceInfo(Guid sourceId, ushort sourceType)
+    {
+        SourceId = sourceId;
+        SourceType = new FaqSourceType(sourceType);
     }
 }

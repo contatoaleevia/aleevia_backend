@@ -9,6 +9,7 @@ namespace Infrastructure.Repositories;
 public class OfficeAttendanceRepository(ApiDbContext context) 
     : Repository<OfficeAttendance>(context), IOfficeAttendanceRepository
 {
+
     public async Task<List<OfficeAttendance>> GetAllByOfficeIdAsync(Guid officeId)
     {
         return await DbSet
@@ -32,5 +33,12 @@ public class OfficeAttendanceRepository(ApiDbContext context)
         return await DbSet
             .AsNoTracking()
             .AnyAsync(oa => oa.OfficeId == officeId && oa.ServiceTypeId == serviceTypeId && oa.Active);
+    }
+
+    public async Task<int> CountByOfficeIdAsync(Guid officeId)
+    {
+        return await DbSet
+            .Where(oa => oa.OfficeId == officeId && oa.Active)
+            .CountAsync();
     }
 } 

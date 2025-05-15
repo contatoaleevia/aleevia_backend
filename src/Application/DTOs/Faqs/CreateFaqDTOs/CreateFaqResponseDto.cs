@@ -1,9 +1,42 @@
-﻿namespace Application.DTOs.Faqs.CreateFaqDTOs;
-public class CreateFaqResponseDto(Guid id, string question, string answer, Guid sourceId, DateTime createdAt)
+﻿using Domain.Entities.Faqs;
+
+namespace Application.DTOs.Faqs.CreateFaqDTOs;
+
+public record CreateFaqResponseDto
 {
-    public Guid Id { get; set; } = id;
-    public string Question { get; set; } = question;
-    public string Answer { get; set; } = answer;
-    public Guid SourceId { get; set; } = sourceId;
-    public DateTime CreatedAt { get; set; } = createdAt;
+    public required CreateFaqData Faq { get; init; }
+
+    public static CreateFaqResponseDto FromFaq(Faq faq)
+    {
+        ArgumentNullException.ThrowIfNull(faq);
+
+        return new CreateFaqResponseDto
+        {
+            Faq = new CreateFaqData
+            {
+                Id = faq.Id,
+                SourceId = faq.SourceId,
+                SourceType = faq.SourceType,
+                Question = faq.Question,
+                Answer = faq.Answer,
+                Link = faq.Link,
+                FaqCategory = faq.FaqCategory,
+                IsActive = faq.IsActive,
+                CreatedAt = faq.CreatedAt
+            }
+        };
+    }
+}
+
+public record CreateFaqData
+{
+    public required Guid Id { get; init; }
+    public required Guid SourceId { get; init; }
+    public required FaqSourceType SourceType { get; init; }
+    public required string Question { get; init; }
+    public required string Answer { get; init; }
+    public string? Link { get; init; }
+    public required FaqCategoryType FaqCategory { get; init; }
+    public required bool IsActive { get; init; }
+    public required DateTime CreatedAt { get; init; }
 }
