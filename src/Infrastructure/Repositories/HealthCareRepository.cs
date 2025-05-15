@@ -14,4 +14,12 @@ public class HealthCareRepository(ApiDbContext context) : Repository<HealthCare>
             .Where(x => x.OfficeId == officeId)
             .ToListAsync();
     }
+
+    public async Task<int> CountByOfficeIdAsync(Guid officeId)
+    {
+        return await DbSet
+            .AsNoTracking()
+            .Where(x => x.OfficeId == officeId && x.IsActive)
+            .CountAsync();
+    }
 }

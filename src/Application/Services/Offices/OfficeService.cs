@@ -28,7 +28,8 @@ public class OfficeService(
     IOfficeSpecialtyRepository officeSpecialtyRepository,
     ISpecialtyRepository specialtyRepository,
     IFaqRepository faqRepository,
-    IOfficeAttendanceRepository officeAttendanceRepository) : IOfficeService
+    IOfficeAttendanceRepository officeAttendanceRepository,
+    IHealthCareRepository healthCareRepository) : IOfficeService
 {
     public async Task<CreateOfficeResponse> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
@@ -224,14 +225,14 @@ public class OfficeService(
         var totalProfessionals = await officesProfessionalsRepository.CountByOfficeIdAsync(officeId);
         var totalServices = await officeAttendanceRepository.CountByOfficeIdAsync(officeId);
         var totalFaqs = await faqRepository.CountBySourceIdAsync(officeId);
-        // TODO: Implementar total de planos de saúde
-        // var totalHealthInsurances = await healthInsuranceRepository.CountByOfficeIdAsync(officeId);
+        var totalHealthCares = await healthCareRepository.CountByOfficeIdAsync(officeId);
 
         return GetOfficeAnalyticsResponse.FromOffice(
             office,
             totalProfessionals,
             totalServices,
-            totalFaqs
+            totalFaqs,
+            totalHealthCares
         );
     }
 }

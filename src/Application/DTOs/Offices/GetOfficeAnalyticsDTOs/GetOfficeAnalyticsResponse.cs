@@ -10,7 +10,8 @@ public record GetOfficeAnalyticsResponse
         Office office,
         int totalProfessionals,
         int totalServices,
-        int totalFaqs)
+        int totalFaqs,
+        int totalHealthCares)
     {
         ArgumentNullException.ThrowIfNull(office);
 
@@ -22,7 +23,8 @@ public record GetOfficeAnalyticsResponse
                 OfficeName = office.Name,
                 TotalProfessionals = totalProfessionals,
                 TotalServices = totalServices,
-                TotalFaqs = totalFaqs
+                TotalFaqs = totalFaqs,
+                TotalHealthCares = totalHealthCares
             }
         };
     }
@@ -35,4 +37,5 @@ public record OfficeAnalyticsData
     public required int TotalProfessionals { get; init; }
     public required int TotalServices { get; init; }
     public required int TotalFaqs { get; init; }
+    public required int TotalHealthCares { get; init; }
 } 
