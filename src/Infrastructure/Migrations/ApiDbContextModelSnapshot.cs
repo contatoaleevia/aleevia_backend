@@ -127,6 +127,17 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Link")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("link");
+
                     b.Property<string>("Question")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -186,6 +197,54 @@ namespace Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("faq_page", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.HealthCares.HealthCare", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AnsNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("ans_number");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("OfficeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("office_id");
+
+                    b.Property<string>("Registry")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("registry");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfficeId");
+
+                    b.ToTable("healthcare", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Profession", b =>
@@ -305,6 +364,46 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ia_chat", "public");
+                });
+
+            modelBuilder.Entity("Domain.Entities.IaChats.IaChatRating", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text")
+                        .HasColumnName("comment");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("ExperienceType")
+                        .HasColumnType("integer")
+                        .HasColumnName("experience");
+
+                    b.Property<int>("GeneralRating")
+                        .HasColumnType("integer")
+                        .HasColumnName("general");
+
+                    b.Property<int>("ProblemSolvedType")
+                        .HasColumnType("integer")
+                        .HasColumnName("problem_solved");
+
+                    b.Property<int>("Utility")
+                        .HasColumnType("integer")
+                        .HasColumnName("utility");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("rating_chat", "public");
                 });
 
             modelBuilder.Entity("Domain.Entities.IaChats.IaMessage", b =>
@@ -1157,6 +1256,16 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Entities.HealthCares.HealthCare", b =>
+                {
+                    b.HasOne("Domain.Entities.Offices.Office", "Office")
+                        .WithMany("HealthCares")
+                        .HasForeignKey("OfficeId")
+                        .IsRequired();
+
+                    b.Navigation("Office");
+                });
+
             modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Specialty", b =>
                 {
                     b.HasOne("Domain.Entities.HealthcareProfessionals.Profession", "Profession")
@@ -1198,6 +1307,16 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("SourceType")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.IaChats.IaChatRating", b =>
+                {
+                    b.HasOne("Domain.Entities.IaChats.IaChat", "Chat")
+                        .WithMany()
+                        .HasForeignKey("ChatId")
+                        .IsRequired();
+
+                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("Domain.Entities.IaChats.IaMessage", b =>
@@ -1938,6 +2057,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Offices.Office", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("HealthCares");
 
                     b.Navigation("Professionals");
 

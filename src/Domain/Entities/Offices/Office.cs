@@ -2,6 +2,7 @@
 using Domain.Entities.Addresses;
 using Domain.Entities.Identities;
 using Domain.Entities.ValueObjects;
+using Domain.Entities.HealthCares;
 
 namespace Domain.Entities.Offices;
 
@@ -17,9 +18,10 @@ public class Office : AggregateRoot
     public Url Instagram { get; private set; }
     public FileS3 Logo { get; private set; }
     public bool Individual { get; private set; }
-    public ICollection<OfficeAddress> Addresses { get; set; } = [];
+    public ICollection<OfficeAddress> Addresses { get; private set; } = [];
     public ICollection<OfficesProfessional> Professionals { get; private set; } = [];
     public ICollection<OfficeSpecialty> Specialties { get; private set; } = [];
+    public ICollection<HealthCare> HealthCares { get; private set; } = [];
 
     public Manager Owner { get; set; } = null!;
 
@@ -43,6 +45,19 @@ public class Office : AggregateRoot
         Addresses = [];
         Professionals = [];
         Specialties = [];
+    }
+
+    public void Update(string? name = null, string? cnpj = null, string? phoneNumber = null, string? whatsapp = null, 
+        string? email = null, string? site = null, string? instagram = null, string? logo = null)
+    {
+        Name = name ?? Name;
+        Cnpj = cnpj != null ? SetDocument(cnpj) : Cnpj;
+        Phone = phoneNumber != null ? SetPhoneNumber(phoneNumber) : Phone;
+        Whatsapp = whatsapp != null ? SetWhatsapp(whatsapp) : Whatsapp;
+        Email = email != null ? SetEmail(email) : Email;
+        Site = site != null ? SetSite(site) : Site;
+        Instagram = instagram != null ? SetInstagram(instagram) : Instagram;
+        Logo = logo != null ? SetLogo(logo) : Logo;
     }
 
     private Document SetDocument(string? document)

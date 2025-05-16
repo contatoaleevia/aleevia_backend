@@ -1,5 +1,6 @@
 using Application.DTOs.IaChats.CreateIaChatDTOs;
 using Application.DTOs.IaChats.CreateIaMessageDTOs;
+using Application.DTOs.IaChats.CreateIaChatRatingDTOs;
 using Application.Services.IaChats;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers;
 
 [Route("api/chats")]
-public class IaChatController(IIaChatService iaChatService) : ControllerBase
+public class IaChatController(IIaChatService iaChatService, IIaChatRatingService iaChatRatingService) : ControllerBase
 {
     /// <summary>
     /// Obtém todos os chats disponíveis.
@@ -64,6 +65,27 @@ public class IaChatController(IIaChatService iaChatService) : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         var response = await iaChatService.AddMessageToChatAsync(chatId, requestDto);
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Adiciona uma avaliação a um chat existente.
+    /// </summary>
+    /// <param name="chatId">ID do chat para avaliar</param>
+    /// <param name="requestDto">Objeto com os dados da avaliação:
+    /// <summary/>GeneralRating: Avaliação geral (0-10)
+    /// <summary/>Experience: Experiência (0 Muito boa, 1 Boa, 2 Regular, 3 Ruim, 4 Muito ruim) 
+    /// <summary/>Utility: Utilidade (1-5)
+    /// <summary/>ProblemSolved: Problema resolvido (0 Sim, 1 Parcialmente, 2 Não)
+    /// <summary/>Comment: Comentário (opcional)
+    /// </param>
+    /// <returns>Informações da avaliação adicionada</returns>
+    [HttpPost("{chatId:guid}/rating")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RateChat(Guid chatId, [FromBody] CreateIaChatRatingRequestDto requestDto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var response = await iaChatRatingService.CreateRatingAsync(chatId, requestDto);
         return Ok(response);
     }
 } 

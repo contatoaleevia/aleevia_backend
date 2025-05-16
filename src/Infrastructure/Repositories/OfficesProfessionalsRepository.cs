@@ -32,9 +32,17 @@ public class OfficesProfessionalsRepository(ApiDbContext context) : Repository<O
     public async Task<OfficesProfessional?> GetByOfficeAndProfessional(Guid officeId, Guid professionalId)
     {
         return await DbSet
+            .Include(x => x.Professional)
             .FirstOrDefaultAsync(
                 op => op.OfficeId == officeId && 
                     op.ProfessionalId == professionalId
             );
+    }
+
+    public async Task<int> CountByOfficeIdAsync(Guid officeId)
+    {
+        return await DbSet
+            .Where(op => op.OfficeId == officeId && op.IsActive)
+            .CountAsync();
     }
 }

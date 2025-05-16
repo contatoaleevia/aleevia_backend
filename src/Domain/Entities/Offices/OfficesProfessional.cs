@@ -44,4 +44,10 @@ public class OfficesProfessional : AggregateRoot
         IsActive = true;
         DeletedAt = null;
     }
+
+    public string? GetProfessionalName() => Professional.Name;
+    public string? GetProfessionalPreferredName() => Professional.PreferredName;
+    public string? GetProfessionalEmail() => Professional.Email;
+    public string GetProfessionalCpfFormatted() => Professional.Cpf.GetFormattedValue();
+    public string? GetProfessionalCnpjFormatted() => Professional.Cnpj?.GetFormattedValue();
 }

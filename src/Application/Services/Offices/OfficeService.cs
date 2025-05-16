@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.Xml;
-using Application.DTOs.Offices.BindOfficeAddressDTOs;
+﻿using Application.DTOs.Offices.BindOfficeAddressDTOs;
 using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
 using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
@@ -8,13 +7,10 @@ using Application.DTOs.Professionals;
 using Application.Services.Professionals;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Offices;
-using Domain.Entities.ValueObjects;
 using Domain.Exceptions.Managers;
 using Domain.Exceptions.Offices;
-using Domain.Exceptions.Professionals;
 using Domain.Exceptions.Professions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Offices;
 
@@ -26,7 +22,10 @@ public class OfficeService(
     IOfficesProfessionalsRepository officesProfessionalsRepository,
     IOfficeSpecialtyRepository officeSpecialtyRepository,
     ISpecialtyRepository specialtyRepository,
-    IOfficeFileSender fileSender) : IOfficeService
+    IOfficeFileSender fileSender,
+    IFaqRepository faqRepository,
+    IOfficeAttendanceRepository officeAttendanceRepository,
+    IHealthCareRepository healthCareRepository) : IOfficeService
 {
     public async Task<CreateOfficeResponse> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
@@ -45,7 +44,7 @@ public class OfficeService(
             email: request.Email,
             site: request.Site,
             instagram: request.Instagram,
-            logo: FileS3.Create(logoId, logoUrl),
+            logo: request.Logo,
             individual: request.Individual
         );
 
@@ -93,18 +92,18 @@ public class OfficeService(
     {
         var professional = await professionalService.PreRegisterWhenNotExists(request.Professional);
 
-        var office = await repository.GetByIdAsync(request.OfficeId)
-            ?? throw new OfficeNotFoundException(request.OfficeId);
-
+        var office = await repository.GetByIdAsync(request.OfficeId);
+        if(office is null) throw new OfficeNotFoundException(request.OfficeId);
         var officeProfessional = await officesProfessionalsRepository.GetByOfficeAndProfessional(request.OfficeId, professional.Id);
-        if (officeProfessional != null)
+        
+        if (officeProfessional is not null)
         {
             if (officeProfessional.IsActive)
                 throw new OfficeProfessionalAlreadyExistsException(request.OfficeId, professional.Id);
 
             officeProfessional.Activate();
             await officesProfessionalsRepository.UpdateAsync(officeProfessional);
-            return new BindOfficeProfessionalResponse(officeProfessional.Id);
+            return new BindOfficeProfessionalResponse(officeProfessional);
         }
 
         var newOfficeProfessional = new OfficesProfessional(
@@ -114,7 +113,7 @@ public class OfficeService(
             request.Professional.IsPublic
         );
         var response = await officesProfessionalsRepository.CreateAsync(newOfficeProfessional);
-        return new BindOfficeProfessionalResponse(response.Id);
+        return new BindOfficeProfessionalResponse(response);
     }
 
     public async Task DeactivateOfficeProfessional(DeactivateOfficeProfessionalRequest request)
@@ -129,7 +128,14 @@ public class OfficeService(
     public async Task<OfficeResponse> GetOfficeById(Guid id)
     {
         var office = await repository.GetByIdWithDetailsAsync(id) ?? throw new OfficeNotFoundException(id);
-        return OfficeResponse.FromOffice(office, office.Addresses, office.Professionals, office.Specialties);
+        
+        return OfficeResponse.FromOffice(
+            office,
+            [.. office.Addresses], 
+            [.. office.Professionals], 
+            [.. office.Specialties],
+            [.. office.HealthCares]
+        );
     }
 
     public async Task<List<OfficeSimplifiedResponse>> GetOfficesByUserId(Guid userId)
@@ -157,6 +163,7 @@ public class OfficeService(
         var specialty = await specialtyRepository.GetByIdAsync(request.SpecialtyId) ?? throw new SpecialtyNotFoundException(request.SpecialtyId);
         
         var officeSpecialty = await officeSpecialtyRepository.GetByOfficeAndSpecialty(request.OfficeId, request.SpecialtyId);
+        Console.WriteLine(officeSpecialty);
         if (officeSpecialty != null)
         {
             if (officeSpecialty.IsActive)
@@ -191,5 +198,56 @@ public class OfficeService(
         using var memoryStream = new MemoryStream();
         await formFile.CopyToAsync(memoryStream);
         return await fileSender.UploadLogoAsync(id.ToString(), memoryStream);
+    }
+
+    public async Task<UpdateOfficeResponse> UpdateOffice(UpdateOfficeRequest request, Guid userId)
+    {
+        var manager = await managerRepository.GetManagerByUserId(userId)
+                      ?? throw new ManagerUserNotFoundException(userId);
+
+        var office = await repository.GetByIdAsync(request.Id)
+                     ?? throw new OfficeNotFoundException(request.Id);
+
+        if (office.OwnerId != manager.Id)
+            throw new UnauthorizedOfficeAccessException(request.Id, userId);
+
+        office.Update(
+            name: request.Name,
+            phoneNumber: request.PhoneNumber,
+            whatsapp: request.Whatsapp,
+            email: request.Email,
+            site: request.Site,
+            instagram: request.Instagram,
+            logo: request.Logo
+        );
+
+        await repository.UpdateAsync(office);
+        
+        return UpdateOfficeResponse.FromOffice(office);
+    }
+
+    public async Task<GetOfficeAnalyticsResponse> GetOfficeAnalytics(Guid officeId, Guid userId)
+    {
+        var manager = await managerRepository.GetManagerByUserId(userId)
+                      ?? throw new ManagerUserNotFoundException(userId);
+
+        var office = await repository.GetByIdAsync(officeId)
+                     ?? throw new OfficeNotFoundException(officeId);
+
+        if (office.OwnerId != manager.Id)
+            throw new UnauthorizedOfficeAccessException(officeId, userId);
+
+        var totalProfessionals = await officesProfessionalsRepository.CountByOfficeIdAsync(officeId);
+        var totalServices = await officeAttendanceRepository.CountByOfficeIdAsync(officeId);
+        var totalFaqs = await faqRepository.CountBySourceIdAsync(officeId);
+        var totalHealthCares = await healthCareRepository.CountByOfficeIdAsync(officeId);
+
+        return GetOfficeAnalyticsResponse.FromOffice(
+            office,
+            totalProfessionals,
+            totalServices,
+            totalFaqs,
+            totalHealthCares
+        );
     }
 }

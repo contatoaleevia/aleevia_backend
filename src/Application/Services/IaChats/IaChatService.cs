@@ -151,8 +151,16 @@ public class IaChatService(
             var aiResponse = await httpClient.PostAsJsonAsync(_aiPythonUrl, aiRequestData);
             if (aiResponse.IsSuccessStatusCode)
             {
-                var aiResponseContent = await aiResponse.Content.ReadFromJsonAsync<Dictionary<string, string>>();
-                aiResponseMessage = aiResponseContent?["response"] ?? aiResponseMessage;
+                var aiResponseContent = await aiResponse.Content.ReadFromJsonAsync<Dictionary<string, object>>();
+                aiResponseMessage = aiResponseContent?["message"]?.ToString() ?? aiResponseMessage;
+                
+                if (aiResponseContent?["content"] != null)
+                {
+                    var contentJson = JsonSerializer.Serialize(aiResponseContent["content"]);
+                    var contentDict = JsonSerializer.Deserialize<Dictionary<string, object?>>(contentJson);
+                    if (contentDict != null)
+                        messageContent = contentDict;
+                }
             }
         }
         catch (Exception)

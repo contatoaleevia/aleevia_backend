@@ -55,6 +55,8 @@ public static class InfrastructureIocContainer
         services.AddScoped<IOfficeAddressRepository, OfficeAddressRepository>();
         services.AddScoped<IOfficeSpecialtyRepository, OfficeSpecialtyRepository>();
         services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
+        services.AddScoped<IHealthCareRepository, HealthCareRepository>();
+        services.AddScoped<IIaChatRatingRepository, IaChatRatingRepository>();
     }
     
     private static void RegisterIdentityConfiguration(IServiceCollection services, IConfiguration configuration)
@@ -92,14 +94,14 @@ public static class InfrastructureIocContainer
             opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(opts =>
         {
-            opts.RequireHttpsMetadata = true;
+            opts.RequireHttpsMetadata = false;
             opts.SaveToken = true;
             opts.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = true,
-                ValidateAudience = true,
+                ValidateIssuer = false,
+                ValidateAudience = false,
                 ValidAudience = apiSettings.ValidIn,
                 ValidIssuer = apiSettings.Issuer
             };

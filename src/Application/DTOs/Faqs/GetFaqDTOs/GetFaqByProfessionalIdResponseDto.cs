@@ -10,6 +10,7 @@ public class GetFaqByProfessionalIdResponseDto
         FaqSourceType sourceType, 
         string question, 
         string answer,
+        string? link,
         FaqCategoryType faqCategory,
         DateTime createdAt, 
         DateTime? updatedAt, 
@@ -20,6 +21,7 @@ public class GetFaqByProfessionalIdResponseDto
         SourceType = sourceType;
         Question = question;
         Answer = answer;
+        Link = link;
         FaqCategory = faqCategory;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
@@ -35,6 +37,7 @@ public class GetFaqByProfessionalIdResponseDto
     public FaqSourceType SourceType { get; set; }
     public string Question { get; set; }
     public string Answer { get; set; }
+    public string? Link { get; set; }
     public FaqCategoryType FaqCategory { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }

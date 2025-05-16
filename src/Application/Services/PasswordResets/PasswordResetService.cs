@@ -23,11 +23,7 @@ public class PasswordResetService(
 
     public async Task<RequestPasswordResetResponseDTO> RequestPasswordResetAsync(RequestPasswordResetDTO request)
     {
-        var user = await FindUserByDocumentAsync(request.Document);
-        if (user == null)
-        {
-            return new RequestPasswordResetResponseDTO{Message = "Não foi possível encontrar um usuário com o documento informado." };
-        }
+        var user = await FindUserByDocumentAsync(request.Document) ?? throw new UserNotFoundByDocumentException(request.Document);
 
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
         var encodedToken = HttpUtility.UrlEncode(token);

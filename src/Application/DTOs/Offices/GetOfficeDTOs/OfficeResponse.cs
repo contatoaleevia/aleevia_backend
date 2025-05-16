@@ -1,4 +1,6 @@
 using Domain.Entities.Professionals;
+using Domain.Entities.HealthCares;
+using Domain.Entities.Offices;
 
 namespace Application.DTOs.Offices.GetOfficeDTOs;
 
@@ -7,15 +9,13 @@ public record OfficeResponse
     public required OfficeData Office { get; init; }
 
     public static OfficeResponse FromOffice(
-        Domain.Entities.Offices.Office office, 
-        IEnumerable<Domain.Entities.Offices.OfficeAddress> addresses,
-        IEnumerable<Domain.Entities.Offices.OfficesProfessional> professionals,
-        IEnumerable<Domain.Entities.Offices.OfficeSpecialty> specialties)
+        Office office,
+        List<OfficeAddress> addresses,
+        List<OfficesProfessional> professionals,
+        List<OfficeSpecialty> specialties,
+        List<HealthCare> healthCares)
     {
         ArgumentNullException.ThrowIfNull(office);
-        ArgumentNullException.ThrowIfNull(addresses);
-        ArgumentNullException.ThrowIfNull(professionals);
-        ArgumentNullException.ThrowIfNull(specialties);
 
         return new OfficeResponse
         {
@@ -26,10 +26,10 @@ public record OfficeResponse
                 Name = office.Name,
                 Cnpj = office.Cnpj.Value,
                 PhoneNumber = office.Phone.Value,
-                Whatsapp = office.Whatsapp.Value,
-                Email = office.Email.Value,
-                Site = office.Site.Value,
-                Instagram = office.Instagram.Value,
+                Whatsapp = office.Whatsapp?.Value,
+                Email = office.Email?.Value,
+                Site = office.Site?.Value,
+                Instagram = office.Instagram?.Value,
                 Logo = office.Logo.Url,
                 Individual = office.Individual,
                 Addresses = [.. addresses.Select(a => new OfficeAddressResponse
@@ -101,6 +101,16 @@ public record OfficeResponse
                     Id = s.Id,
                     SpecialtyId = s.SpecialtyId,
                     Name = s.Specialty?.Name ?? string.Empty
+                })],
+                HealthCares = [.. healthCares.Select(h => new HealthCareData
+                {
+                    Id = h.Id,
+                    Name = h.Name,
+                    AnsNumber = h.AnsNumber,
+                    Registry = h.Registry,
+                    IsActive = h.IsActive,
+                    CreatedAt = h.CreatedAt,
+                    UpdatedAt = h.UpdatedAt
                 })]
             }
         };
@@ -114,15 +124,16 @@ public record OfficeData
     public required string Name { get; init; }
     public required string Cnpj { get; init; }
     public required string PhoneNumber { get; init; }
-    public required string Whatsapp { get; init; }
-    public required string Email { get; init; }
-    public required string Site { get; init; }
-    public required string Instagram { get; init; }
-    public required string Logo { get; init; }
+    public string? Whatsapp { get; init; }
+    public string? Email { get; init; }
+    public string? Site { get; init; }
+    public string? Instagram { get; init; }
+    public string? Logo { get; init; }
     public required bool Individual { get; init; }
-    public required IReadOnlyList<OfficeAddressResponse> Addresses { get; init; }
-    public required IReadOnlyList<OfficeProfessionalResponse> Professionals { get; init; }
-    public required IReadOnlyList<OfficeSpecialtyResponse> Specialties { get; init; }
+    public required List<OfficeAddressResponse> Addresses { get; init; }
+    public required List<OfficeProfessionalResponse> Professionals { get; init; }
+    public required List<OfficeSpecialtyResponse> Specialties { get; init; }
+    public required List<HealthCareData> HealthCares { get; init; }
 }
 
 public record OfficeAddressResponse
@@ -225,4 +236,15 @@ public record OfficeSpecialtyResponse
     public required Guid Id { get; init; }
     public required Guid SpecialtyId { get; init; }
     public required string Name { get; init; }
+}
+
+public record HealthCareData
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
+    public string? AnsNumber { get; init; }
+    public string? Registry { get; init; }
+    public required bool IsActive { get; init; }
+    public required DateTime CreatedAt { get; init; }
+    public DateTime? UpdatedAt { get; init; }
 } 
