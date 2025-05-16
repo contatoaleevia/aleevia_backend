@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.DTOs.Offices.UpdateOfficeDTOs;
 
@@ -13,5 +14,5 @@ public record UpdateOfficeRequest
     public string? Email { get; init; }
     public string? Site { get; init; }
     public string? Instagram { get; init; }
-    public string? Logo { get; init; }
+    public IFormFile? Logo { get; init; }
 } 

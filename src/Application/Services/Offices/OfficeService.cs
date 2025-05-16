@@ -2,11 +2,14 @@
 using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
 using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
+using Application.DTOs.Offices.GetOfficeAnalyticsDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
+using Application.DTOs.Offices.UpdateOfficeDTOs;
 using Application.DTOs.Professionals;
 using Application.Services.Professionals;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Offices;
+using Domain.Entities.ValueObjects;
 using Domain.Exceptions.Managers;
 using Domain.Exceptions.Offices;
 using Domain.Exceptions.Professions;
@@ -44,7 +47,7 @@ public class OfficeService(
             email: request.Email,
             site: request.Site,
             instagram: request.Instagram,
-            logo: request.Logo,
+            logo: FileS3.Create(logoId, logoUrl),
             individual: request.Individual
         );
 
@@ -210,7 +213,13 @@ public class OfficeService(
 
         if (office.OwnerId != manager.Id)
             throw new UnauthorizedOfficeAccessException(request.Id, userId);
-
+        var logoUrl = office.GetLogoUrl();
+        var logoId = office.GetLogoId();
+        if (office.HasLogo())
+        {
+            await fileSender.DeleteLogoAsync(office.GetLogoFileName()!);
+            logoUrl = await UploadLogo(office.GetLogoId()!.Value, request.Logo);
+        }
         office.Update(
             name: request.Name,
             phoneNumber: request.PhoneNumber,
@@ -218,7 +227,7 @@ public class OfficeService(
             email: request.Email,
             site: request.Site,
             instagram: request.Instagram,
-            logo: request.Logo
+            logo: FileS3.Create(logoId!.Value, logoUrl)
         );
 
         await repository.UpdateAsync(office);

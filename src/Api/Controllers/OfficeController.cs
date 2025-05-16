@@ -242,7 +242,7 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateOffice([FromBody] UpdateOfficeRequest request)
+    public async Task<IActionResult> UpdateOffice([FromForm] UpdateOfficeRequest request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         return Ok(await service.UpdateOffice(request, session.UserId));

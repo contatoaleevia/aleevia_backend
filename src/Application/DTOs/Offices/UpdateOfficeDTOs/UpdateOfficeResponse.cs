@@ -23,7 +23,7 @@ public record UpdateOfficeResponse
                 Email = office.Email.Value,
                 Site = office.Site.Value,
                 Instagram = office.Instagram.Value,
-                Logo = office.Logo.Value,
+                Logo = office.GetLogoUrl(),
                 Individual = office.Individual,
                 UpdatedAt = DateTime.UtcNow
             }
