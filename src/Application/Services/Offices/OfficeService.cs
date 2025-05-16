@@ -7,6 +7,7 @@ using Application.DTOs.Offices.GetOfficeDTOs;
 using Application.DTOs.Offices.UpdateOfficeDTOs;
 using Application.DTOs.Professionals;
 using Application.Services.Professionals;
+using CrossCutting.Extensions;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Offices;
 using Domain.Entities.ValueObjects;
@@ -213,22 +214,27 @@ public class OfficeService(
 
         if (office.OwnerId != manager.Id)
             throw new UnauthorizedOfficeAccessException(request.Id, userId);
-        var logoUrl = office.GetLogoUrl();
-        var logoId = office.GetLogoId();
-        if (office.HasLogo())
-        {
-            await fileSender.DeleteLogoAsync(office.GetLogoFileName()!);
-            logoUrl = await UploadLogo(office.GetLogoId()!.Value, request.Logo);
-        }
+       
         office.Update(
             name: request.Name,
             phoneNumber: request.PhoneNumber,
             whatsapp: request.Whatsapp,
             email: request.Email,
             site: request.Site,
-            instagram: request.Instagram,
-            logo: FileS3.Create(logoId!.Value, logoUrl)
+            instagram: request.Instagram
         );
+
+        if (request.Logo != null)
+        {
+            var logoUrl = office.GetLogoUrl();
+        
+            if (!logoUrl.IsNullOrEmpty())
+                await fileSender.DeleteLogoAsync(office.GetLogoFileName()!);
+          
+            var logoId = office.GetLogoId() ?? Guid.NewGuid();
+            logoUrl = await UploadLogo(logoId, request.Logo);
+            office.SetLogo(FileS3.Create(logoId, logoUrl));
+        }
 
         await repository.UpdateAsync(office);
         

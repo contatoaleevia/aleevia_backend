@@ -64,7 +64,7 @@ public class Office : AggregateRoot
 
     private Url SetInstagram(string? instagram)
         => instagram is null ? Url.CreateAsEmpty() : Url.Create(instagram);
-
+    
     public string? GetLogoFileName() => Logo.Id?.ToString();
     public string GetLogoUrl() => Logo.Url;
     public bool HasLogo() => Logo.Id is not null;

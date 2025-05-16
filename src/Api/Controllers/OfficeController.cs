@@ -236,7 +236,7 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// <returns>Dados atualizados do local de trabalho</returns>
     [HttpPatch]
     [Authorize(Roles = "Admin")]
-    [Consumes("application/json")]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(UpdateOfficeResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status401Unauthorized)]

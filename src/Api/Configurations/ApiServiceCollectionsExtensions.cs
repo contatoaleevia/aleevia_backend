@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Api.Filters;
 using Application;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.OpenApi.Models;
 
 namespace Api.Configurations;
@@ -9,6 +11,21 @@ public static class ApiServiceCollectionsExtensions
 {
     public static void AddApiServices(this IServiceCollection services)
     {
+        services.Configure<FormOptions>(x =>
+        {
+            x.MultipartHeadersLengthLimit = int.MaxValue;
+            x.MultipartBoundaryLengthLimit = int.MaxValue;
+            x.MultipartBodyLengthLimit = long.MaxValue;
+            x.ValueLengthLimit = int.MaxValue;
+            x.BufferBodyLengthLimit = long.MaxValue;
+            x.MemoryBufferThreshold = int.MaxValue;
+        });
+        
+        services.Configure<KestrelServerOptions>(option =>
+        {
+            option.Limits.MaxRequestBodySize = long.MaxValue;
+        });
+        
         services
             .AddControllers(opt =>
                 opt.Filters.Add(typeof(NotificationFilter)))

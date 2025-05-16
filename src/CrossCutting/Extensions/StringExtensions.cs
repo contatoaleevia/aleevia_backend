@@ -17,4 +17,9 @@ public static class StringExtensions
 
         return result.ToString();
     }
+    
+    public static bool IsNullOrEmpty(this string? value)
+    {
+        return string.IsNullOrEmpty(value);
+    }
 }
