@@ -3,6 +3,9 @@
 #Atualiza o repositorio git
 git pull
 
+#Mostra o Hash do ultimo commit feito 
+git rev-parse HEAD
+
 #Para o container
 docker stop backend-aleevia
 
@@ -16,7 +19,7 @@ docker rmi backend-aleevia
 docker build -f docker/Dockerfile-Homolog -t backend-aleevia .
 
 #Constroi o novo container
-docker run --name backend-aleevia -d -p 7086:7086 --env-file ./.env-backend-homolog backend-aleevia
+docker run --name backend-aleevia -d -p 7086:7086 --env-file ./.env backend-aleevia
 
-#Lista os containers ativos
+#Lista os containers ativos 
 docker ps -a
