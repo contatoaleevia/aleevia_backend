@@ -39,6 +39,7 @@ public static class ApplicationIocContainer
         services.AddScoped<IProfessionService, ProfessionService>();
         services.AddScoped<IOfficeAttendanceService, OfficeAttendanceService>();
         services.AddScoped<IIaChatService, IaChatService>();
+        services.AddScoped<IIaChatRatingService, IaChatRatingService>();
         services.AddScoped<IAddressService, AddressService>();
         services.AddScoped<IProfessionalService, ProfessionalService>();
         services.AddScoped<IPatientService, PatientService>();

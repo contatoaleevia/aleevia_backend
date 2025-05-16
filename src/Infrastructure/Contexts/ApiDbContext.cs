@@ -58,6 +58,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public DbSet<Patient> Patients { get; set; }
     public DbSet<PatientLead> PatientLeads { get; set; }
     public DbSet<HealthCare> HealthCares { get; set; }
+    public DbSet<IaChatRating> IaChatRatings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -94,6 +95,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new ProfessionalSpecialtyDetailConfiguration());
         builder.ApplyConfiguration(new OfficeSpecialtyConfiguration());
         builder.ApplyConfiguration(new HealthCareConfiguration());
+        builder.ApplyConfiguration(new IaChatRatingConfiguration());
 
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
