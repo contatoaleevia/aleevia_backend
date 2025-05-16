@@ -93,18 +93,18 @@ public class OfficeService(
     {
         var professional = await professionalService.PreRegisterWhenNotExists(request.Professional);
 
-        var office = await repository.GetByIdAsync(request.OfficeId)
-            ?? throw new OfficeNotFoundException(request.OfficeId);
-
+        var office = await repository.GetByIdAsync(request.OfficeId);
+        if(office is null) throw new OfficeNotFoundException(request.OfficeId);
         var officeProfessional = await officesProfessionalsRepository.GetByOfficeAndProfessional(request.OfficeId, professional.Id);
-        if (officeProfessional != null)
+        
+        if (officeProfessional is not null)
         {
             if (officeProfessional.IsActive)
                 throw new OfficeProfessionalAlreadyExistsException(request.OfficeId, professional.Id);
 
             officeProfessional.Activate();
             await officesProfessionalsRepository.UpdateAsync(officeProfessional);
-            return new BindOfficeProfessionalResponse(officeProfessional.Id);
+            return new BindOfficeProfessionalResponse(officeProfessional);
         }
 
         var newOfficeProfessional = new OfficesProfessional(
@@ -114,7 +114,7 @@ public class OfficeService(
             request.Professional.IsPublic
         );
         var response = await officesProfessionalsRepository.CreateAsync(newOfficeProfessional);
-        return new BindOfficeProfessionalResponse(response.Id);
+        return new BindOfficeProfessionalResponse(response);
     }
 
     public async Task DeactivateOfficeProfessional(DeactivateOfficeProfessionalRequest request)

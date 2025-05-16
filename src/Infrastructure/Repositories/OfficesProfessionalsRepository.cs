@@ -32,6 +32,7 @@ public class OfficesProfessionalsRepository(ApiDbContext context) : Repository<O
     public async Task<OfficesProfessional?> GetByOfficeAndProfessional(Guid officeId, Guid professionalId)
     {
         return await DbSet
+            .Include(x => x.Professional)
             .FirstOrDefaultAsync(
                 op => op.OfficeId == officeId && 
                     op.ProfessionalId == professionalId
