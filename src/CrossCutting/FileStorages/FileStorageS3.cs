@@ -1,5 +1,6 @@
 ﻿using Amazon.S3;
 using System.Net;
+using Amazon;
 using Amazon.Runtime;
 using Amazon.S3.Model;
 using CrossCutting.FileStorages.Settings;
@@ -46,6 +47,8 @@ public class FileStorageS3(IFileStorageSettings settings) : IFileStorageS3
         return new AmazonS3Client(credentials, new AmazonS3Config
         {
             ServiceURL = settings.ClientUrl,
+            ForcePathStyle = true,
+            RegionEndpoint = RegionEndpoint.SAEast1
         });
     }
     

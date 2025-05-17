@@ -1,4 +1,4 @@
 ﻿namespace Domain.Exceptions.Offices;
 
-public class SendLogoException() 
-    : ApiException("Ocorreu um erro ao fazer o upload do log", 400);
+public class SendLogoException(string message) 
+    : ApiException($"Ocorreu o seguinte erro ao fazer o upload da logo: {Environment.NewLine}{message}", 400);

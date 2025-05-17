@@ -13,13 +13,13 @@ public class OfficeFileSender(IFileStorageS3 fileStorageS3) : IOfficeFileSender
         {
             var mediaUrl = await fileStorageS3.UploadAsync(BucketName, fileName, fileStream);
             if (string.IsNullOrEmpty(mediaUrl))
-                throw new SendLogoException();
+                throw new SendLogoException("Url do arquivo não pode ser nula ou vazia.");
 
             return mediaUrl;
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            throw new SendLogoException();
+            throw new SendLogoException(e.Message);
         }
     }
 
