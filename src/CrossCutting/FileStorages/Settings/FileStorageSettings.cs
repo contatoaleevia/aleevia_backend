@@ -8,7 +8,7 @@ public class FileStorageSettings : IFileStorageSettings
     public string SecretKey { get; set; } = null!;
     public string ClientUrl { get; set; } = null!;
     public string DomainUrl { get; set; } = null!;
-    public string BucketPathName { get; set; } = null!;
+    public string BucketPathSharedOffice { get; set; } = null!;
 
     public static FileStorageSettings GetInstance(IConfiguration configuration)
     {

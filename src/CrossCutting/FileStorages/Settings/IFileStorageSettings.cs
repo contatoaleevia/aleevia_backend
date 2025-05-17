@@ -6,5 +6,5 @@ public interface IFileStorageSettings
     string SecretKey { get; set; }
     string ClientUrl { get; set; }
     string DomainUrl { get; set; }
-    string BucketPathName { get; set; }
+    string BucketPathSharedOffice { get; set; }
 }

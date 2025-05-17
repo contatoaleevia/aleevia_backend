@@ -1,17 +1,18 @@
 ﻿using CrossCutting.FileStorages;
+using CrossCutting.MinioFileStorages;
 using Domain.Exceptions.Offices;
 
 namespace Application.Services.Offices;
 
-public class OfficeFileSender(IFileStorageS3 fileStorageS3) : IOfficeFileSender
+public class OfficeFileSender(IMinioService minioService) : IOfficeFileSender
 {
-    private const string BucketName = "office";
+    private const string BucketName = "aleevia";
 
     public async Task<string> UploadLogoAsync(string fileName, Stream fileStream)
     {
         try
         {
-            var mediaUrl = await fileStorageS3.UploadAsync(BucketName, fileName, fileStream);
+            var mediaUrl = await minioService.UploadAsync(BucketName, fileName, fileStream);
             if (string.IsNullOrEmpty(mediaUrl))
                 throw new SendLogoException("Url do arquivo não pode ser nula ou vazia.");
 
@@ -27,7 +28,7 @@ public class OfficeFileSender(IFileStorageS3 fileStorageS3) : IOfficeFileSender
     {
         try
         {
-           await fileStorageS3.DeleteAsync(BucketName, fileName);
+           await minioService.DeleteAsync(BucketName, fileName);
 
         }
         catch (Exception)

@@ -201,6 +201,7 @@ public class OfficeService(
             return null;
         using var memoryStream = new MemoryStream();
         await formFile.CopyToAsync(memoryStream);
+        memoryStream.Position = 0;
         return await fileSender.UploadLogoAsync(id.ToString(), memoryStream);
     }
 

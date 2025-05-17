@@ -2,6 +2,7 @@
 using System.Net;
 using Amazon;
 using Amazon.Runtime;
+using Amazon.Runtime.Credentials.Internal;
 using Amazon.S3.Model;
 using CrossCutting.FileStorages.Settings;
 
@@ -54,6 +55,6 @@ public class FileStorageS3(IFileStorageSettings settings) : IFileStorageS3
     
     private string BuildKey(string fileName)
     {
-        return string.IsNullOrEmpty(settings.BucketPathName) ? fileName : $"{settings.BucketPathName}/{fileName}";
+        return string.IsNullOrEmpty(settings.BucketPathSharedOffice) ? fileName : $"{settings.BucketPathSharedOffice}/{fileName}";
     }
 }
