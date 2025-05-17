@@ -47,6 +47,23 @@ public class Office : AggregateRoot
         Specialties = [];
     }
 
+    public void Update(string? name = null, string? cnpj = null, string? phoneNumber = null, string? whatsapp = null, 
+        string? email = null, string? site = null, string? instagram = null)
+    {
+        Name = name ?? Name;
+        Cnpj = cnpj != null ? SetDocument(cnpj) : Cnpj;
+        Phone = phoneNumber != null ? SetPhoneNumber(phoneNumber) : Phone;
+        Whatsapp = whatsapp != null ? SetWhatsapp(whatsapp) : Whatsapp;
+        Email = email != null ? SetEmail(email) : Email;
+        Site = site != null ? SetSite(site) : Site;
+        Instagram = instagram != null ? SetInstagram(instagram) : Instagram;
+    }
+    
+    public void SetLogo(FileS3 logo)
+    {
+        Logo = logo;
+    }
+
     private Document SetDocument(string? document)
         => string.IsNullOrEmpty(document) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(document);
 
