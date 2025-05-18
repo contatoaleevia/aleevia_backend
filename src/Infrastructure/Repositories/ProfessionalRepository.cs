@@ -59,6 +59,8 @@ public class ProfessionalRepository(ApiDbContext context) : Repository<Professio
     {
         return DbSet
             .Include(x => x.SpecialtyDetails)
+            .Include(x => x.Documents)
+            .Include(x => x.Addresses)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 }

@@ -44,9 +44,9 @@ public class Professional : AggregateRoot
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
-    public ICollection<ProfessionalSpecialtyDetail> SpecialtyDetails { get; private set; } = [];
-    public ICollection<ProfessionalDocument> Documents { get; private set; } = [];
-    public ICollection<ProfessionalAddress> Addresses { get; set; } = [];
+    public List<ProfessionalSpecialtyDetail> SpecialtyDetails { get; private set; } = [];
+    public List<ProfessionalDocument> Documents { get; private set; } = [];
+    public List<ProfessionalAddress> Addresses { get; set; } = [];
 
     private ProfessionalRegisterStatus SetRegisterAsPending()
     {

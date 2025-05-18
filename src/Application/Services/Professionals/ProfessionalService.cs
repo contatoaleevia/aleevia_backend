@@ -137,9 +137,13 @@ public class ProfessionalService(
 
     public async Task UpdateProfessional(UpdateProfessionalRequest request, Guid professionalId)
     {
+        using var scope = ApiTransactionScope.RepeatableRead(true);
+    
         var professional = await professionalRepository.GetByIdAsync(professionalId);
         if (professional is null)
             throw new ProfessionalNotFoundException(professionalId);
+    
+        // First update the base professional data
         professional.Update(
             request.Name,
             request.PreferredName,
@@ -148,11 +152,27 @@ public class ProfessionalService(
             request.Instagram,
             request.Biography
         );
+    
+        await professionalRepository.UpdateAsync(professional);
+        await professionalRepository.SaveChangesAsync(); // Make sure changes are saved
+    
+        // Then handle the specialty detail separately
         var specialtyDetail = request.ProfessionData;
         await ValidateProfessionDataAsync(specialtyDetail);
-        professional.AddSpecialtyDetail(specialtyDetail.ProfessionId, specialtyDetail.SpecialityId,
-            specialtyDetail.SubSpecialityId);
-        professional.SetAddress(request.AddressId);        
-        await professionalRepository.UpdateAsync(professional);
+    
+        // Create and add the specialty detail
+        var newSpecialtyDetail = new ProfessionalSpecialtyDetail(
+            professional.Id,
+            specialtyDetail.ProfessionId,
+            specialtyDetail.SpecialityId,
+            specialtyDetail.SubSpecialityId
+        );
+    
+        await professionalRepository.CreateSpecialtyDetailAsync(newSpecialtyDetail);
+    
+        // professional.SetAddress(request.AddressId);        
+        // await professionalRepository.UpdateAsync(professional);
+        scope.Complete();
+      
     }
 }

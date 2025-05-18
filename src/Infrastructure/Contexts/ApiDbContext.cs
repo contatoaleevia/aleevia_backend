@@ -96,6 +96,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new OfficeSpecialtyConfiguration());
         builder.ApplyConfiguration(new HealthCareConfiguration());
         builder.ApplyConfiguration(new IaChatRatingConfiguration());
+        builder.ApplyConfiguration(new ProfessionalAddressConfiguration());
 
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
