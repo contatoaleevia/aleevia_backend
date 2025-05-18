@@ -66,7 +66,8 @@ public class ProfessionalController(IProfessionalService service, IUserSession s
     /// <summary/>Instagram: Perfil do Instagram profissional (opcional)
     /// <summary/>Biography: Biografia ou descrição profissional
     /// <summary/>ProfessionData: Dados da profissão, especialidade e subespecialidade
-    /// <summary/>VideoPresentation: Link para vídeo de apresentação do profissional
+    /// <summary/>VideoPresentation: Link para vídeo de apresentação do profissional (ainda não foi incluso opção de S3)
+    /// <summary/>AddressId: ID do endereço do profissional
     /// </param>
     /// <param name="id">ID do profissional a ser atualizado</param>
     /// <returns>Confirmação de atualização bem-sucedida</returns>
