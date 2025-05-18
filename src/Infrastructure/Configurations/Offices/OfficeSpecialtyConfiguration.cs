@@ -35,7 +35,7 @@ public class OfficeSpecialtyConfiguration : IEntityTypeConfiguration<OfficeSpeci
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(x => x.Specialty)
+        builder.HasOne(x => x.Speciality)
             .WithMany()
             .HasForeignKey(x => x.SpecialtyId)
             .IsRequired()

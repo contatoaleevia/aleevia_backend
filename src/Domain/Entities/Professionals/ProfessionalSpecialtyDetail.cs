@@ -10,9 +10,9 @@ public class ProfessionalSpecialtyDetail : Entity
     public Guid ProfessionId { get; private set; }
     public Profession Profession { get; private set; } = null!;
     public Guid SpecialityId { get; private set; }
-    public Specialty Speciality { get; private set; } = null!;
-    public Guid? SubspecialityId { get; private set; }
-    public SubSpecialty? Subspeciality { get; private set; }
+    public Speciality Speciality { get; private set; } = null!;
+    public Guid? SubSpecialityId { get; private set; }
+    public SubSpecialty? SubSpeciality { get; private set; }
     public string? VideoPresentation { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
@@ -22,13 +22,13 @@ public class ProfessionalSpecialtyDetail : Entity
         Guid professionalId,
         Guid professionId,
         Guid specialityId,
-        Guid? subspecialityId = null,
+        Guid? subSpecialityId = null,
         string? videoPresentation = null)
     {
         ProfessionalId = professionalId;
         ProfessionId = professionId;
         SpecialityId = specialityId;
-        SubspecialityId = subspecialityId;
+        SubSpecialityId = subSpecialityId;
         VideoPresentation = videoPresentation;
         CreatedAt = DateTime.UtcNow;
     }

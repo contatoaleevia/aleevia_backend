@@ -19,7 +19,7 @@ public class Professional : AggregateRoot
         string email)
     {
         ManagerId = managerId;
-        RegisterStatus = isRegistered ?  SetRegisterAsApproval() : SetRegisterAsPending();
+        RegisterStatus = isRegistered ? SetRegisterAsApproval() : SetRegisterAsPending();
         Cpf = Document.CreateDocumentAsCpf(cpf);
         Cnpj = null;
         CreatedAt = DateTime.UtcNow;
@@ -46,32 +46,38 @@ public class Professional : AggregateRoot
     public DateTime? DeletedAt { get; private set; }
     public ICollection<ProfessionalSpecialtyDetail> SpecialtyDetails { get; private set; } = [];
     public ICollection<ProfessionalDocument> Documents { get; private set; } = [];
+    public ICollection<ProfessionalAddress> Addresses { get; set; } = [];
 
     private ProfessionalRegisterStatus SetRegisterAsPending()
     {
         IsRegistered = false;
         return ProfessionalRegisterStatus.CreateAsPending();
     }
+
     private ProfessionalRegisterStatus SetRegisterAsApproval()
     {
         IsRegistered = false;
         return ProfessionalRegisterStatus.CreateAsApproved();
     }
-        
+
     private Document SetDocument(string? document)
         => string.IsNullOrEmpty(document) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(document);
+
     private Url SetWebsite(string? url)
         => url is null ? Url.CreateAsEmpty() : Url.Create(url);
+
     private Url SetInstagram(string? instagram)
         => instagram is null ? Url.CreateAsEmpty() : Url.Create(instagram);
+
     private Url SetBiography(string? biography)
         => biography is null ? Url.CreateAsEmpty() : Url.Create(biography);
 
-    public void Register(string name, string preferredName, string email, string cnpj, string? webSite, string? instagram, string? biography)
+    public void Register(string name, string preferredName, string email, string cnpj, string? webSite,
+        string? instagram, string? biography)
     {
         if (IsRegistered)
             throw new InvalidOperationException("Profissional já está registrado");
-                
+
         IsRegistered = true;
         RegisterStatus = ProfessionalRegisterStatus.CreateAsApproved();
         Name = name;
@@ -81,5 +87,43 @@ public class Professional : AggregateRoot
         Website = SetWebsite(webSite);
         Instagram = SetInstagram(instagram);
         Biography = SetBiography(biography);
+    }
+
+    public void Update(string name, string preferredName, string email, string website, string instagram,
+        string biography)
+    {
+        Name = name;
+        PreferredName = preferredName;
+        Email = email;
+        Website = SetWebsite(website);
+        Instagram = SetInstagram(instagram);
+        Biography = SetBiography(biography);
+
+    }
+    
+    public void AddSpecialtyDetail(
+        Guid professionId,
+        Guid specialityId,
+        Guid? subSpecialityId = null,
+        string? videoPresentation = null)
+    {
+        var specialtyDetail = new ProfessionalSpecialtyDetail(
+            Id,
+            professionId,
+            specialityId,
+            subSpecialityId,
+            videoPresentation);
+        SpecialtyDetails.Add(specialtyDetail);
+    }
+
+    public void SetAddress(Guid addressId)
+    {
+        var address = Addresses.FirstOrDefault();
+        if (address is null)
+           Addresses.Add(new ProfessionalAddress(Id, addressId));
+        else
+        {
+            address.Update(addressId);
+        }
     }
 }

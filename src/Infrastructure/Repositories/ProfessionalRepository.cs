@@ -43,7 +43,7 @@ public class ProfessionalRepository(ApiDbContext context) : Repository<Professio
             .Include(p => p.SpecialtyDetails)
                 .ThenInclude(sd => sd.Speciality)
             .Include(p => p.SpecialtyDetails)
-                .ThenInclude(sd => sd.Subspeciality)
+                .ThenInclude(sd => sd.SubSpeciality)
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Manager.UserId == userId);
     }
@@ -53,5 +53,12 @@ public class ProfessionalRepository(ApiDbContext context) : Repository<Professio
         return await DbSet
             .Include(p => p.Manager)
             .FirstOrDefaultAsync(p => p.ManagerId == managerId);
+    }
+
+    public override Task<Professional?> GetByIdAsync(Guid id)
+    {
+        return DbSet
+            .Include(x => x.SpecialtyDetails)
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 }

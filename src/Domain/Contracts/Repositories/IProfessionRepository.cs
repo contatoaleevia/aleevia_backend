@@ -6,6 +6,6 @@ namespace Domain.Contracts.Repositories;
 public interface IProfessionRepository : IRepository<Profession>
 {
     Task<List<Profession>> GetAllActiveAsync();
-    Task<Specialty?> GetSpecialityByIdAsync(Guid id);
+    Task<Speciality?> GetSpecialityByIdAsync(Guid id);
     Task<SubSpecialty?> GetSubSpecialityByIdAsync(Guid? id);
 }

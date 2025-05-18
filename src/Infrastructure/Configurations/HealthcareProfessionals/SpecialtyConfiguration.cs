@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations.HealthcareProfessionals;
 
-public class SpecialtyConfiguration : IEntityTypeConfiguration<Specialty>
+public class SpecialtyConfiguration : IEntityTypeConfiguration<Speciality>
 {
-    public void Configure(EntityTypeBuilder<Specialty> builder)
+    public void Configure(EntityTypeBuilder<Speciality> builder)
     {
         builder.ToTable("specialties");
 
@@ -33,7 +33,7 @@ public class SpecialtyConfiguration : IEntityTypeConfiguration<Specialty>
             .HasColumnName("profession_id");
 
         builder.HasMany(x => x.SubSpecialties)
-            .WithOne(x => x.Specialty)
+            .WithOne(x => x.Speciality)
             .HasForeignKey(x => x.SpecialtyId)
             .OnDelete(DeleteBehavior.Cascade);
     }

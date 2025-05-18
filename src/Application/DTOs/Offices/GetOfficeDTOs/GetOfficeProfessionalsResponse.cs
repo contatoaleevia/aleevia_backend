@@ -57,8 +57,8 @@ public class ProfessionalSpecialtyDetailData(ProfessionalSpecialtyDetail special
     public string ProfessionName { get; set; } = specialtyDetail.Profession.Name;
     public Guid SpecialityId { get; set; } = specialtyDetail.SpecialityId;
     public string SpecialityName { get; set; } = specialtyDetail.Speciality.Name;
-    public Guid? SubspecialityId { get; set; } = specialtyDetail.SubspecialityId;
-    public string? SubspecialityName { get; set; } = specialtyDetail.Subspeciality?.Name;
+    public Guid? SubspecialityId { get; set; } = specialtyDetail.SubSpecialityId;
+    public string? SubspecialityName { get; set; } = specialtyDetail.SubSpeciality?.Name;
     public string? VideoPresentation { get; set; } = specialtyDetail.VideoPresentation;
 }
 

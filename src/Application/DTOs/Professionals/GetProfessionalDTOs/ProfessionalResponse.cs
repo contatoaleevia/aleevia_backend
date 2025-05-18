@@ -29,7 +29,7 @@ public record ProfessionalResponse
                     Id = s.Id,
                     ProfessionId = s.ProfessionId,
                     SpecialityId = s.SpecialityId,
-                    SubspecialityId = s.SubspecialityId,
+                    SubspecialityId = s.SubSpecialityId,
                     VideoPresentation = s.VideoPresentation
                 }).ToList() ?? [],
                 Documents = professional.Documents?.Select(d => new ProfessionalDocumentResponse
