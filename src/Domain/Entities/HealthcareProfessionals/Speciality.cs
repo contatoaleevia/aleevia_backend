@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Domain.Entities.HealthcareProfessionals;
 
-public class Specialty : AggregateRoot
+public class Speciality : AggregateRoot
 {
     public string Name { get; private set; }
     public bool Active { get; private set; }
@@ -14,7 +14,7 @@ public class Specialty : AggregateRoot
     public Profession Profession { get; private set; } = null!;
     public ICollection<SubSpecialty> SubSpecialties { get; private set; } = [];
 
-    public Specialty(string name, Guid professionId)
+    public Speciality(string name, Guid professionId)
     {
         Name = name;
         ProfessionId = professionId;
@@ -23,7 +23,7 @@ public class Specialty : AggregateRoot
         SubSpecialties = [];
     }
 
-    protected Specialty() { }
+    protected Speciality() { }
 
     public void Update(string name)
     {

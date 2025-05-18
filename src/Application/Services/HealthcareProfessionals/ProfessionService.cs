@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Application.DTOs.HealthcareProfessionals;
+using Application.DTOs.Professionals.UpdateProfessionalRequestDTOs;
 using Domain.Contracts.Repositories;
 
 namespace Application.Services.HealthcareProfessionals;

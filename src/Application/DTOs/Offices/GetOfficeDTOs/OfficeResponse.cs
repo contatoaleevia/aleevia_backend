@@ -79,7 +79,7 @@ public record OfficeResponse
                         {
                             SpecialityName = s.Speciality.Name,
                             ProfessionName = s.Profession.Name,
-                            SubspecialityName = s.Subspeciality?.Name,
+                            SubspecialityName = s.SubSpeciality?.Name,
                             VideoPresentation = s.VideoPresentation
                         })],
                         Documents = [.. p.Professional.Documents.Select(d => new ProfessionalDocumentResponse
@@ -100,7 +100,7 @@ public record OfficeResponse
                 {
                     Id = s.Id,
                     SpecialtyId = s.SpecialtyId,
-                    Name = s.Specialty?.Name ?? string.Empty
+                    Name = s.Speciality?.Name ?? string.Empty
                 })],
                 HealthCares = [.. healthCares.Select(h => new HealthCareData
                 {

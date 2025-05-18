@@ -21,7 +21,7 @@ public class OfficesProfessionalsRepository(ApiDbContext context) : Repository<O
                     .ThenInclude(sd => sd.Speciality)
             .Include(op => op.Professional)
                 .ThenInclude(p => p.SpecialtyDetails)
-                    .ThenInclude(sd => sd.Subspeciality)
+                    .ThenInclude(sd => sd.SubSpeciality)
             .Include(op => op.Professional)
                 .ThenInclude(p => p.Documents)
             .Where(op => op.OfficeId == officeId && op.IsActive)

@@ -20,16 +20,39 @@ public class ProfessionalRepository(ApiDbContext context) : Repository<Professio
             .Include(x => x.Documents)
             .FirstOrDefaultAsync(x => x.Cpf.Value == cpf.RemoveSpecialCharacters());
 
-    public async Task CreateSpecialtyDetailAsync(ProfessionalSpecialtyDetail specialtyDetail)
+    public async Task CreateSpecialtyDetailAsync(ProfessionalSpecialtyDetail specialtyDetail, bool saveChanges = true)
     {
         await specialtyDetailsDB.AddAsync(specialtyDetail);
-        await SaveChangesAsync();
+        if (saveChanges)
+            await SaveChangesAsync();
     }
 
-    public async Task CreateDocumentAsync(ProfessionalDocument document)
+    public async Task UpdateSpecialtyDetailsAsync(ProfessionalSpecialtyDetail specialtyDetail, bool saveChanges = true)
+    {
+        specialtyDetailsDB.Update(specialtyDetail);
+        if (saveChanges)
+            await SaveChangesAsync();
+    }
+
+    public async Task CreateDocumentAsync(ProfessionalDocument document, bool saveChanges = true)
     {
         await documentsDB.AddAsync(document);
-        await SaveChangesAsync();
+        if(saveChanges)
+            await SaveChangesAsync();
+    }
+
+    public async Task UpdateProfessionalAddressAsync(ProfessionalAddress professionalAddressees, bool saveChanges = true)
+    {
+        context.Set<ProfessionalAddress>().Update(professionalAddressees);
+        if (saveChanges)
+            await SaveChangesAsync();
+    }
+
+    public async Task CreateProfessionalAddressAsync(ProfessionalAddress newAddress, bool saveChanges = true)
+    {
+        context.Set<ProfessionalAddress>().Add(newAddress);
+        if (saveChanges)
+            await SaveChangesAsync();
     }
 
     public async Task<Professional?> GetByUserIdWithDetailsAsync(Guid userId)
@@ -43,7 +66,7 @@ public class ProfessionalRepository(ApiDbContext context) : Repository<Professio
             .Include(p => p.SpecialtyDetails)
                 .ThenInclude(sd => sd.Speciality)
             .Include(p => p.SpecialtyDetails)
-                .ThenInclude(sd => sd.Subspeciality)
+                .ThenInclude(sd => sd.SubSpeciality)
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Manager.UserId == userId);
     }
@@ -53,5 +76,14 @@ public class ProfessionalRepository(ApiDbContext context) : Repository<Professio
         return await DbSet
             .Include(p => p.Manager)
             .FirstOrDefaultAsync(p => p.ManagerId == managerId);
+    }
+
+    public override Task<Professional?> GetByIdAsync(Guid id)
+    {
+        return DbSet
+            .Include(x => x.SpecialtyDetails)
+            .Include(x => x.Documents)
+            .Include(x => x.Addresses)
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 }

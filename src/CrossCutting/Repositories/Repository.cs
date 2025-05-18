@@ -11,7 +11,7 @@ public class Repository<T>(DbContext context) : IRepository<T>
 
     protected readonly DbSet<T> DbSet = context.Set<T>();
 
-    public async Task<T?> GetByIdAsync(Guid id)
+    public virtual async Task<T?> GetByIdAsync(Guid id)
     {
         return await DbSet.FindAsync(id);
     }

@@ -1,5 +1,6 @@
 ﻿using Api.ApiResponses;
 using Application.DTOs.Professionals.GetProfessionalDTOs;
+using Application.DTOs.Professionals.UpdateProfessionalRequestDTOs;
 using Application.Services.Professionals;
 using CrossCutting.Session;
 using Domain.Contracts.Services.RegisterProfessionals;
@@ -51,5 +52,34 @@ public class ProfessionalController(IProfessionalService service, IUserSession s
     public async Task<IActionResult> GetMyProfile()
     {
         return Ok(await service.GetProfessionalByUserId(session.UserId));
+    }
+    
+    
+    /// <summary>
+    /// Atualiza os dados de um Profissional de Saúde existente.
+    /// </summary>
+    /// <param name="request">Objeto com os dados atualizados do profissional:
+    /// <summary/>Name: Nome completo do profissional
+    /// <summary/>PreferredName: Nome pelo qual o profissional prefere ser chamado
+    /// <summary/>Email: Email profissional para contato
+    /// <summary/>Website: Website profissional (opcional)
+    /// <summary/>Instagram: Perfil do Instagram profissional (opcional)
+    /// <summary/>Biography: Biografia ou descrição profissional
+    /// <summary/>ProfessionData: Dados da profissão, especialidade e subespecialidade
+    /// <summary/>VideoPresentation: Link para vídeo de apresentação do profissional
+    /// </param>
+    /// <param name="id">ID do profissional a ser atualizado</param>
+    /// <returns>Confirmação de atualização bem-sucedida</returns>
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateProfessional([FromBody] UpdateProfessionalRequest request, Guid id)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        await service.UpdateProfessional(request, id);
+        return Ok();
     }
 }

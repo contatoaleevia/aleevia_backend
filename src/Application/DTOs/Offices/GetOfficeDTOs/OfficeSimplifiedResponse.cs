@@ -58,7 +58,7 @@ public record OfficeSimplifiedResponse
                 {
                     Id = s.Id,
                     SpecialtyId = s.SpecialtyId,
-                    Name = s.Specialty?.Name ?? string.Empty
+                    Name = s.Speciality?.Name ?? string.Empty
                 })]
             }
         };
