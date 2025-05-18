@@ -44,9 +44,9 @@ public class Professional : AggregateRoot
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
-    public List<ProfessionalSpecialtyDetail> SpecialtyDetails { get; private set; } = [];
-    public List<ProfessionalDocument> Documents { get; private set; } = [];
-    public List<ProfessionalAddress> Addresses { get; set; } = [];
+    public ICollection<ProfessionalSpecialtyDetail> SpecialtyDetails { get; private set; } = [];
+    public ICollection<ProfessionalDocument> Documents { get; private set; } = [];
+    public ICollection<ProfessionalAddress> Addresses { get; set; } = [];
 
     private ProfessionalRegisterStatus SetRegisterAsPending()
     {
@@ -98,32 +98,9 @@ public class Professional : AggregateRoot
         Website = SetWebsite(website);
         Instagram = SetInstagram(instagram);
         Biography = SetBiography(biography);
-
-    }
-    
-    public void AddSpecialtyDetail(
-        Guid professionId,
-        Guid specialityId,
-        Guid? subSpecialityId = null,
-        string? videoPresentation = null)
-    {
-        var specialtyDetail = new ProfessionalSpecialtyDetail(
-            Id,
-            professionId,
-            specialityId,
-            subSpecialityId,
-            videoPresentation);
-        SpecialtyDetails.Add(specialtyDetail);
     }
 
-    public void SetAddress(Guid addressId)
-    {
-        var address = Addresses.FirstOrDefault();
-        if (address is null)
-           Addresses.Add(new ProfessionalAddress(Id, addressId));
-        else
-        {
-            address.Update(addressId);
-        }
-    }
+    public ProfessionalSpecialtyDetail? GetSpecialityDetail(Guid professionId, Guid specialityId, Guid? subSpecialityId)
+        => SpecialtyDetails.FirstOrDefault(x =>
+            x.ProfessionId == professionId && x.SpecialityId == specialityId && x.SubSpecialityId == subSpecialityId);
 }
