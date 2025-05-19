@@ -18,7 +18,7 @@ using Application.DTOs.Professionals;
 using Domain.Entities.Professionals;
 using Domain.Exceptions.Professionals;
 using Domain.Contracts.Repositories;
-
+using Microsoft.Extensions.Configuration;
 namespace Application.Services.Users;
 
 public class UserService(
@@ -27,9 +27,13 @@ public class UserService(
     IManagerService managerService,
     IEmailService emailService,
     IPatientService patientService,
-    IProfessionalRepository professionalRepository
+    IProfessionalRepository professionalRepository,
+    IConfiguration configuration
 ) : IUserService
 {
+
+    private readonly string _frontendUrl = configuration.GetValue<string>("FrontendUrl") ?? throw new InvalidOperationException("FrontendUrl não configurada no appsettings");
+    
     public async Task<CreateManagerUserResponse> CreateManagerUserAsync(CreateManagerUserRequest request)
     {
         var user = new User(
@@ -45,13 +49,14 @@ public class UserService(
         {
             await CreateUserAsync(user, request.Password);
             await managerService.CreateManager(request.Manager, user.Id);
+            var verificationLink = $"{_frontendUrl}/verify-email/{user.Id}";
 
             try
             {
                 await emailService.SendEmailAsync(
                     to: user.Email!,
                     subject: WelcomeEmailTemplate.GetSubject(),
-                    body: WelcomeEmailTemplate.GetBody(user.Name),
+                    body: WelcomeEmailTemplate.GetBody(verificationLink),
                     isHtml: true
                 );
             }

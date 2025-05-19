@@ -4,10 +4,9 @@ using Domain.Entities.Identities;
 namespace Application.DTOs.Addresses.CreateAddressDTOs;
 
 [method: JsonConstructor]
-public class CreateAddressRequestDto(Guid sourceId, UserType sourceType, string name, string street, string neighborhood, string number, string city, string state, string zipCode, string? complement, string? type)
+public class CreateAddressRequestDto(Guid sourceId, string name, string street, string neighborhood, string number, string city, string state, string zipCode, string? complement, string? type)
 {
     public Guid SourceId { get; set; } = sourceId;
-    public UserType SourceType { get; set; } = sourceType;
     public string Name { get; set; } = name;
     public string Street { get; set; } = street;
     public string Neighborhood { get; set; } = neighborhood;
