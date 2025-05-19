@@ -210,7 +210,7 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// <param name="id">ID do local de trabalho</param>
     /// <returns>Lista de profissionais do local de trabalho</returns>
     [HttpGet("{id}/professionals")]
-    [Authorize(Roles = "Admin")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(GetOfficeProfessionalsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
