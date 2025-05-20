@@ -11,6 +11,7 @@ using Application.Helpers;
 using Domain.Exceptions.Faq;
 
 namespace Application.Services.Faqs;
+
 public class FaqService(
     IFaqRepository repository,
     IProfessionalRepository professionalRepository,
@@ -24,54 +25,65 @@ public class FaqService(
 
         return new GetFaqWithPageResponseDto
         {
-            FaqPage = faqPage is not null ? new GetFaqPageResponseDto(
-                faqPage.Id,
-                faqPage.SourceId,
-                faqPage.CustomUrl,
-                faqPage.WelcomeMessage,
-                faqPage.CreatedAt,
-                faqPage.UpdatedAt) : null,
-            Faqs = [.. faqs.Select(x => new GetFaqByProfessionalIdResponseDto(
-                x.Id,
-                x.SourceId,
-                x.SourceType,
-                x.Question,
-                x.Answer,
-                x.Link,
-                x.FaqCategory,
-                x.CreatedAt,
-                x.UpdatedAt,
-                x.DeletedAt
-            ))]
+            FaqPage = faqPage is not null
+                ? new GetFaqPageResponseDto(
+                    faqPage.Id,
+                    faqPage.SourceId,
+                    faqPage.CustomUrl,
+                    faqPage.WelcomeMessage,
+                    faqPage.CreatedAt,
+                    faqPage.UpdatedAt)
+                : null,
+            Faqs =
+            [
+                .. faqs.Select(x => new GetFaqByProfessionalIdResponseDto(
+                    x.Id,
+                    x.SourceId,
+                    x.SourceType,
+                    x.Question,
+                    x.Answer,
+                    x.Link,
+                    x.FaqCategory,
+                    x.CreatedAt,
+                    x.UpdatedAt,
+                    x.DeletedAt
+                ))
+            ]
         };
     }
 
     public async Task<GetFaqWithPageResponseDto> GetFaqsByCustomUrlAsync(string customUrl)
     {
-        var faqPage = await faqPageRepository.GetByCustomUrlAsync(customUrl) ?? throw new NotFoundException($"Página de FAQ não encontrada para a URL: {customUrl}");
+        var faqPage = await faqPageRepository.GetByCustomUrlAsync(customUrl) ??
+                      throw new NotFoundException($"Página de FAQ não encontrada para a URL: {customUrl}");
         var faqs = await repository.GetAllAsync(faqPage.SourceId);
 
         return new GetFaqWithPageResponseDto
         {
-            FaqPage = faqPage is not null ? new GetFaqPageResponseDto(
-                faqPage.Id,
-                faqPage.SourceId,
-                faqPage.CustomUrl,
-                faqPage.WelcomeMessage,
-                faqPage.CreatedAt,
-                faqPage.UpdatedAt) : null,
-            Faqs = [.. faqs.Select(x => new GetFaqByProfessionalIdResponseDto(
-                x.Id,
-                x.SourceId,
-                x.SourceType,
-                x.Question,
-                x.Answer,
-                x.Link,
-                x.FaqCategory,
-                x.CreatedAt,
-                x.UpdatedAt,
-                x.DeletedAt
-            ))]
+            FaqPage = faqPage is not null
+                ? new GetFaqPageResponseDto(
+                    faqPage.Id,
+                    faqPage.SourceId,
+                    faqPage.CustomUrl,
+                    faqPage.WelcomeMessage,
+                    faqPage.CreatedAt,
+                    faqPage.UpdatedAt)
+                : null,
+            Faqs =
+            [
+                .. faqs.Select(x => new GetFaqByProfessionalIdResponseDto(
+                    x.Id,
+                    x.SourceId,
+                    x.SourceType,
+                    x.Question,
+                    x.Answer,
+                    x.Link,
+                    x.FaqCategory,
+                    x.CreatedAt,
+                    x.UpdatedAt,
+                    x.DeletedAt
+                ))
+            ]
         };
     }
 
@@ -126,13 +138,13 @@ public class FaqService(
             }
             catch (Exception)
             {
-                erros.Add(new ImportError
-                {
-                    Item = dto,
-                    ErrorMessage = "Não foi possível importar o registro"
-                });
+                erros.Add(new ImportError(
+                    item: dto,
+                    errorMessage: "Não foi possível importar o registro"
+                ));
             }
         }
+
         return new ImportResult
         {
             Sucesso = faqsImportadas,

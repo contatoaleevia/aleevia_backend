@@ -5,7 +5,7 @@ namespace Domain.Entities.ValueObjects;
 
 public class Email
 {
-    public string Value { get; set; }
+    public string Value { get; set; } = string.Empty;
 
     private Email()
     {

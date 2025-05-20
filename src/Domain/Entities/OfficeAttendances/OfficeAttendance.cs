@@ -9,9 +9,9 @@ public class OfficeAttendance : AggregateRoot
 {
     public Guid OfficeId { get; private set; }
     public Guid ServiceTypeId { get; private set; }
-    public string Title { get; private set; }
+    public string Title { get; private set; } = string.Empty;
     public string? Description { get; private set; }
-    public Money Price { get; private set; }
+    public Money Price { get; private set; } = null!;
     public bool Active { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }

@@ -6,7 +6,7 @@ namespace Domain.Entities.HealthcareProfessionals;
 
 public class Speciality : AggregateRoot
 {
-    public string Name { get; private set; }
+    public string Name { get; private set; } = string.Empty;
     public bool Active { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }

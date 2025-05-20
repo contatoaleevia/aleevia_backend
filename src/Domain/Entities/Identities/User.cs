@@ -7,10 +7,10 @@ namespace Domain.Entities.Identities;
 
 public sealed class User : IdentityUser<Guid>
 {
-    public string Name { get; private set; }
-    public Document Cpf { get; private set; }
-    public Document Cnpj { get; private set; }
-    public UserType UserType { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public Document Cpf { get; private set; } = null!;
+    public Document Cnpj { get; private set; } = null!;
+    public UserType UserType { get; private set; } = null!;
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }

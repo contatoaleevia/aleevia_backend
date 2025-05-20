@@ -14,7 +14,7 @@ namespace Api.Controllers;
 public class ProfessionalController(IProfessionalService service, IUserSession session) : ControllerBase
 {
     /// <summary>
-    /// Cria um novo Profissional de Saúde.
+    /// Registra Profissional de Saúde Pré Cadastrado.
     /// </summary>
     /// <param name="request">Objeto com os dados do profissional:
     /// <summary/>Name: Nome completo do profissional
@@ -25,7 +25,7 @@ public class ProfessionalController(IProfessionalService service, IUserSession s
     /// <summary/>RegisterNumber: Número de registro profissional (CRM, CRO, etc.)
     /// <summary/>RegisterState: Estado do registro profissional (UF)
     /// </param>
-    /// <returns>ID do profissional criado</returns>
+    /// <returns>ID do profissional</returns>
     [HttpPost]
     [Authorize(Roles = "Admin")]
     [Consumes("application/json")]
