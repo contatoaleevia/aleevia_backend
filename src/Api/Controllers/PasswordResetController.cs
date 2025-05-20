@@ -23,6 +23,6 @@ public class PasswordResetController(IPasswordResetService passwordResetService)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         await passwordResetService.ResetPasswordAsync(request);
-        return Ok("Senha redefinida com sucesso.");
+        return Ok(new { message = "Senha redefinida com sucesso." });
     }
 } 
