@@ -1,6 +1,7 @@
 using CrossCutting.Repositories;
 using Domain.Contracts.Repositories;
 using Domain.Entities.IaChats;
+using Domain.Entities.IaChats.Enums;
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,5 +28,13 @@ public class IaChatRepository(ApiDbContext context) : Repository<IaChat>(context
     {
         await context.IaMessages.AddAsync(message);
         await context.SaveChangesAsync();
+    }
+
+    public async Task<List<IaChat>> GetBySourceIdAsync(Guid sourceId)
+    {
+        return await context.IaChats
+            .Include(c => c.Messages.Where(m => m.SenderType.SenderType == IaMessageSenderEnum.Client))
+            .Where(c => c.HashSourceId == sourceId)
+            .ToListAsync();
     }
 } 

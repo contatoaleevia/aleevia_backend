@@ -17,7 +17,25 @@ public class FaqRepository(ApiDbContext context) : Repository<Faq>(context), IFa
     public async Task<int> CountBySourceIdAsync(Guid sourceId)
     {
         return await DbSet
+            .AsNoTracking()
+            .CountAsync(f => f.SourceId == sourceId && f.IsActive);
+    }
+
+    public async Task<List<FaqCategoryCount>> GetCategoriesBySourceIdAsync(Guid sourceId)
+    {
+        var faqs = await DbSet
+            .AsNoTracking()
             .Where(f => f.SourceId == sourceId && f.IsActive)
-            .CountAsync();
+            .ToListAsync();
+
+        return [.. faqs
+            .GroupBy(f => f.FaqCategory.CategoryType)
+            .Select(g => new FaqCategoryCount
+            {
+                Category = g.First().FaqCategory.CategoryTypeName,
+                Count = g.Count()
+            })
+            .OrderByDescending(x => x.Count)
+            .Take(5)];
     }
 }

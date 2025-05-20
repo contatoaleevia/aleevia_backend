@@ -113,7 +113,7 @@ public static class WelcomeEmailTemplate
                     <td>
                         <table align='center' border='0' cellpadding='0' cellspacing='0' width='600' class='email-wrapper'>
                             <tr>
-                                <td style='padding: 40px 0 60px 0;'>
+                                <td style='padding: 40px 0 60px 50px;'>
                                     <img src='https://jssbucket.s3.amazonaws.com/healthai/healthai/20250331_183033_b156b5a5.png' alt='Aleevia' width='240' style='display: block;' />
                                 </td>
                             </tr>
@@ -127,7 +127,7 @@ public static class WelcomeEmailTemplate
                                     <p>Seu cadastro na Aleevia foi realizado com sucesso! Agora você já pode acessar a plataforma e aproveitar todas as nossas funcionalidades para cuidar da sua saúde com mais facilidade.</p>
                                     <p>Acesse sua conta aqui:</p>
                                     <p style='margin: 30px 0;'>
-                                        <a href='#' class='button'>Acessar conta</a>
+                                        <a href='{verificationLink}' class='button'>Acessar conta</a>
                                     </p>
                                     <p>Obrigada por utilizar a Aleevia, sua saúde na palma de suas mãos</p>
                                     <p>Equipe Aleevia 💙</p>
@@ -137,7 +137,7 @@ public static class WelcomeEmailTemplate
                                 <td align='center' class='social-links'>
                                     <a href='https://aleevia.com' style='color: #0052FF; text-decoration: none; font-family: Arial, sans-serif; margin-right: 20px;'>aleevia.com</a>
                                     <span style='color: #666666; margin: 0 5px;'>|</span>
-                                    <a href='https://instagram.com/aleevia' style='margin: 0 10px;'>
+                                    <a href='https://www.instagram.com/aleevia.ai?igsh=dzVrbGc2OHhtMHEw' style='margin: 0 10px;'>
                                         <img src='https://jssbucket.s3.amazonaws.com/healthai/healthia/20250407_104225_0821c413.png' alt='Instagram' width='24' height='24' style='display: inline-block; vertical-align: middle;' />
                                     </a>
                                     <a href='https://linkedin.com/company/aleevia' style='margin: 0 10px;'>
@@ -147,10 +147,9 @@ public static class WelcomeEmailTemplate
                             </tr>
                             <tr>
                                 <td class='footer' style='padding: 20px 40px;'>
-                                    <p>Se você não se inscreveu nesta conta, pode ignorar este e-mail e a conta será excluída.</p>
-                                    <p>© 2024 Empresa. Todos os direitos reservados. Você recebeu este e-mail porque se inscreveu em um aplicativo que ajuda a criar seus e-mails. Para atualizar suas preferências de assinatura de e-mails, clique aqui.</p>
+                                    <p>© 2024 Empresa. Todos os direitos reservados.</p>
                                     <p style='text-align: center;'>
-                                        <a href='#' style='color: #0052FF; text-decoration: none;'>Ver e-mail no browser</a>
+                                        <a href='{verificationLink}' style='color: #0052FF; text-decoration: none;'>Ver e-mail no browser</a>
                                     </p>
                                 </td>
                             </tr>

@@ -51,4 +51,13 @@ public class HealthCareService(
 
         return UpdateHealthCareResponse.FromHealthCare(healthCare);
     }
+
+    public async Task DeleteHealthCareAsync(Guid id)
+    {
+        var healthCare = await healthCareRepository.GetByIdAsync(id) 
+                            ?? throw new HealthCareNotFoundException(id);
+
+        healthCare.Deactivate();
+        await healthCareRepository.UpdateAsync(healthCare);
+    }
 }
