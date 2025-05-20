@@ -147,7 +147,6 @@ public static class WelcomeEmailTemplate
                             </tr>
                             <tr>
                                 <td class='footer' style='padding: 20px 40px;'>
-                                    <p>Se você não se inscreveu nesta conta, pode ignorar este e-mail e a conta será excluída.</p>
                                     <p>© 2024 Empresa. Todos os direitos reservados.</p>
                                     <p style='text-align: center;'>
                                         <a href='{verificationLink}' style='color: #0052FF; text-decoration: none;'>Ver e-mail no browser</a>
