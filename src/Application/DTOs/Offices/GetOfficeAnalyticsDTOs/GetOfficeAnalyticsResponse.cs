@@ -8,6 +8,7 @@ public class GetOfficeAnalyticsResponse
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
+    public string? Logo { get; set; }
     public int TotalProfessionals { get; set; }
     public int TotalServices { get; set; }
     public FaqStatisticsDto FaqStatistics { get; set; } = new();
@@ -28,6 +29,7 @@ public class GetOfficeAnalyticsResponse
         {
             Id = office.Id,
             Name = office.Name,
+            Logo = office.Logo?.Value,
             TotalProfessionals = totalProfessionals,
             TotalServices = totalServices,
             FaqStatistics = faqStatistics,
