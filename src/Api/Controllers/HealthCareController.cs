@@ -79,4 +79,22 @@ public class HealthCareController(IHealthCareService healthCareService) : Contro
         var response = await healthCareService.UpdateHealthCareAsync(requestDto);
         return Ok(response);
     }
+
+    /// <summary>
+    /// Realiza o soft delete de um convenio de saúde
+    /// </summary>
+    /// <param name="id">ID do convenio de saúde</param>
+    /// <returns></returns>
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteHealthCare(Guid id)
+    {
+        await healthCareService.DeleteHealthCareAsync(id);
+        return Ok(new { message = "Convenio desativado com sucesso." });
+    }
 }
