@@ -1,16 +1,15 @@
 ﻿using Api.ApiResponses;
+using Api.Attributes;
 using Application.DTOs.HealthCares.CreateHealthCareDTOs;
 using Application.DTOs.HealthCares.GetHealthCareDTOs;
 using Application.DTOs.HealthCares.UpdateHealthCareDTOs;
 using Application.Services.HealthCares;
-using CrossCutting.Session;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("api/healthcare")]
 public class HealthCareController(IHealthCareService healthCareService) : ControllerBase
 {
@@ -44,7 +43,7 @@ public class HealthCareController(IHealthCareService healthCareService) : Contro
     /// <param name="officeId">ID do consultório</param>
     /// <returns>Lista de convenios de saúde do consultório</returns>
     [HttpGet("office/{officeId:guid}")]
-    [Authorize(Roles = "Admin")]
+    [ApiKey]
     [ProducesResponseType(typeof(List<GetHealthCareResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
