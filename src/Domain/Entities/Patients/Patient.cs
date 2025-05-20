@@ -19,7 +19,7 @@ public class Patient : AggregateRoot
     public DateTime? RemovedAt { get; private set; }
     
     // Navigation property
-    public User User { get; private set; }
+    public User User { get; private set; } = null!;
     
     protected Patient() { }
     

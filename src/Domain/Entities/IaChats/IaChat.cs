@@ -6,9 +6,9 @@ namespace Domain.Entities.IaChats;
 public sealed class IaChat : AggregateRoot
 {
     public Guid? SourceId { get; private set; }
-    public IaChatSourceType SourceType { get; private set; }
-    public Guid? HashSourceId { get; private set; }
-    public ushort? HashSourceType { get; private set; }
+    public IaChatSourceType SourceType { get; private set; } = null!;
+    public Guid? HashSourceId { get; private set; }  = string.Empty;
+    public ushort? HashSourceType { get; private set; } = string.Empty;
     public DateTime CreatedAt { get; private set; }
     public ICollection<IaMessage> Messages { get; private set; } = [];
 

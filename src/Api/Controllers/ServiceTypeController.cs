@@ -23,7 +23,7 @@ public class ServiceTypeController(IServiceTypeService serviceTypeService) : Con
     /// <summary>
     /// Cria um novo tipo de serviço.
     /// </summary>
-    /// <param name="requestDto">Objeto com os dados do tipo de serviço
+    /// <param name="requestDto">Objeto com os dados do tipo de serviço:
     /// <summary/>Name: Nome do tipo de serviço
     /// <summary/>Description: Descrição do tipo de serviço (opcional)
     /// </param>

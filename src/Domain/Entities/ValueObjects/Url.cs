@@ -2,7 +2,7 @@
 
 public class Url
 {
-    public string Value { get; private set; }
+    public string Value { get; private set; } = string.Empty;
 
     private Url()
     {

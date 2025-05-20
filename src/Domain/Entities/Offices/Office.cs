@@ -9,14 +9,14 @@ namespace Domain.Entities.Offices;
 public class Office : AggregateRoot
 {
     public Guid OwnerId { get; private set; }
-    public string Name { get; private set; }
-    public Document Cnpj { get; private set; }
-    public PhoneNumber Phone { get; private set; }
-    public PhoneNumber Whatsapp { get; private set; }
-    public Email Email { get; private set; }
-    public Url Site { get; private set; }
-    public Url Instagram { get; private set; }
-    public Url Logo { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public Document Cnpj { get; private set; } = null!;
+    public PhoneNumber Phone { get; private set; } = null!;
+    public PhoneNumber Whatsapp { get; private set; } = null!;
+    public Email Email { get; private set; } = null!;
+    public Url Site { get; private set; } = null!;
+    public Url Instagram { get; private set; } = null!;
+    public Url Logo { get; private set; } = null!;
     public bool Individual { get; private set; }
     public ICollection<OfficeAddress> Addresses { get; private set; } = [];
     public ICollection<OfficesProfessional> Professionals { get; private set; } = [];

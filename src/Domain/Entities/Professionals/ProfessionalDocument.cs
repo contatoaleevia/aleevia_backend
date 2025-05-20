@@ -6,9 +6,9 @@ public class ProfessionalDocument : Entity
 {
     public Guid ProfessionalId { get; private set; }
     public Professional Professional { get; private set; } = null!;
-    public string DocumentType { get; private set; }
-    public string DocumentNumber { get; private set; }
-    public string DocumentState { get; private set; }
+    public string DocumentType { get; private set; } = string.Empty;
+    public string DocumentNumber { get; private set; } = string.Empty;
+    public string DocumentState { get; private set; } = string.Empty;
     public string? FrontUrl { get; private set; }
     public string? BackUrl { get; private set; }
     public bool Validated { get; private set; }

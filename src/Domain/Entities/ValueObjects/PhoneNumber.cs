@@ -5,7 +5,7 @@ namespace Domain.Entities.ValueObjects;
 
 public class PhoneNumber
 {
-    public string Value { get; private set; }
+    public string Value { get; private set; } = string.Empty;
 
     private PhoneNumber()
     {

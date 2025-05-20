@@ -29,7 +29,7 @@ public record LoginResponseDto
                 Active = user.Active,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt,
-                Roles = [.. user.GetRolesNames()],
+                Roles = [.. user.UserRoles.Select(x => new UserRoleData{ Id = x.RoleId, Name = x.GetRoleName() })],
                 ManagerId = managerId
             }
         };
@@ -50,6 +50,12 @@ public record UserData
     public required bool Active { get; init; }
     public required DateTime CreatedAt { get; init; }
     public DateTime? UpdatedAt { get; init; }
-    public required IReadOnlyList<string> Roles { get; init; }
+    public required IReadOnlyList<UserRoleData> Roles { get; init; }
     public Guid? ManagerId { get; init; }
+}
+
+public record UserRoleData
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
 }

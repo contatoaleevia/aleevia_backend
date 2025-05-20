@@ -6,17 +6,17 @@ public sealed class Faq : AggregateRoot
 {
     public Guid SourceId { get; private set; }
     public User? Source { get; private set; }
-    public FaqSourceType SourceType { get; private set; }
-    public string Question { get; private set; }
-    public string Answer { get; private set; }
+    public FaqSourceType SourceType { get; private set; } = null!;
+    public string Question { get; private set; } = string.Empty;
+    public string Answer { get; private set; } = string.Empty;
     public string? Link { get; private set; }
-    public FaqCategoryType FaqCategory { get; private set; }
+    public FaqCategoryType FaqCategory { get; private set; } = null!;
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
 
-    public Faq()
+    private Faq()
     {
     }
 

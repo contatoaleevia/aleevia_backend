@@ -12,7 +12,7 @@ public class IaChatRating : AggregateRoot
     public ProblemSolvedTypeEnum ProblemSolvedType { get; private set; }
     public string? Comment { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public IaChat Chat { get; private set; }
+    public IaChat Chat { get; private set; } = null!;
 
     private IaChatRating() { }
 
