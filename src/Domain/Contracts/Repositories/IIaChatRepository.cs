@@ -8,4 +8,5 @@ public interface IIaChatRepository : IRepository<IaChat>
     Task<List<IaChat>> GetAllAsync();
     Task<IaChat?> GetByIdWithMessagesAsync(Guid id);
     Task CreateMessageAsync(IaMessage message);
+    Task<List<IaChat>> GetBySourceIdAsync(Guid sourceId);
 } 

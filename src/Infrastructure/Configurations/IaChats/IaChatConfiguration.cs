@@ -25,6 +25,12 @@ public class IaChatConfiguration : IEntityTypeConfiguration<IaChat>
                 .HasColumnName("source_type");
         });
 
+        builder.Property(x => x.HashSourceId)
+            .HasColumnName("hash_source");
+
+        builder.Property(x => x.HashSourceType)
+            .HasColumnName("hash_source_type");
+
         builder.Property(x => x.CreatedAt)
             .IsRequired()
             .HasColumnName("created_at");

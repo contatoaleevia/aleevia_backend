@@ -257,6 +257,8 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// - Total de serviços
     /// - Total de FAQs
     /// - Total de convênios
+    /// - Estatísticas de avaliações de chat
+    /// - Estatísticas de conversas de chat
     /// </returns>
     [HttpGet("{id}/analytics")]
     [Authorize(Roles = "Admin")]
