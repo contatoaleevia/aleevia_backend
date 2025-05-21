@@ -42,9 +42,12 @@ public class IaChatService(
         var initialMessage = "Olá, como posso te ajudar hoje?";
         var messageContent = new
         {
-            source_id = (Guid?)null,
+            source = (Guid?)null,
             source_type = (ushort?)null
         };
+
+        Guid? hashSourceId = null;
+        ushort? hashSourceType = null;
 
         if (!string.IsNullOrEmpty(requestDto.SourceHash))
         {
@@ -54,15 +57,23 @@ public class IaChatService(
                 ?? throw new FaqPageBySourceIdNotFoundException(sourceId);
             initialMessage = faqPage.WelcomeMessage ?? initialMessage;
 
+            hashSourceId = sourceId;
+            hashSourceType = sourceType;
+
             messageContent = new
             {
-                source_id = (Guid?)sourceId,
+                source = (Guid?)sourceId,
                 source_type = (ushort?)sourceType
             };
         }
 
         var userId = userSession.UserId != Guid.Empty ? (Guid?)userSession.UserId : null;
-        var chat = new IaChat(userId, userSession.UserType ?? (ushort)IaChatSourceEnum.Lead);
+        var chat = new IaChat(
+            userId, 
+            userSession.UserType ?? (ushort)IaChatSourceEnum.Lead,
+            hashSourceId,
+            hashSourceType
+        );
 
         var message = new IaMessage(
             chat.Id,

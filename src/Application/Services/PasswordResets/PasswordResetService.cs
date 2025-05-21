@@ -29,7 +29,7 @@ public class PasswordResetService(
         var encodedToken = HttpUtility.UrlEncode(token);
         var documentBytes = Encoding.UTF8.GetBytes(user.Cpf.Value);
         var encodedDocument = Convert.ToBase64String(documentBytes);
-        var resetLink = $"{_frontendUrl}/reset-password?token={encodedToken}&document={encodedDocument}";
+        var resetLink = $"{_frontendUrl}/auth/reset-password?token={encodedToken}&document={encodedDocument}";
 
         await emailService.SendEmailAsync(
             to: user.Email!,

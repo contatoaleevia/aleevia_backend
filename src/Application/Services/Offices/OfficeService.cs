@@ -1,12 +1,13 @@
 ﻿using System.Security.Cryptography.Xml;
+using Application.DTOs.IaChats;
 using Application.DTOs.Offices.BindOfficeAddressDTOs;
 using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
 using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
-using Application.DTOs.Offices.GetOfficeAnalyticsDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
 using Application.DTOs.Offices.UpdateOfficeDTOs;
 using Application.DTOs.Professionals;
+using Application.DTOs.Faqs;
 using Application.Services.Professionals;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Offices;
@@ -26,10 +27,7 @@ public class OfficeService(
     IProfessionalService professionalService,
     IOfficesProfessionalsRepository officesProfessionalsRepository,
     IOfficeSpecialtyRepository officeSpecialtyRepository,
-    ISpecialtyRepository specialtyRepository,
-    IFaqRepository faqRepository,
-    IOfficeAttendanceRepository officeAttendanceRepository,
-    IHealthCareRepository healthCareRepository) : IOfficeService
+    ISpecialtyRepository specialtyRepository) : IOfficeService
 {
     public async Task<CreateOfficeResponse> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
@@ -216,30 +214,5 @@ public class OfficeService(
         await repository.UpdateAsync(office);
         
         return UpdateOfficeResponse.FromOffice(office);
-    }
-
-    public async Task<GetOfficeAnalyticsResponse> GetOfficeAnalytics(Guid officeId, Guid userId)
-    {
-        var manager = await managerRepository.GetManagerByUserId(userId)
-                      ?? throw new ManagerUserNotFoundException(userId);
-
-        var office = await repository.GetByIdAsync(officeId)
-                     ?? throw new OfficeNotFoundException(officeId);
-
-        if (office.OwnerId != manager.Id)
-            throw new UnauthorizedOfficeAccessException(officeId, userId);
-
-        var totalProfessionals = await officesProfessionalsRepository.CountByOfficeIdAsync(officeId);
-        var totalServices = await officeAttendanceRepository.CountByOfficeIdAsync(officeId);
-        var totalFaqs = await faqRepository.CountBySourceIdAsync(officeId);
-        var totalHealthCares = await healthCareRepository.CountByOfficeIdAsync(officeId);
-
-        return GetOfficeAnalyticsResponse.FromOffice(
-            office,
-            totalProfessionals,
-            totalServices,
-            totalFaqs,
-            totalHealthCares
-        );
     }
 }

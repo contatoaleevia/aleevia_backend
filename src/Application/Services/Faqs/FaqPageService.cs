@@ -23,7 +23,7 @@ public class FaqPageService(
             throw new FaqPageAlreadyExistException(request.SourceId);
 
         var sourceHash = HashHelper.EncodeSourceInfo(request.SourceId, (ushort)request.SourceType);
-        var fullUrl = $"{_frontendUrl.TrimEnd('/')}/faq/{sourceHash}";
+        var fullUrl = $"{_frontendUrl}/faq?sourceHash={sourceHash}";
 
         var faqPage = new FaqPage(
             request.SourceId,

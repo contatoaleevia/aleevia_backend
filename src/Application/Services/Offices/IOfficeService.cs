@@ -2,7 +2,6 @@
 using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
 using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
-using Application.DTOs.Offices.GetOfficeAnalyticsDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
 using Application.DTOs.Offices.UpdateOfficeDTOs;
 using Application.DTOs.Professionals;
@@ -22,5 +21,4 @@ public interface IOfficeService
     Task<OfficeResponse> GetOfficeById(Guid id);
     Task<List<OfficeSimplifiedResponse>> GetOfficesByUserId(Guid userId);
     Task<GetOfficeProfessionalsResponse> GetOfficeProfessionals(Guid officeId);
-    Task<GetOfficeAnalyticsResponse> GetOfficeAnalytics(Guid officeId, Guid userId);
 }

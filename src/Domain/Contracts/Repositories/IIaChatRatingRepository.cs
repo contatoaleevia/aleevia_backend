@@ -5,4 +5,6 @@ namespace Domain.Contracts.Repositories;
 
 public interface IIaChatRatingRepository : IRepository<IaChatRating>
 {
+    Task<IEnumerable<IaChatRating>> GetAllAsync();
+    Task<IEnumerable<IaChatRating>> GetBySourceIdAsync(Guid sourceId);
 } 

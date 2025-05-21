@@ -4,13 +4,16 @@ using Application.DTOs.Addresses.UpdateAddressDTOs;
 using Application.DTOs.Adresses.GetAddressBySourceDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Addresses;
+using Domain.Entities.Identities;
 using Domain.Exceptions.Adresses;
+using Domain.Exceptions;
 using Infrastructure.Contexts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Addresses;
 
-public class AddressService(IAddressRepository repository) : IAddressService
+public class AddressService(IAddressRepository repository, UserManager<User> userManager) : IAddressService
 {
     public async Task<GetAddressByIdResponseDto> GetByIdAddress(Guid id)
     {
@@ -38,10 +41,13 @@ public class AddressService(IAddressRepository repository) : IAddressService
 
     public async Task<CreateAddressResponseDto> CreateAddressAsync(CreateAddressRequestDto requestDto)
     {
+        var user = await userManager.Users.FirstOrDefaultAsync(x =>
+            x.Id == requestDto.SourceId) ?? throw new UserNotFoundException(requestDto.SourceId);
+
         var address = new Address(
             name: requestDto.Name,
             sourceId: requestDto.SourceId,
-            sourceType: requestDto.SourceType,
+            sourceType: user.UserType,
             street: requestDto.Street,
             city: requestDto.City,
             state: requestDto.State,
@@ -52,7 +58,7 @@ public class AddressService(IAddressRepository repository) : IAddressService
             type: requestDto.Type);
 
         var response = await repository.CreateAsync(address);
-        return new CreateAddressResponseDto(response.Id, response.Street, response.Number);
+        return CreateAddressResponseDto.FromAddress(response);
     }
 
     public async Task<IEnumerable<GetAddressBySourceResponse>> GetAddressBySourceId(Guid userId, Guid managerId)

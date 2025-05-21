@@ -8,4 +8,5 @@ public interface IHealthCareService
     Task<CreateHealthCareResponse> CreateHealthCareAsync(CreateHealthCareRequest requestDto);
     Task<List<GetHealthCareResponse>> GetHealthCaresByOfficeIdAsync(Guid officeId);
     Task<UpdateHealthCareResponse> UpdateHealthCareAsync(UpdateHealthCareRequest requestDto);
+    Task DeleteHealthCareAsync(Guid id);
 }
