@@ -25,4 +25,6 @@ public class Manager : AggregateRoot
     {
         CorporateName = corporateName;
     }
+    
+    public ushort? GetTypeId() => (ushort) ManagerType.TypeId;
 }

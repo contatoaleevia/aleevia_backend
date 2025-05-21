@@ -39,14 +39,14 @@ public class AuthService(
                 new IdentityError { Description = "Credenciais inválidas." }
             ]);
         
-        var managerId = await managerRepository.GetDbContext<ApiDbContext>()
+        var manager = await managerRepository.GetDbContext<ApiDbContext>()
             .Managers
             .Include(x => x.User)
             .Where(x => x.UserId == user.Id)
-            .Select(x => x.Id).FirstOrDefaultAsync();
+            .FirstOrDefaultAsync();
         
-        var token = generateJwtTokenHelper.GenerateJwtToken(user, managerId, requestDto.RememberMe);
+        var token = generateJwtTokenHelper.GenerateJwtToken(user, manager?.Id, requestDto.RememberMe);
 
-        return LoginResponseDto.FromUser(user, token, managerId);
+        return LoginResponseDto.FromUser(user, token, manager);
     }
 }
