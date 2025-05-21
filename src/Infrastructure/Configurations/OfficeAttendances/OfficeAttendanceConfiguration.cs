@@ -33,6 +33,10 @@ public class OfficeAttendanceConfiguration : IEntityTypeConfiguration<OfficeAtte
             .HasColumnName("description")
             .HasMaxLength(500);
 
+        builder.Property(x => x.Duration)
+            .HasColumnName("duration")
+            .IsRequired();
+
         builder.OwnsOne(x => x.Price, price =>
         {
             price.Property(p => p.ValueAsCents)

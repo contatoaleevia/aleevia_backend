@@ -8,7 +8,7 @@ using Domain.Contracts.Repositories;
 using Domain.Entities.IaChats;
 using Domain.Entities.IaChats.Enums;
 using Domain.Exceptions;
-using Domain.Exceptions.Faq;
+using Domain.Exceptions.Faqs;
 using Infrastructure.Helpers;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;

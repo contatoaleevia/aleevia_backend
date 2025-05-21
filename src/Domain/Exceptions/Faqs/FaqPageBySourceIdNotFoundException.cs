@@ -1,4 +1,4 @@
-namespace Domain.Exceptions;
+namespace Domain.Exceptions.Faqs;
 
 public class FaqPageBySourceIdNotFoundException : NotFoundException
 {

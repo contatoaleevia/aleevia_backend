@@ -4,11 +4,14 @@ using Application.DTOs.OfficeAttendance.GetOfficeAttendanceDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.OfficeAttendances;
 using Domain.Exceptions;
+using Domain.Exceptions.Offices;
+
 namespace Application.Services.OfficeAttendances;
 
 public class OfficeAttendanceService(
     IOfficeAttendanceRepository officeAttendanceRepository,
-    IServiceTypeRepository serviceTypeRepository
+    IServiceTypeRepository serviceTypeRepository,
+    IOfficeRepository officeRepository
 ) : IOfficeAttendanceService
 {
     public async Task<CreateOfficeAttendanceResponseDto> CreateAsync(CreateOfficeAttendanceRequestDto requestDto)
@@ -17,11 +20,15 @@ public class OfficeAttendanceService(
         if (serviceType is null || !serviceType.Active)
             throw new ServiceTypeNotFoundException(requestDto.ServiceTypeId);
 
+        _ = await officeRepository.GetByIdAsync(requestDto.OfficeId)
+             ?? throw new OfficeNotFoundException(requestDto.OfficeId);
+
         var officeAttendance = new OfficeAttendance(
             officeId: requestDto.OfficeId,
             serviceTypeId: requestDto.ServiceTypeId,
             title: requestDto.Title,
             price: requestDto.Price,
+            duration: requestDto.Duration,
             description: requestDto.Description
         );
 
@@ -35,6 +42,7 @@ public class OfficeAttendanceService(
             Title = officeAttendance.Title,
             Description = officeAttendance.Description,
             Price = officeAttendance.Price.Value,
+            Duration = officeAttendance.Duration,
             Active = officeAttendance.Active,
             CreatedAt = officeAttendance.CreatedAt
         };
@@ -42,6 +50,9 @@ public class OfficeAttendanceService(
 
     public async Task<List<GetOfficeAttendanceResponseDto>> GetAllByOfficeIdAsync(Guid officeId)
     {
+        var office = await officeRepository.GetByIdAsync(officeId)
+                ?? throw new OfficeNotFoundException(officeId);
+
         var officeAttendances = await officeAttendanceRepository.GetAllByOfficeIdAsync(officeId);
         
         return [.. officeAttendances.Select(oa => new GetOfficeAttendanceResponseDto
@@ -52,6 +63,7 @@ public class OfficeAttendanceService(
             Title = oa.Title,
             Description = oa.Description,
             Price = oa.Price.Value,
+            Duration = oa.Duration,
             Active = oa.Active,
             CreatedAt = oa.CreatedAt,
             UpdatedAt = oa.UpdatedAt,

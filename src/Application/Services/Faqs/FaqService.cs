@@ -6,9 +6,9 @@ using Application.DTOs.Faqs.UpdateFaqDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Faqs;
 using Domain.Exceptions;
+using Domain.Exceptions.Faqs;
 using Application.DTOs.Faqs.ImportFaqsDTOs;
 using Application.Helpers;
-using Domain.Exceptions.Faq;
 
 namespace Application.Services.Faqs;
 
