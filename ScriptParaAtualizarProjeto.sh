@@ -19,7 +19,7 @@ docker rmi backend-aleevia
 docker build -f docker/Dockerfile-Homolog -t backend-aleevia .
 
 #Constroi o novo container
-docker run --name backend-aleevia -d -p 7086:7086 --env-file ./.env backend-aleevia
+docker run --restart unless-stopped --name backend-aleevia -d -p 7086:7086 --env-file ./.env backend-aleevia
 
 #Lista os containers ativos 
 docker ps -a
