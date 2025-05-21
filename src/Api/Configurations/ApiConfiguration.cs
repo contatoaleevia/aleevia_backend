@@ -1,4 +1,6 @@
 ﻿using Api.Middlewares;
+using Infrastructure.Contexts;
+using Infrastructure.DependencyInjections;
 
 namespace Api.Configurations;
 
@@ -26,5 +28,7 @@ public static class ApiConfiguration
         app.UseMiddleware(typeof(ErrorHandlerMiddleware));
         
         app.MapControllers();
+        
+        app.MigrateDatabase<ApiDbContext>();
     }
 }
