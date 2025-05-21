@@ -31,7 +31,7 @@ public class IaChatController(IIaChatService iaChatService, IIaChatRatingService
     /// <returns>Informações do chat criado</returns>
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> CreateChat([FromBody] CreateIaChatRequestDto requestDto)
+    public async Task<IActionResult> CreateChat([FromForm] CreateIaChatRequestDto requestDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         var response = await iaChatService.CreateChatAsync(requestDto);
