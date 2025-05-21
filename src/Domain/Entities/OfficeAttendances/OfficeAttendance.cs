@@ -12,6 +12,7 @@ public class OfficeAttendance : AggregateRoot
     public string Title { get; private set; } = string.Empty;
     public string? Description { get; private set; }
     public Money Price { get; private set; } = null!;
+    public int Duration { get; private set; }
     public bool Active { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
@@ -27,21 +28,24 @@ public class OfficeAttendance : AggregateRoot
         Guid serviceTypeId,
         string title,
         decimal price,
+        int duration,
         string? description)
     {
         OfficeId = officeId;
         ServiceTypeId = serviceTypeId;
         Title = title;
         Price = SetPrice(price);
+        Duration = duration;
         Description = description;
         Active = true;
         CreatedAt = DateTime.UtcNow;
     }
 
-    public void Update(string title, decimal price, string? description)
+    public void Update(string title, decimal price, int duration, string? description)
     {
         Title = title;
         Price = SetPrice(price);
+        Duration = duration;
         Description = description;
         UpdatedAt = DateTime.UtcNow;
     }

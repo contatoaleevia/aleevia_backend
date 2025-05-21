@@ -25,7 +25,7 @@ public class FaqPageConfiguration : IEntityTypeConfiguration<FaqPage>
 
         builder.Property(x => x.CustomUrl)
             .IsRequired()
-            .HasMaxLength(100)
+            .HasMaxLength(500)
             .HasColumnName("custom_url");
 
         builder.Property(x => x.WelcomeMessage)

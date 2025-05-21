@@ -30,7 +30,8 @@ public class HealthCareService(
 
     public async Task<List<GetHealthCareResponse>> GetHealthCaresByOfficeIdAsync(Guid officeId)
     {
-        var office = await officeRepository.GetByIdAsync(officeId) ?? throw new OfficeNotFoundException(officeId);
+        _ = await officeRepository.GetByIdAsync(officeId) 
+                ?? throw new OfficeNotFoundException(officeId);
 
         var healthCares = await healthCareRepository.GetByOfficeIdAsync(officeId);
         return [.. healthCares.Select(GetHealthCareResponse.FromHealthCare)];
