@@ -49,7 +49,7 @@ public class UserService(
         {
             await CreateUserAsync(user, request.Password);
             await managerService.CreateManager(request.Manager, user.Id);
-            var verificationLink = $"{_frontendUrl}verify-email/{user.Id}";
+            var verificationLink = $"{_frontendUrl}auth/login";
 
             try
             {

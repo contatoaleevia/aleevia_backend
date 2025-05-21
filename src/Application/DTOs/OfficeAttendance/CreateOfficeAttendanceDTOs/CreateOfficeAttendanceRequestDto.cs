@@ -19,4 +19,8 @@ public class CreateOfficeAttendanceRequestDto
 
     [Required(ErrorMessage = "Preço é obrigatório")]
     public decimal Price { get; set; }
+
+    [Required(ErrorMessage = "Duração é obrigatória")]
+    [Range(1, int.MaxValue, ErrorMessage = "Duração deve ser maior que 0")]
+    public int Duration { get; set; }
 } 

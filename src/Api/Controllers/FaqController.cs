@@ -71,11 +71,11 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     }
 
     /// <summary>
-    /// Cria uma página de FAQ.
+    /// Cria um link para pagina de FAQ personalizada para o Office ou Professional.
     /// </summary>
     /// <param name="requestDto">Objeto com os dados para criação da página:
-    /// <summary/>SourceId: ID da fonte (profissional, local de trabalho) relacionada à página
-    /// <summary/>SourceType: Tipo de fonte (profissional = 0, local de trabalho = 1)
+    /// <summary/>SourceId: ID da fonte (profissional, office) relacionada à página
+    /// <summary/>SourceType: Tipo de fonte (profissional = 0, office = 1)
     /// <summary/>WelcomeMessage: Mensagem de boas-vindas da IA para a página de FAQ
     /// </param>
     /// <returns>Informações da página de FAQ criada</returns>

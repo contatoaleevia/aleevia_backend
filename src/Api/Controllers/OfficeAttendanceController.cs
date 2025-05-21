@@ -27,9 +27,11 @@ public class OfficeAttendanceController(IOfficeAttendanceService officeAttendanc
     /// </summary>
     /// <param name="requestDto">Objeto com os dados do atendimento:
     /// <summary/>OfficeId: ID do consultório
-    /// <summary/>DayOfWeek: Dia da semana (0-6, onde 0 é domingo)
-    /// <summary/>StartTime: Hora de início do atendimento
-    /// <summary/>EndTime: Hora de término do atendimento
+    /// <summary/>ServiceTypeId: ID do tipo de serviço
+    /// <summary/>Title: Título do atendimento
+    /// <summary/>Description: Descrição do atendimento
+    /// <summary/>Price: Preço do atendimento
+    /// <summary/>Duration: Duração do atendimento em minutos
     /// </param>
     /// <returns>Informações do atendimento criado</returns>
     [HttpPost]
