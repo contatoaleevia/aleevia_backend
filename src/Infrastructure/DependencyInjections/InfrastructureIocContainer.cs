@@ -94,14 +94,14 @@ public static class InfrastructureIocContainer
             opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(opts =>
         {
-            opts.RequireHttpsMetadata = false;
+            opts.RequireHttpsMetadata = true;
             opts.SaveToken = true;
             opts.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false,
+                ValidateIssuer = true,
+                ValidateAudience = true,
                 ValidAudience = apiSettings.ValidIn,
                 ValidIssuer = apiSettings.Issuer
             };

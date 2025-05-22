@@ -20,12 +20,15 @@ public static class ApiConfiguration
         }
 
         app.UseHttpsRedirection();
+        app.UseHsts();
         
         app.UseAuthentication();
 
         app.UseAuthorization(); 
         
         app.UseMiddleware(typeof(ErrorHandlerMiddleware));
+
+        app.UseSecurityHeaders();
         
         app.MapControllers();
         

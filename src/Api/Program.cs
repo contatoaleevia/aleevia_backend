@@ -7,6 +7,11 @@ using Infrastructure.DependencyInjections;
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.AddServerHeader = false;
+});
+
 builder.Services.AddCrossCuttingServices();
 builder.Services.AddInfrastructureServices(configuration);
 builder.Services.AddDomainServices();
