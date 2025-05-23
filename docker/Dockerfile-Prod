@@ -10,4 +10,4 @@ WORKDIR /App
 COPY --from=build /app .
 
 ENTRYPOINT ["dotnet", "Api.dll", "--environment=Production"]
-EXPOSE 7086
+EXPOSE 8003
