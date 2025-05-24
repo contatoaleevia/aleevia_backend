@@ -24,13 +24,13 @@ public class OfficeRepository(ApiDbContext context) : Repository<Office>(context
             .Include(x => x.Professionals)
                 .ThenInclude(x => x.Professional)
                     .ThenInclude(x => x.SpecialtyDetails)
-                        .ThenInclude(x => x.Subspeciality)
+                        .ThenInclude(x => x.SubSpeciality)
             .Include(x => x.Professionals)
                 .ThenInclude(x => x.Professional)
                     .ThenInclude(x => x.Documents)
-            .Include(x => x.Specialties.Where(s => s.IsActive))
-                .ThenInclude(x => x.Specialty)
-            .Include(x => x.HealthCares.Where(h => h.IsActive))
+            .Include(x => x.Specialties)
+                .ThenInclude(x => x.Speciality)
+            .Include(x => x.HealthCares)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
@@ -40,7 +40,7 @@ public class OfficeRepository(ApiDbContext context) : Repository<Office>(context
             .Include(x => x.Addresses)
                 .ThenInclude(x => x.Address)
             .Include(x => x.Specialties.Where(s => s.IsActive))
-                .ThenInclude(x => x.Specialty)
+                .ThenInclude(x => x.Speciality)
             .Where(x => x.OwnerId == ownerId)
             .AsNoTracking()
             .ToListAsync();

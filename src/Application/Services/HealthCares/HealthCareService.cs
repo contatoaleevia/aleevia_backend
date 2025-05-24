@@ -30,7 +30,8 @@ public class HealthCareService(
 
     public async Task<List<GetHealthCareResponse>> GetHealthCaresByOfficeIdAsync(Guid officeId)
     {
-        var office = await officeRepository.GetByIdAsync(officeId) ?? throw new OfficeNotFoundException(officeId);
+        _ = await officeRepository.GetByIdAsync(officeId) 
+                ?? throw new OfficeNotFoundException(officeId);
 
         var healthCares = await healthCareRepository.GetByOfficeIdAsync(officeId);
         return [.. healthCares.Select(GetHealthCareResponse.FromHealthCare)];
@@ -50,5 +51,14 @@ public class HealthCareService(
         await healthCareRepository.UpdateAsync(healthCare);
 
         return UpdateHealthCareResponse.FromHealthCare(healthCare);
+    }
+
+    public async Task DeleteHealthCareAsync(Guid id)
+    {
+        var healthCare = await healthCareRepository.GetByIdAsync(id) 
+                            ?? throw new HealthCareNotFoundException(id);
+
+        healthCare.Deactivate();
+        await healthCareRepository.UpdateAsync(healthCare);
     }
 }

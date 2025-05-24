@@ -4,6 +4,6 @@ namespace Application.Services.PasswordResets;
 
 public interface IPasswordResetService
 {
-    Task<RequestPasswordResetResponseDTO> RequestPasswordResetAsync(RequestPasswordResetDTO request);
-    Task ResetPasswordAsync(ResetPasswordDTO request);
+    Task<RequestPasswordResetResponseDto> RequestPasswordResetAsync(RequestPasswordResetDto request);
+    Task ResetPasswordAsync(ResetPasswordDto request);
 } 

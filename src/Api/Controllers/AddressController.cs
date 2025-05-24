@@ -1,9 +1,9 @@
 ﻿using Api.ApiResponses;
 using Api.Attributes;
 using Application.DTOs.Addresses.CreateAddressDTOs;
+using Application.DTOs.Addresses.GetAddressBySourceDTOs;
 using Application.DTOs.Addresses.GetAddressDTOs;
 using Application.DTOs.Addresses.UpdateAddressDTOs;
-using Application.DTOs.Adresses.GetAddressBySourceDTOs;
 using Application.Services.Addresses;
 using CrossCutting.Session;
 using Domain.Exceptions.UserSessions;

@@ -1,4 +1,3 @@
-using System;
 using CrossCutting.Entities;
 using Domain.Entities.HealthcareProfessionals;
 
@@ -11,7 +10,7 @@ public class OfficeSpecialty : AggregateRoot
     public bool IsActive { get; private set; }
 
     public Office Office { get; private set; } = null!;
-    public Specialty Specialty { get; private set; } = null!;
+    public Speciality Speciality { get; private set; } = null!;
 
     public OfficeSpecialty(Guid officeId, Guid specialtyId)
     {

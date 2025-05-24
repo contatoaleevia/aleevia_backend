@@ -1,9 +1,11 @@
 ﻿using CrossCutting.Entities;
 using Domain.Entities.Professionals;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.Offices;
 public class OfficesProfessional : AggregateRoot
 {
+    [UsedImplicitly]
     private OfficesProfessional()
     {
     }

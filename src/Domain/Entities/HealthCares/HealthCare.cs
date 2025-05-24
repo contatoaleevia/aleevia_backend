@@ -6,7 +6,7 @@ public class HealthCare : AggregateRoot
 {
     public Office Office { get; private set; } = null!;
     public Guid OfficeId { get; private set; }
-    public string Name { get; private set; }
+    public string Name { get; private set; } = string.Empty;
     public string? AnsNumber { get; private set; }
     public string? Registry { get; private set; }
     public bool IsActive { get; private set; }
@@ -36,11 +36,6 @@ public class HealthCare : AggregateRoot
     public void Deactivate()
     {
         IsActive = false;
-        UpdatedAt = DateTime.UtcNow;
-    }
-    public void Activate()
-    {
-        IsActive = true;
         UpdatedAt = DateTime.UtcNow;
     }
 }

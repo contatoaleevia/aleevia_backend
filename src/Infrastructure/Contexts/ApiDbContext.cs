@@ -45,7 +45,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
     public DbSet<Manager> Managers { get; set; }
     public DbSet<ServiceType> ServiceTypes { get; set; }
     public DbSet<Profession> Professions { get; set; }
-    public DbSet<Specialty> Specialties { get; set; }
+    public DbSet<Speciality> Specialties { get; set; }
     public DbSet<SubSpecialty> SubSpecialties { get; set; }
     public DbSet<OfficeAttendance> OfficeAttendances { get; set; }
     public DbSet<IaChat> IaChats { get; set; }
@@ -96,6 +96,7 @@ public class ApiDbContext(DbContextOptions<ApiDbContext> options)
         builder.ApplyConfiguration(new OfficeSpecialtyConfiguration());
         builder.ApplyConfiguration(new HealthCareConfiguration());
         builder.ApplyConfiguration(new IaChatRatingConfiguration());
+        builder.ApplyConfiguration(new ProfessionalAddressConfiguration());
 
         foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {

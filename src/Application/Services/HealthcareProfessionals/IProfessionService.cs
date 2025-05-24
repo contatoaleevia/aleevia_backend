@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Application.DTOs.HealthcareProfessionals;
 
 namespace Application.Services.HealthcareProfessionals;

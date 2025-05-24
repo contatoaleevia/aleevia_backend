@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace Application.DTOs.Faqs.GetFaqPageDTOs;
 
 public class GetFaqPageResponseDto(
@@ -8,10 +10,10 @@ public class GetFaqPageResponseDto(
     DateTime createdAt,
     DateTime? updatedAt)
 {
-    public Guid Id { get; set; } = id;
-    public Guid SourceId { get; set; } = sourceId;
-    public string CustomUrl { get; set; } = customUrl;
-    public string? WelcomeMessage { get; set; } = welcomeMessage;
-    public DateTime CreatedAt { get; set; } = createdAt;
-    public DateTime? UpdatedAt { get; set; } = updatedAt;
+    [UsedImplicitly] public Guid Id { get; set; } = id;
+    [UsedImplicitly] public Guid SourceId { get; set; } = sourceId;
+    [UsedImplicitly] public string CustomUrl { get; set; } = customUrl;
+    [UsedImplicitly] public string? WelcomeMessage { get; set; } = welcomeMessage;
+    [UsedImplicitly] public DateTime CreatedAt { get; set; } = createdAt;
+    [UsedImplicitly] public DateTime? UpdatedAt { get; set; } = updatedAt;
 } 

@@ -9,15 +9,15 @@ public sealed class Address : AggregateRoot
     public User? Source { get; private set; }
     public UserType? SourceType { get; private set; }
     public string? Name { get; private set; }
-    public string Street { get; private set; }
-    public string Neighborhood { get; private set; }
-    public string Number { get; private set; }
-    public string City { get; private set; }
-    public string State { get; private set; }
-    public string ZipCode { get; private set; }
+    public string Street { get; private set; } = string.Empty;
+    public string Neighborhood { get; private set; } = string.Empty;
+    public string Number { get; private set; } = string.Empty;
+    public string City { get; private set; } = string.Empty;
+    public string State { get; private set; } = string.Empty;
+    public string ZipCode { get; private set; } = string.Empty;
     public string? Complement { get; private set; }
     public string? Type { get; private set; }
-    public string Location { get; private set; }
+    public string Location { get; private set; } = string.Empty;
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 

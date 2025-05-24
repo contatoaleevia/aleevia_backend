@@ -10,7 +10,7 @@ public class PasswordResetController(IPasswordResetService passwordResetService)
 {
     [HttpPost("request")]
     [AllowAnonymous]
-    public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetDTO request)
+    public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetDto request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         var response = await passwordResetService.RequestPasswordResetAsync(request);
@@ -19,10 +19,10 @@ public class PasswordResetController(IPasswordResetService passwordResetService)
 
     [HttpPost("reset")]
     [AllowAnonymous]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO request)
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         await passwordResetService.ResetPasswordAsync(request);
-        return Ok("Senha redefinida com sucesso.");
+        return Ok(new { message = "Senha redefinida com sucesso." });
     }
 } 

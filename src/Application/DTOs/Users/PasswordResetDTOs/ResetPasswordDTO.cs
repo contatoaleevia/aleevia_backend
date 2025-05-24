@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Users.PasswordResetDTOs;
 
-public class ResetPasswordDTO
+public class ResetPasswordDto
 {
     [Required(ErrorMessage = "O token é obrigatório")]
     public required string Token { get; set; }

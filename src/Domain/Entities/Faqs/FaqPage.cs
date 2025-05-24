@@ -1,15 +1,17 @@
 using CrossCutting.Entities;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.Faqs;
 public sealed class FaqPage : AggregateRoot
 {
     public Guid SourceId { get; private set; }
     public FaqSourceEnum SourceType { get; private set; }
-    public string CustomUrl { get; private set; }
+    public string CustomUrl { get; private set; } = string.Empty;
     public string? WelcomeMessage { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
 
+    [UsedImplicitly]
     private FaqPage()
     {
     }
@@ -32,12 +34,6 @@ public sealed class FaqPage : AggregateRoot
     public void Update(string? welcomeMessage)
     {
         WelcomeMessage = welcomeMessage;
-        UpdatedAt = DateTime.UtcNow;
-    }
-
-    public void UpdateCustomUrl(string customUrl)
-    {
-        CustomUrl = customUrl.Trim();
         UpdatedAt = DateTime.UtcNow;
     }
 } 

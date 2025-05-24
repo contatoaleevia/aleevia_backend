@@ -31,8 +31,8 @@ public class GetProfessionalResponse
                     ProfessionName = s.Profession.Name,
                     SpecialityId = s.SpecialityId,
                     SpecialityName = s.Speciality.Name,
-                    SubspecialityId = s.SubspecialityId,
-                    SubspecialityName = s.Subspeciality?.Name,
+                    SubspecialityId = s.SubSpecialityId,
+                    SubspecialityName = s.SubSpeciality?.Name,
                     VideoPresentation = s.VideoPresentation
                 })],
                 Documents = [.. professional.Documents.Select(d => new ProfessionalDocumentResponseData

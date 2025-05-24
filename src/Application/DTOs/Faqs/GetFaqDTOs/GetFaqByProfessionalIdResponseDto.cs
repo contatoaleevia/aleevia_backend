@@ -1,47 +1,30 @@
 ﻿using Domain.Entities.Faqs;
-using Domain.Entities.Identities;
+using JetBrains.Annotations;
 
 namespace Application.DTOs.Faqs.GetFaqDTOs;
-public class GetFaqByProfessionalIdResponseDto
+
+public class GetFaqByProfessionalIdResponseDto(
+    Guid id,
+    Guid sourceId,
+    FaqSourceType sourceType,
+    string question,
+    string answer,
+    string? link,
+    FaqCategoryType faqCategory,
+    DateTime createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt)
 {
-    public GetFaqByProfessionalIdResponseDto(
-        Guid id, 
-        Guid sourceId, 
-        FaqSourceType sourceType, 
-        string question, 
-        string answer,
-        string? link,
-        FaqCategoryType faqCategory,
-        DateTime createdAt, 
-        DateTime? updatedAt, 
-        DateTime? deletedAt)
-    {
-        Id = id;
-        SourceId = sourceId;
-        SourceType = sourceType;
-        Question = question;
-        Answer = answer;
-        Link = link;
-        FaqCategory = faqCategory;
-        CreatedAt = createdAt;
-        UpdatedAt = updatedAt;
-        DeletedAt = deletedAt;
-    }
-
-    public GetFaqByProfessionalIdResponseDto()
-    {
-    }
-
-    public Guid Id { get; set; }
-    public Guid SourceId { get; set; }
-    public FaqSourceType SourceType { get; set; }
-    public string Question { get; set; }
-    public string Answer { get; set; }
-    public string? Link { get; set; }
-    public FaqCategoryType FaqCategory { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
-    public DateTime? DeletedAt { get; set; }
+    [UsedImplicitly] public Guid Id { get; set; } = id;
+    [UsedImplicitly] public Guid SourceId { get; set; } = sourceId;
+    [UsedImplicitly] public FaqSourceType SourceType { get; set; } = sourceType;
+    [UsedImplicitly] public string Question { get; set; } = question;
+    [UsedImplicitly] public string Answer { get; set; } = answer;
+    [UsedImplicitly] public string? Link { get; set; } = link;
+    [UsedImplicitly] public FaqCategoryType FaqCategory { get; set; } = faqCategory;
+    [UsedImplicitly] public DateTime CreatedAt { get; set; } = createdAt;
+    [UsedImplicitly] public DateTime? UpdatedAt { get; set; } = updatedAt;
+    [UsedImplicitly] public DateTime? DeletedAt { get; set; } = deletedAt;
 }
 
 public class GetFaqByProfessionalIdResponseDtoList

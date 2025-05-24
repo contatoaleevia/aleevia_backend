@@ -1,5 +1,6 @@
 ﻿using CrossCutting.Entities;
 using Domain.Entities.Addresses;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.Offices;
 
@@ -13,6 +14,7 @@ public class OfficeAddress : AggregateRoot
     public Address Address { get; set; } = null!;
     public Office Office { get; set; } = null!;
     
+    [UsedImplicitly]
     private OfficeAddress() { }
     
     public OfficeAddress(Guid? addressId, Guid officeId, bool isTeleconsultation)

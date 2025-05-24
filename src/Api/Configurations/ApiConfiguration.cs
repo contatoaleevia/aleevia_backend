@@ -1,4 +1,6 @@
 ﻿using Api.Middlewares;
+using Infrastructure.Contexts;
+using Infrastructure.DependencyInjections;
 
 namespace Api.Configurations;
 
@@ -18,13 +20,18 @@ public static class ApiConfiguration
         }
 
         app.UseHttpsRedirection();
+        app.UseHsts();
         
         app.UseAuthentication();
 
         app.UseAuthorization(); 
         
         app.UseMiddleware(typeof(ErrorHandlerMiddleware));
+
+        app.UseSecurityHeaders();
         
         app.MapControllers();
+        
+        app.MigrateDatabase<ApiDbContext>();
     }
 }

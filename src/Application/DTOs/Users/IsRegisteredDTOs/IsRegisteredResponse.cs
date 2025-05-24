@@ -1,7 +1,9 @@
-﻿namespace Application.DTOs.Users.IsRegisteredDTOs;
+﻿using JetBrains.Annotations;
+
+namespace Application.DTOs.Users.IsRegisteredDTOs;
 
 public record IsRegisteredResponse(bool IsRegistered, Guid? UserId = null)
 {
-    public bool IsRegistered { get; set; } = IsRegistered;
+    [UsedImplicitly] public bool IsRegistered { get; } = IsRegistered;
     public Guid? UserId { get; set; } = UserId;
 }

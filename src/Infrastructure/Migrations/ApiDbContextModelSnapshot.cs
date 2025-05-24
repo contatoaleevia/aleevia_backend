@@ -170,8 +170,8 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("CustomUrl")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
                         .HasColumnName("custom_url");
 
                     b.Property<Guid>("SourceId")
@@ -276,7 +276,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("professions", "public");
                 });
 
-            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Specialty", b =>
+            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Speciality", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -356,6 +356,14 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<Guid?>("HashSourceId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("hash_source");
+
+                    b.Property<int?>("HashSourceType")
+                        .HasColumnType("integer")
+                        .HasColumnName("hash_source_type");
 
                     b.Property<Guid?>("SourceId")
                         .HasColumnType("uuid")
@@ -637,6 +645,10 @@ namespace Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
                         .HasColumnName("description");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("integer")
+                        .HasColumnName("duration");
 
                     b.Property<Guid>("OfficeId")
                         .HasColumnType("uuid")
@@ -950,6 +962,30 @@ namespace Infrastructure.Migrations
                     b.ToTable("professional", "public");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Professionals.ProfessionalAddress", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("address_id");
+
+                    b.Property<Guid>("ProfessionalId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("professional_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("ProfessionalId");
+
+                    b.ToTable("professional_address", "public");
+                });
+
             modelBuilder.Entity("Domain.Entities.Professionals.ProfessionalDocument", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1031,7 +1067,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("speciality_id");
 
-                    b.Property<Guid?>("SubspecialityId")
+                    b.Property<Guid?>("SubSpecialityId")
                         .HasColumnType("uuid")
                         .HasColumnName("subspeciality_id");
 
@@ -1051,7 +1087,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("SpecialityId");
 
-                    b.HasIndex("SubspecialityId");
+                    b.HasIndex("SubSpecialityId");
 
                     b.ToTable("professional_specialty_details", "public");
                 });
@@ -1266,7 +1302,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("Office");
                 });
 
-            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Specialty", b =>
+            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Speciality", b =>
                 {
                     b.HasOne("Domain.Entities.HealthcareProfessionals.Profession", "Profession")
                         .WithMany("Specialties")
@@ -1278,12 +1314,12 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.SubSpecialty", b =>
                 {
-                    b.HasOne("Domain.Entities.HealthcareProfessionals.Specialty", "Specialty")
+                    b.HasOne("Domain.Entities.HealthcareProfessionals.Speciality", "Speciality")
                         .WithMany("SubSpecialties")
                         .HasForeignKey("SpecialtyId")
                         .IsRequired();
 
-                    b.Navigation("Specialty");
+                    b.Navigation("Speciality");
                 });
 
             modelBuilder.Entity("Domain.Entities.IaChats.IaChat", b =>
@@ -1708,14 +1744,14 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("OfficeId")
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.HealthcareProfessionals.Specialty", "Specialty")
+                    b.HasOne("Domain.Entities.HealthcareProfessionals.Speciality", "Speciality")
                         .WithMany()
                         .HasForeignKey("SpecialtyId")
                         .IsRequired();
 
                     b.Navigation("Office");
 
-                    b.Navigation("Specialty");
+                    b.Navigation("Speciality");
                 });
 
             modelBuilder.Entity("Domain.Entities.Offices.OfficesProfessional", b =>
@@ -1964,6 +2000,23 @@ namespace Infrastructure.Migrations
                     b.Navigation("Website");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Professionals.ProfessionalAddress", b =>
+                {
+                    b.HasOne("Domain.Entities.Addresses.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Professionals.Professional", "Professional")
+                        .WithMany("Addresses")
+                        .HasForeignKey("ProfessionalId")
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Professional");
+                });
+
             modelBuilder.Entity("Domain.Entities.Professionals.ProfessionalDocument", b =>
                 {
                     b.HasOne("Domain.Entities.Professionals.Professional", "Professional")
@@ -1986,14 +2039,14 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("ProfessionalId")
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.HealthcareProfessionals.Specialty", "Speciality")
+                    b.HasOne("Domain.Entities.HealthcareProfessionals.Speciality", "Speciality")
                         .WithMany()
                         .HasForeignKey("SpecialityId")
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.HealthcareProfessionals.SubSpecialty", "Subspeciality")
+                    b.HasOne("Domain.Entities.HealthcareProfessionals.SubSpecialty", "SubSpeciality")
                         .WithMany()
-                        .HasForeignKey("SubspecialityId");
+                        .HasForeignKey("SubSpecialityId");
 
                     b.Navigation("Profession");
 
@@ -2001,7 +2054,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Speciality");
 
-                    b.Navigation("Subspeciality");
+                    b.Navigation("SubSpeciality");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -2041,7 +2094,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("Specialties");
                 });
 
-            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Specialty", b =>
+            modelBuilder.Entity("Domain.Entities.HealthcareProfessionals.Speciality", b =>
                 {
                     b.Navigation("SubSpecialties");
                 });
@@ -2071,6 +2124,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Professionals.Professional", b =>
                 {
+                    b.Navigation("Addresses");
+
                     b.Navigation("Documents");
 
                     b.Navigation("SpecialtyDetails");

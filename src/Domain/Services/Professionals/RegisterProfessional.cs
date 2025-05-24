@@ -1,5 +1,4 @@
 ﻿using Domain.Contracts.Services.RegisterProfessionals;
-using Domain.Entities.Identities;
 using Domain.Entities.Professionals;
 
 namespace Domain.Services.Professionals;

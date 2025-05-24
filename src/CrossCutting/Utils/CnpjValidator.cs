@@ -52,7 +52,7 @@ public static class CnpjValidator
             value = value.Replace(".", "").Replace("-", "").Replace("/", "").Trim();
 
         if (value.Length != 14)
-            throw new ArgumentOutOfRangeException("");
+            throw new ArgumentOutOfRangeException(string.Empty);
         return $"{value[..2]}.{value[2..5]}.{value[5..8]}/{value[8..12]}-{value[12..14]}";
     }
 }

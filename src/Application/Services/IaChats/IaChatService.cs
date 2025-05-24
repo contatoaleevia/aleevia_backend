@@ -8,7 +8,7 @@ using Domain.Contracts.Repositories;
 using Domain.Entities.IaChats;
 using Domain.Entities.IaChats.Enums;
 using Domain.Exceptions;
-using Domain.Exceptions.Faq;
+using Domain.Exceptions.Faqs;
 using Infrastructure.Helpers;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
@@ -42,9 +42,12 @@ public class IaChatService(
         var initialMessage = "Olá, como posso te ajudar hoje?";
         var messageContent = new
         {
-            source_id = (Guid?)null,
+            source = (Guid?)null,
             source_type = (ushort?)null
         };
+
+        Guid? hashSourceId = null;
+        ushort? hashSourceType = null;
 
         if (!string.IsNullOrEmpty(requestDto.SourceHash))
         {
@@ -54,15 +57,23 @@ public class IaChatService(
                 ?? throw new FaqPageBySourceIdNotFoundException(sourceId);
             initialMessage = faqPage.WelcomeMessage ?? initialMessage;
 
+            hashSourceId = sourceId;
+            hashSourceType = sourceType;
+
             messageContent = new
             {
-                source_id = (Guid?)sourceId,
+                source = (Guid?)sourceId,
                 source_type = (ushort?)sourceType
             };
         }
 
         var userId = userSession.UserId != Guid.Empty ? (Guid?)userSession.UserId : null;
-        var chat = new IaChat(userId, userSession.UserType ?? (ushort)IaChatSourceEnum.Lead);
+        var chat = new IaChat(
+            userId, 
+            userSession.UserType ?? (ushort)IaChatSourceEnum.Lead,
+            hashSourceId,
+            hashSourceType
+        );
 
         var message = new IaMessage(
             chat.Id,
@@ -119,9 +130,7 @@ public class IaChatService(
             })
             .ToList();
 
-        var requestContent = requestDto.Content != null
-            ? JsonSerializer.Deserialize<Dictionary<string, object?>>(requestDto.Content.RootElement.ToString())
-            : [];
+        var requestContent = JsonSerializer.Deserialize<Dictionary<string, object?>>(requestDto.Content.RootElement.ToString());
 
         var messageContent = requestContent != null 
             ? new Dictionary<string, object?>(requestContent)
@@ -145,26 +154,21 @@ public class IaChatService(
             content = messageContent
         };
 
-        string aiResponseMessage = "Desculpe, não consegui processar sua mensagem no momento. Por favor, tente novamente mais tarde.";
-        try
+        var aiResponseMessage = "Desculpe, não consegui processar sua mensagem no momento. Por favor, tente novamente mais tarde.";
+       
+        var aiResponse = await httpClient.PostAsJsonAsync(_aiPythonUrl, aiRequestData);
+        if (aiResponse.IsSuccessStatusCode)
         {
-            var aiResponse = await httpClient.PostAsJsonAsync(_aiPythonUrl, aiRequestData);
-            if (aiResponse.IsSuccessStatusCode)
+            var aiResponseContent = await aiResponse.Content.ReadFromJsonAsync<Dictionary<string, object>>();
+            aiResponseMessage = aiResponseContent?["message"].ToString() ?? aiResponseMessage;
+            
+            if (aiResponseContent?["content"] != null)
             {
-                var aiResponseContent = await aiResponse.Content.ReadFromJsonAsync<Dictionary<string, object>>();
-                aiResponseMessage = aiResponseContent?["message"]?.ToString() ?? aiResponseMessage;
-                
-                if (aiResponseContent?["content"] != null)
-                {
-                    var contentJson = JsonSerializer.Serialize(aiResponseContent["content"]);
-                    var contentDict = JsonSerializer.Deserialize<Dictionary<string, object?>>(contentJson);
-                    if (contentDict != null)
-                        messageContent = contentDict;
-                }
+                var contentJson = JsonSerializer.Serialize(aiResponseContent["content"]);
+                var contentDict = JsonSerializer.Deserialize<Dictionary<string, object?>>(contentJson);
+                if (contentDict != null)
+                    messageContent = contentDict;
             }
-        }
-        catch (Exception)
-        {
         }
 
         var aiMessage = new IaMessage(

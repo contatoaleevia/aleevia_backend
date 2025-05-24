@@ -7,7 +7,7 @@ public record LoginResponseDto
     public required string Token { get; init; }
     public required UserData User { get; init; }
 
-    public static LoginResponseDto FromUser(User user, string token, Guid? managerId)
+    public static LoginResponseDto FromUser(User user, string token, Manager? manager)
     {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentNullException.ThrowIfNull(token);
@@ -29,8 +29,9 @@ public record LoginResponseDto
                 Active = user.Active,
                 CreatedAt = user.CreatedAt,
                 UpdatedAt = user.UpdatedAt,
-                Roles = [.. user.GetRolesNames()],
-                ManagerId = managerId
+                Roles = [.. user.UserRoles.Select(x => new UserRoleData{ Id = x.RoleId, Name = x.GetRoleName() })],
+                ManagerId = manager?.Id,
+                ManagerTypeId = manager?.GetTypeId()
             }
         };
     }
@@ -50,6 +51,13 @@ public record UserData
     public required bool Active { get; init; }
     public required DateTime CreatedAt { get; init; }
     public DateTime? UpdatedAt { get; init; }
-    public required IReadOnlyList<string> Roles { get; init; }
+    public required IReadOnlyList<UserRoleData> Roles { get; init; }
     public Guid? ManagerId { get; init; }
+    public ushort? ManagerTypeId { get; init; }
+}
+
+public record UserRoleData
+{
+    public required Guid Id { get; init; }
+    public required string Name { get; init; }
 }

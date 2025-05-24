@@ -1,7 +1,8 @@
 using Application.DTOs.Patients.CreatePatientLeadDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Patients;
-using Domain.Exceptions;
+using Domain.Exceptions.Patients;
+
 namespace Application.Services.Patients;
 
 public class PatientLeadService(IPatientLeadRepository patientLeadRepository) : IPatientLeadService

@@ -3,8 +3,9 @@ using Application.DTOs.Faqs.GetFaqPageDTOs;
 using Application.DTOs.Faqs.UpdateFaqPageDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Faqs;
-using Domain.Exceptions;
-using Domain.Exceptions.Faq;
+using Domain.Exceptions.Faqs;
+using Domain.Exceptions.Offices;
+using Domain.Exceptions.Professionals;
 using Infrastructure.Helpers;
 using Microsoft.Extensions.Configuration;
 
@@ -12,6 +13,8 @@ namespace Application.Services.Faqs;
 
 public class FaqPageService(
     IFaqPageRepository repository,
+    IProfessionalRepository professionalRepository,
+    IOfficeRepository officeRepository,
     IConfiguration configuration) : IFaqPageService
 {
     private readonly string _frontendUrl = configuration.GetValue<string>("FrontendUrl") ?? throw new InvalidOperationException("FrontendUrl não configurada no appsettings");
@@ -22,8 +25,10 @@ public class FaqPageService(
         if (existingPage != null)
             throw new FaqPageAlreadyExistException(request.SourceId);
 
+        await ValidateSourceAsync(request.SourceId, request.SourceType);
+
         var sourceHash = HashHelper.EncodeSourceInfo(request.SourceId, (ushort)request.SourceType);
-        var fullUrl = $"{_frontendUrl.TrimEnd('/')}/faq/{sourceHash}";
+        var fullUrl = $"{_frontendUrl}faq?sourceHash={sourceHash}";
 
         var faqPage = new FaqPage(
             request.SourceId,
@@ -43,6 +48,18 @@ public class FaqPageService(
             faqPage.SourceType.ToString(),
             faqPage.CreatedAt
         );
+    }
+
+    private async Task ValidateSourceAsync(Guid sourceId, FaqSourceEnum sourceType)
+    {
+        _ = (object)(sourceType switch
+        {
+            FaqSourceEnum.Professional => await professionalRepository.GetByIdAsync(sourceId)
+                                ?? throw new ProfessionalIdNotFoundException(sourceId),
+            FaqSourceEnum.Office => await officeRepository.GetByIdAsync(sourceId)
+                                ?? throw new OfficeNotFoundException(sourceId),
+            _ => throw new InvalidOperationException($"SourceType inválido: {sourceType}. Deve ser Professional (0) ou Office (1)")
+        });
     }
 
     public async Task<UpdateFaqPageResponseDto> UpdateFaqPageAsync(UpdateFaqPageRequestDto request)

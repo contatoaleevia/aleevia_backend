@@ -7,8 +7,8 @@ namespace Infrastructure.Repositories;
 
 public class ProfessionRepository(ApiDbContext context) : Repository<Profession>(context), IProfessionRepository 
 {
-    private readonly DbSet<Specialty> specialtiesDB = context.Set<Specialty>();
-    private readonly DbSet<SubSpecialty> subspecialtiesDB = context.Set<SubSpecialty>();
+    private readonly DbSet<Speciality> _specialtiesDb = context.Set<Speciality>();
+    private readonly DbSet<SubSpecialty> _subspecialtiesDb = context.Set<SubSpecialty>();
 
     public async Task<List<Profession>> GetAllActiveAsync()
     {
@@ -25,9 +25,9 @@ public class ProfessionRepository(ApiDbContext context) : Repository<Profession>
             .ToListAsync();
     }
 
-    public async Task<Specialty?> GetSpecialityByIdAsync(Guid id)
-        => await specialtiesDB.FindAsync(id);
+    public async Task<Speciality?> GetSpecialityByIdAsync(Guid id)
+        => await _specialtiesDb.FindAsync(id);
 
     public async Task<SubSpecialty?> GetSubSpecialityByIdAsync(Guid? id)
-        => id.HasValue ? await subspecialtiesDB.FindAsync(id.Value) : null;
+        => id.HasValue ? await _subspecialtiesDb.FindAsync(id.Value) : null;
 }

@@ -2,7 +2,6 @@
 using Application.DTOs.Offices.BindOfficeProfessionalDTOs;
 using Application.DTOs.Offices.BindOfficeSpecialtyDTOs;
 using Application.DTOs.Offices.CreateOfficeDTOs;
-using Application.DTOs.Offices.GetOfficeAnalyticsDTOs;
 using Application.DTOs.Offices.GetOfficeDTOs;
 using Application.DTOs.Offices.UpdateOfficeDTOs;
 using Application.DTOs.Professionals;
@@ -10,7 +9,6 @@ using Application.Services.Professionals;
 using CrossCutting.Extensions;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Offices;
-using Domain.Entities.ValueObjects;
 using Domain.Exceptions.Managers;
 using Domain.Exceptions.Offices;
 using Domain.Exceptions.Professions;
@@ -26,10 +24,7 @@ public class OfficeService(
     IOfficesProfessionalsRepository officesProfessionalsRepository,
     IOfficeSpecialtyRepository officeSpecialtyRepository,
     ISpecialtyRepository specialtyRepository,
-    IOfficeFileSender fileSender,
-    IFaqRepository faqRepository,
-    IOfficeAttendanceRepository officeAttendanceRepository,
-    IHealthCareRepository healthCareRepository) : IOfficeService
+    IOfficeFileSender fileSender) : IOfficeService
 {
     public async Task<CreateOfficeResponse> CreateOffice(CreateOfficeRequest request, Guid userId)
     {
@@ -66,8 +61,9 @@ public class OfficeService(
 
     public async Task<BindOfficeAddressResponse> BindOfficeAddress(BindOfficeAddressRequest request, Guid userId)
     {
-        var manager = await managerRepository.GetManagerByUserId(userId)
-                      ?? throw new ManagerUserNotFoundException(userId);
+        var manager = await managerRepository.GetManagerByUserId(userId);
+        if (manager is null)
+            throw new ManagerUserNotFoundException(userId);
 
         var officeAddress = await officeAddressRepository.GetOfficeAddress(request.OfficeId);
         if (officeAddress.Count > 0) throw new OfficeAddressAlreadyExistsException(request.OfficeId);
@@ -97,9 +93,10 @@ public class OfficeService(
         var professional = await professionalService.PreRegisterWhenNotExists(request.Professional);
 
         var office = await repository.GetByIdAsync(request.OfficeId);
-        if(office is null) throw new OfficeNotFoundException(request.OfficeId);
-        var officeProfessional = await officesProfessionalsRepository.GetByOfficeAndProfessional(request.OfficeId, professional.Id);
-        
+        if (office is null) throw new OfficeNotFoundException(request.OfficeId);
+        var officeProfessional =
+            await officesProfessionalsRepository.GetByOfficeAndProfessional(request.OfficeId, professional.Id);
+
         if (officeProfessional is not null)
         {
             if (officeProfessional.IsActive)
@@ -123,7 +120,7 @@ public class OfficeService(
     public async Task DeactivateOfficeProfessional(DeactivateOfficeProfessionalRequest request)
     {
         var officeProfessional = await officesProfessionalsRepository.GetByIdAsync(request.Id)
-            ?? throw new OfficeProfessionalNotFoundException(request.Id);
+                                 ?? throw new OfficeProfessionalNotFoundException(request.Id);
 
         officeProfessional.Deactivate();
         await officesProfessionalsRepository.UpdateAsync(officeProfessional);
@@ -132,11 +129,11 @@ public class OfficeService(
     public async Task<OfficeResponse> GetOfficeById(Guid id)
     {
         var office = await repository.GetByIdWithDetailsAsync(id) ?? throw new OfficeNotFoundException(id);
-        
+
         return OfficeResponse.FromOffice(
             office,
-            [.. office.Addresses], 
-            [.. office.Professionals], 
+            [.. office.Addresses],
+            [.. office.Professionals],
             [.. office.Specialties],
             [.. office.HealthCares]
         );
@@ -148,9 +145,12 @@ public class OfficeService(
                       ?? throw new ManagerUserNotFoundException(userId);
 
         var offices = await repository.GetAllByOwnerIdWithDetailsAsync(manager.Id);
-        return [.. offices.Select(office => 
-            OfficeSimplifiedResponse.FromOffice(office, office.Addresses, office.Specialties)
-        )];
+        return
+        [
+            .. offices.Select(office =>
+                OfficeSimplifiedResponse.FromOffice(office, office.Addresses, office.Specialties)
+            )
+        ];
     }
 
     public async Task<GetOfficeProfessionalsResponse> GetOfficeProfessionals(Guid officeId)
@@ -163,10 +163,16 @@ public class OfficeService(
 
     public async Task<BindOfficeSpecialtyResponse> BindOfficeSpecialty(BindOfficeSpecialtyRequest request)
     {
-        var office = await repository.GetByIdAsync(request.OfficeId) ?? throw new OfficeNotFoundException(request.OfficeId);
-        var specialty = await specialtyRepository.GetByIdAsync(request.SpecialtyId) ?? throw new SpecialtyNotFoundException(request.SpecialtyId);
+        var office = await repository.GetByIdAsync(request.OfficeId);
+        if(office is null)
+            throw new OfficeNotFoundException(request.OfficeId);
         
-        var officeSpecialty = await officeSpecialtyRepository.GetByOfficeAndSpecialty(request.OfficeId, request.SpecialtyId);
+        var specialty = await specialtyRepository.GetByIdAsync(request.SpecialtyId);
+        if(specialty is null)
+            throw new SpecialtyNotFoundException(request.SpecialtyId);
+
+        var officeSpecialty =
+            await officeSpecialtyRepository.GetByOfficeAndSpecialty(request.OfficeId, request.SpecialtyId);
         Console.WriteLine(officeSpecialty);
         if (officeSpecialty != null)
         {
@@ -189,7 +195,7 @@ public class OfficeService(
     public async Task DeactivateOfficeSpecialty(DeactivateOfficeSpecialtyRequest request)
     {
         var officeSpecialty = await officeSpecialtyRepository.GetByIdAsync(request.Id)
-            ?? throw new OfficeSpecialtyNotFoundException(request.Id);
+                              ?? throw new OfficeSpecialtyNotFoundException(request.Id);
 
         officeSpecialty.Deactivate();
         await officeSpecialtyRepository.UpdateAsync(officeSpecialty);
@@ -238,32 +244,7 @@ public class OfficeService(
         }
 
         await repository.UpdateAsync(office);
-        
+
         return UpdateOfficeResponse.FromOffice(office);
-    }
-
-    public async Task<GetOfficeAnalyticsResponse> GetOfficeAnalytics(Guid officeId, Guid userId)
-    {
-        var manager = await managerRepository.GetManagerByUserId(userId)
-                      ?? throw new ManagerUserNotFoundException(userId);
-
-        var office = await repository.GetByIdAsync(officeId)
-                     ?? throw new OfficeNotFoundException(officeId);
-
-        if (office.OwnerId != manager.Id)
-            throw new UnauthorizedOfficeAccessException(officeId, userId);
-
-        var totalProfessionals = await officesProfessionalsRepository.CountByOfficeIdAsync(officeId);
-        var totalServices = await officeAttendanceRepository.CountByOfficeIdAsync(officeId);
-        var totalFaqs = await faqRepository.CountBySourceIdAsync(officeId);
-        var totalHealthCares = await healthCareRepository.CountByOfficeIdAsync(officeId);
-
-        return GetOfficeAnalyticsResponse.FromOffice(
-            office,
-            totalProfessionals,
-            totalServices,
-            totalFaqs,
-            totalHealthCares
-        );
     }
 }

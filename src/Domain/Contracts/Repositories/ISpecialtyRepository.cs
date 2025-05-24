@@ -3,6 +3,4 @@ using Domain.Entities.HealthcareProfessionals;
 
 namespace Domain.Contracts.Repositories;
  
-public interface ISpecialtyRepository : IRepository<Specialty>
-{
-} 
+public interface ISpecialtyRepository : IRepository<Speciality>; 

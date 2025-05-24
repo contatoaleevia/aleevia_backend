@@ -51,7 +51,7 @@ public static class EnumExtensions
                             .FirstOrDefault();
 
             if ((attr != null && attr.Description == description) || field.Name == description)
-                return (TEnum)field.GetValue(null);
+                return (TEnum)(field.GetValue(null) ?? throw new InvalidOperationException("Field value is null."));
         }
         return null;
     }

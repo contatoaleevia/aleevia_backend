@@ -8,4 +8,11 @@ namespace Infrastructure.Repositories;
 
 public class IaChatRatingRepository(ApiDbContext context) : Repository<IaChatRating>(context), IIaChatRatingRepository
 {
+    public async Task<IEnumerable<IaChatRating>> GetBySourceIdAsync(Guid sourceId)
+    {
+        return await DbSet
+            .AsNoTracking()
+            .Where(r => r.Chat.HashSourceId == sourceId)
+            .ToListAsync();
+    }
 } 

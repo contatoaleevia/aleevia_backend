@@ -1,16 +1,16 @@
 ﻿using CrossCutting.Utils;
 using Domain.Entities.ValueObjects;
-using Domain.Utils;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities.Identities;
 
 public sealed class User : IdentityUser<Guid>
 {
-    public string Name { get; private set; }
-    public Document Cpf { get; private set; }
-    public Document Cnpj { get; private set; }
-    public UserType UserType { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public Document Cpf { get; private set; } = null!;
+    public Document Cnpj { get; private set; } = null!;
+    public UserType UserType { get; private set; } = null!;
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
@@ -20,6 +20,7 @@ public sealed class User : IdentityUser<Guid>
 
     public Manager? Manager { get; private set; }
 
+    [UsedImplicitly]
     private User()
     {
     }
@@ -52,13 +53,13 @@ public sealed class User : IdentityUser<Guid>
         UserRoles = SetRolesByUserType(userType);
     }
 
-    public Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
+    private static Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
 
-    public Document SetCnpj(string? cnpj)
+    private static Document SetCnpj(string? cnpj)
         => string.IsNullOrEmpty(cnpj) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(cnpj);
     public ushort GetUserTypeId() => (ushort)UserType.UserTypeId;
 
-    public string SetPhoneNumber(string? phoneNumber)
+    private static string SetPhoneNumber(string? phoneNumber)
     {
         if (phoneNumber is null) return string.Empty;
         phoneNumber = phoneNumber.Replace(" ", string.Empty).Trim();

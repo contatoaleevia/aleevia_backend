@@ -1,22 +1,22 @@
 ﻿using CrossCutting.Entities;
-using Domain.Entities.Addresses;
 using Domain.Entities.Identities;
 using Domain.Entities.ValueObjects;
 using Domain.Entities.HealthCares;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.Offices;
 
 public class Office : AggregateRoot
 {
     public Guid OwnerId { get; private set; }
-    public string Name { get; private set; }
-    public Document Cnpj { get; private set; }
-    public PhoneNumber Phone { get; private set; }
-    public PhoneNumber Whatsapp { get; private set; }
-    public Email Email { get; private set; }
-    public Url Site { get; private set; }
-    public Url Instagram { get; private set; }
-    public FileS3 Logo { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public Document Cnpj { get; private set; } = null!;
+    public PhoneNumber Phone { get; private set; } = null!;
+    public PhoneNumber Whatsapp { get; private set; } = null!;
+    public Email Email { get; private set; } = null!;
+    public Url Site { get; private set; } = null!;
+    public Url Instagram { get; private set; } = null!;
+    public FileS3 Logo { get; private set; } = null!;
     public bool Individual { get; private set; }
     public ICollection<OfficeAddress> Addresses { get; private set; } = [];
     public ICollection<OfficesProfessional> Professionals { get; private set; } = [];
@@ -25,6 +25,7 @@ public class Office : AggregateRoot
 
     public Manager Owner { get; set; } = null!;
 
+    [UsedImplicitly]
     private Office()
     {
     }
@@ -64,22 +65,22 @@ public class Office : AggregateRoot
         Logo = logo;
     }
 
-    private Document SetDocument(string? document)
+    private static Document SetDocument(string? document)
         => string.IsNullOrEmpty(document) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(document);
 
-    private PhoneNumber SetPhoneNumber(string? phone)
+    private static PhoneNumber SetPhoneNumber(string? phone)
         => string.IsNullOrEmpty(phone) ? PhoneNumber.CreateAsEmpty() : PhoneNumber.Create(phone);
 
-    private PhoneNumber SetWhatsapp(string? whatsapp)
+    private static PhoneNumber SetWhatsapp(string? whatsapp)
         => string.IsNullOrEmpty(whatsapp) ? PhoneNumber.CreateAsEmpty() : PhoneNumber.Create(whatsapp);
 
-    private Email SetEmail(string? email)
+    private static Email SetEmail(string? email)
         => string.IsNullOrEmpty(email) ? Email.CreateAsEmpty() : Email.Create(email);
 
-    private Url SetSite(string? url)
+    private static Url SetSite(string? url)
         => url is null ? Url.CreateAsEmpty() : Url.Create(url);
 
-    private Url SetInstagram(string? instagram)
+    private static Url SetInstagram(string? instagram)
         => instagram is null ? Url.CreateAsEmpty() : Url.Create(instagram);
     
     public string? GetLogoFileName() => Logo.Id?.ToString();

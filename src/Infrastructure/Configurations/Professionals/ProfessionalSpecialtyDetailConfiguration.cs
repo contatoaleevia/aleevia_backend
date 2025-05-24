@@ -36,12 +36,12 @@ public class ProfessionalSpecialtyDetailConfiguration : IEntityTypeConfiguration
             .WithMany()
             .HasForeignKey(x => x.SpecialityId);
 
-        builder.Property(x => x.SubspecialityId)
+        builder.Property(x => x.SubSpecialityId)
             .HasColumnName("subspeciality_id");
 
-        builder.HasOne(x => x.Subspeciality)
+        builder.HasOne(x => x.SubSpeciality)
             .WithMany()
-            .HasForeignKey(x => x.SubspecialityId);
+            .HasForeignKey(x => x.SubSpecialityId);
 
         builder.Property(x => x.VideoPresentation)
             .HasColumnName("video_presentation");

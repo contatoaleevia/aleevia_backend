@@ -1,7 +1,8 @@
-using Domain.Entities.Faqs;
+using JetBrains.Annotations;
 
 namespace Application.DTOs.Faqs.CreateFaqPageDTOs;
 
+[UsedImplicitly]
 public record CreateFaqPageResponseDto(
     Guid Id,
     Guid SourceId,

@@ -1,14 +1,15 @@
-﻿namespace Application.DTOs.Faqs.ImportFaqsDTOs
-{
-    public class ImportResult
-    {
-        public List<ImportFaqsRequest> Sucesso { get; set; } = new();
-        public List<ImportError> Erros { get; set; } = new();
-    }
+﻿using JetBrains.Annotations;
 
-    public class ImportError
-    {
-        public ImportFaqsRequest Item { get; set; }
-        public string ErrorMessage { get; set; }
-    }
+namespace Application.DTOs.Faqs.ImportFaqsDTOs;
+
+public class ImportResult
+{
+    public List<ImportFaqsRequest> Sucesso { get; set; } = [];
+    public List<ImportError> Erros { get; set; } = [];
+}
+
+public class ImportError(ImportFaqsRequest item, string errorMessage)
+{
+    [UsedImplicitly] public ImportFaqsRequest Item { get; set; } = item;
+    [UsedImplicitly] public string ErrorMessage { get; set; } = errorMessage;
 }

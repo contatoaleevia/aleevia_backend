@@ -1,4 +1,6 @@
-﻿namespace Application.DTOs.Adresses.GetAddressBySourceDTOs;
+﻿using JetBrains.Annotations;
+
+namespace Application.DTOs.Addresses.GetAddressBySourceDTOs;
 
 public record GetAddressBySourceResponse(
     Guid Id,
@@ -11,13 +13,13 @@ public record GetAddressBySourceResponse(
     string ZipCode,
     string? Complement)
 {
-    public Guid Id { get; private set; } = Id;
-    public string? Name { get; private set; } = Name;
-    public string Street { get; private set; } = Street;
-    public string Neighborhood { get; private set; } = Neighborhood;
-    public string Number { get; private set; } = Number;
-    public string City { get; private set; } = City;
-    public string State { get; private set; } = State;
-    public string ZipCode { get; private set; } = ZipCode;
-    public string? Complement { get; private set; } = Complement;
+    [UsedImplicitly] public Guid Id { get; private set; } = Id;
+    [UsedImplicitly] public string? Name { get; private set; } = Name;
+    [UsedImplicitly] public string Street { get; private set; } = Street;
+    [UsedImplicitly] public string Neighborhood { get; private set; } = Neighborhood;
+    [UsedImplicitly] public string Number { get; private set; } = Number;
+    [UsedImplicitly] public string City { get; private set; } = City;
+    [UsedImplicitly] public string State { get; private set; } = State;
+    [UsedImplicitly] public string ZipCode { get; private set; } = ZipCode;
+    [UsedImplicitly] public string? Complement { get; private set; } = Complement;
 }

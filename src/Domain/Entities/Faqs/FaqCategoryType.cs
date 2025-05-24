@@ -1,4 +1,5 @@
 ﻿using CrossCutting.Extensions;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.Faqs;
 public class FaqCategoryType
@@ -6,6 +7,7 @@ public class FaqCategoryType
     public FaqCategoryEnum CategoryType { get; set; }
     public string CategoryTypeName => CategoryType.TryGetDescription();
 
+    [UsedImplicitly]
     private FaqCategoryType()
     {
     }

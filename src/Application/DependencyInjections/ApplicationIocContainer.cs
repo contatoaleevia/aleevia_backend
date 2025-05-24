@@ -1,5 +1,4 @@
 ﻿using Application.Helpers;
-using Application.Services;
 using Application.Services.Addresses;
 using Application.Services.Authentications;
 using Application.Services.Managers;
@@ -15,6 +14,7 @@ using Application.Services.Patients;
 using Application.Services.Professionals;
 using Application.Services.PasswordResets;
 using Application.Services.HealthCares;
+using Application.Services.Analytics;
 
 using System.Net.Http.Headers;
 namespace Application.DependencyInjections;
@@ -47,5 +47,6 @@ public static class ApplicationIocContainer
         services.AddScoped<IPasswordResetService, PasswordResetService>();
         services.AddScoped<IOfficeFileSender, OfficeFileSender>();
         services.AddScoped<IHealthCareService, HealthCareService>();
+        services.AddScoped<IAnalyticsService, AnalyticsService>();
     }
 }

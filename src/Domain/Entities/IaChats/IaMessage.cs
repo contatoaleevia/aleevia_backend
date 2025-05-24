@@ -1,16 +1,18 @@
 using CrossCutting.Entities;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.IaChats;
 
 public sealed class IaMessage : AggregateRoot
 {
     public Guid IaChatId { get; private set; }
-    public IaChat IaChat { get; private set; }
-    public IaMessageSenderType SenderType { get; private set; }
-    public string Message { get; private set; }
-    public string Content { get; private set; }
+    public IaChat IaChat { get; private set; } = null!;
+    public IaMessageSenderType SenderType { get; private set; } = null!;
+    public string Message { get; private set; } = string.Empty;
+    public string Content { get; private set; } = string.Empty;
     public DateTime CreatedAt { get; private set; }
 
+    [UsedImplicitly]
     private IaMessage()
     {
     }

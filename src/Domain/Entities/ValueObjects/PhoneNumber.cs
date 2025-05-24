@@ -5,7 +5,7 @@ namespace Domain.Entities.ValueObjects;
 
 public class PhoneNumber
 {
-    public string Value { get; private set; }
+    public string Value { get; private set; } = string.Empty;
 
     private PhoneNumber()
     {
@@ -19,7 +19,7 @@ public class PhoneNumber
     public static PhoneNumber Create(string phoneNumber) => new(phoneNumber);
     public static PhoneNumber CreateAsEmpty() => new() { Value = string.Empty };
 
-    private string SetValue(string value)
+    private static string SetValue(string value)
     {
         if (!PhoneNumberValidator.IsValid(value))
             throw new PhoneNumberInvalidException(value);
