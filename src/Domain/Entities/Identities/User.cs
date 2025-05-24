@@ -1,6 +1,6 @@
 ﻿using CrossCutting.Utils;
 using Domain.Entities.ValueObjects;
-using Domain.Utils;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities.Identities;
@@ -20,6 +20,7 @@ public sealed class User : IdentityUser<Guid>
 
     public Manager? Manager { get; private set; }
 
+    [UsedImplicitly]
     private User()
     {
     }
@@ -52,13 +53,13 @@ public sealed class User : IdentityUser<Guid>
         UserRoles = SetRolesByUserType(userType);
     }
 
-    public Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
+    private static Document SetCpf(string cpf) => Document.CreateDocumentAsCpf(cpf);
 
-    public Document SetCnpj(string? cnpj)
+    private static Document SetCnpj(string? cnpj)
         => string.IsNullOrEmpty(cnpj) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(cnpj);
     public ushort GetUserTypeId() => (ushort)UserType.UserTypeId;
 
-    public string SetPhoneNumber(string? phoneNumber)
+    private static string SetPhoneNumber(string? phoneNumber)
     {
         if (phoneNumber is null) return string.Empty;
         phoneNumber = phoneNumber.Replace(" ", string.Empty).Trim();

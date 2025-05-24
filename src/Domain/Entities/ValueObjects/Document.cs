@@ -1,6 +1,7 @@
 ﻿using CrossCutting.Utils;
 using Domain.Exceptions;
 using Domain.Utils;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.ValueObjects;
 
@@ -9,6 +10,7 @@ public class Document
     public string Value { get; private set; } = string.Empty;
     private DocumentType Type { get; set; }
     
+    [UsedImplicitly]
     private Document(){}
 
     private Document(string value, DocumentType type)

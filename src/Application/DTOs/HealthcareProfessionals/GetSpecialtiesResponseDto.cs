@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Application.DTOs.HealthcareProfessionals;
 
 public class GetSpecialtiesResponseDto

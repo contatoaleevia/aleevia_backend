@@ -1,4 +1,5 @@
 ﻿using CrossCutting.Entities;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.Identities;
 
@@ -10,6 +11,7 @@ public class Manager : AggregateRoot
     
     public User User { get; set; } = null!;
 
+    [UsedImplicitly]
     private Manager()
     {
     }

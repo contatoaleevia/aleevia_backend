@@ -1,5 +1,5 @@
 using CrossCutting.Entities;
-using Domain.Entities.Identities;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.IaChats;
 
@@ -12,6 +12,7 @@ public sealed class IaChat : AggregateRoot
     public DateTime CreatedAt { get; private set; }
     public ICollection<IaMessage> Messages { get; private set; } = [];
 
+    [UsedImplicitly]
     private IaChat()
     {
     }

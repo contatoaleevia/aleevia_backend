@@ -8,5 +8,5 @@ public enum ManagerTypeEnum : ushort
     Individual = 0,
     
     [Description("Clínica/Hospital")]
-    Office = 1,
+    Office = 1
 }

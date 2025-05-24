@@ -2,6 +2,7 @@ using CrossCutting.Entities;
 using Domain.Entities.Offices;
 using Domain.Entities.ServiceTypes;
 using Domain.Entities.ValueObjects;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.OfficeAttendances;
 
@@ -19,6 +20,7 @@ public class OfficeAttendance : AggregateRoot
     public Office Office { get; set; } = null!;
     public ServiceType ServiceType { get; set; } = null!;
 
+    [UsedImplicitly]
     private OfficeAttendance()
     {
     }

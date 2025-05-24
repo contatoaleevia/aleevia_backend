@@ -36,7 +36,7 @@ public record OfficeSimplifiedResponse
                     AddressId = a.AddressId,
                     IsTeleconsultation = a.IsTeleconsultation,
                     IsActive = a.IsActive,
-                    Address = a.Address == null ? null : new AddressResponse
+                    Address = new AddressResponse
                     {
                         Id = a.Address.Id,
                         SourceId = a.Address.SourceId,
@@ -58,7 +58,7 @@ public record OfficeSimplifiedResponse
                 {
                     Id = s.Id,
                     SpecialtyId = s.SpecialtyId,
-                    Name = s.Speciality?.Name ?? string.Empty
+                    Name = s.Speciality.Name
                 })]
             }
         };

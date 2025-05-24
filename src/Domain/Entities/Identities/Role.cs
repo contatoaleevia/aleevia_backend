@@ -31,19 +31,6 @@ public sealed class Role : IdentityRole<Guid>
     public static readonly Role Professional
         = CreateRole(Guid.Parse("b0f3a1c2-4d8e-4b5c-9f7d-6a0e1f3b2c5e"), "Professional");
 
-    public static Role GetRole(string role)
-    {
-        return AllRoles.FirstOrDefault(x => x.Name == role)
-               ?? throw new ArgumentException($"Role {role} not found");
-    }
-    
-    private static readonly List<Role> AllRoles = [
-        Admin,
-        Patient,
-        Employee,
-        Professional
-    ];
-    
     private static Role CreateRole(Guid roleId, string name)
         => new()
         {

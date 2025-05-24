@@ -2,7 +2,7 @@ using Application.DTOs.Faqs;
 using Application.DTOs.IaChats;
 using Application.DTOs.Offices.GetOfficeAnalyticsDTOs;
 using Domain.Contracts.Repositories;
-using Domain.Entities.Offices;
+using Domain.Entities.IaChats;
 using Domain.Exceptions.Managers;
 using Domain.Exceptions.Offices;
 
@@ -49,14 +49,17 @@ public class AnalyticsService(
 
         var ratings = await iaChatRatingRepository.GetBySourceIdAsync(officeId);
         var chats = await iaChatRepository.GetBySourceIdAsync(officeId);
-        
+
+        var iaChatRatings = ratings as IaChatRating[] ?? ratings.ToArray();
+        var iaChatRatingsLength = iaChatRatings.Length;
+        var iaChatRatingsAny = iaChatRatingsLength != 0;
         var chatRatingStats = new IaChatRatingStatisticsDto
         {
-            AverageGeneralRating = ratings.Any() ? Math.Round(ratings.Average(r => r.GeneralRating), 2) : 0,
-            AverageExperience = ratings.Any() ? Math.Ceiling(ratings.Average(r => (int)r.ExperienceType)) : 0,
-            AverageUtility = ratings.Any() ? Math.Round(ratings.Average(r => r.Utility), 2) : 0,
-            AverageProblemSolved = ratings.Any() ? Math.Ceiling(ratings.Average(r => (int)r.ProblemSolvedType)) : 0,
-            TotalRatings = ratings.Count()
+            AverageGeneralRating = iaChatRatingsAny ? Math.Round(iaChatRatings.Average(r => r.GeneralRating), 2) : 0,
+            AverageExperience = iaChatRatingsAny ? Math.Ceiling(iaChatRatings.Average(r => (int)r.ExperienceType)) : 0,
+            AverageUtility = iaChatRatingsAny ? Math.Round(iaChatRatings.Average(r => r.Utility), 2) : 0,
+            AverageProblemSolved = iaChatRatingsAny ? Math.Ceiling(iaChatRatings.Average(r => (int)r.ProblemSolvedType)) : 0,
+            TotalRatings = iaChatRatingsLength
         };
 
         var chatStats = new IaChatStatisticsDto

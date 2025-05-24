@@ -1,10 +1,13 @@
+using JetBrains.Annotations;
+
 namespace Domain.Entities.ValueObjects;
 
 public class Money
 {
-    public long ValueAsCents { get; private set; }
+    public long ValueAsCents { get; }
     public decimal Value => GetValue(ValueAsCents);
 
+    [UsedImplicitly]
     private Money() { }
 
     private Money(long valueAsCents)
@@ -17,8 +20,6 @@ public class Money
         var cents = (long)(value * 100);
         return new Money(cents);
     }
-
-    public static Money CreateAsEmpty() => new(0);
 
     private static decimal GetValue(long cents)
     {

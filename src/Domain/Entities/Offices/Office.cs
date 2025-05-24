@@ -1,8 +1,8 @@
 ﻿using CrossCutting.Entities;
-using Domain.Entities.Addresses;
 using Domain.Entities.Identities;
 using Domain.Entities.ValueObjects;
 using Domain.Entities.HealthCares;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.Offices;
 
@@ -25,6 +25,7 @@ public class Office : AggregateRoot
 
     public Manager Owner { get; set; } = null!;
 
+    [UsedImplicitly]
     private Office()
     {
     }
@@ -60,24 +61,24 @@ public class Office : AggregateRoot
         Logo = logo != null ? SetLogo(logo) : Logo;
     }
 
-    private Document SetDocument(string? document)
+    private static Document SetDocument(string? document)
         => string.IsNullOrEmpty(document) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(document);
 
-    private PhoneNumber SetPhoneNumber(string? phone)
+    private static PhoneNumber SetPhoneNumber(string? phone)
         => string.IsNullOrEmpty(phone) ? PhoneNumber.CreateAsEmpty() : PhoneNumber.Create(phone);
 
-    private PhoneNumber SetWhatsapp(string? whatsapp)
+    private static PhoneNumber SetWhatsapp(string? whatsapp)
         => string.IsNullOrEmpty(whatsapp) ? PhoneNumber.CreateAsEmpty() : PhoneNumber.Create(whatsapp);
 
-    private Email SetEmail(string? email)
+    private static Email SetEmail(string? email)
         => string.IsNullOrEmpty(email) ? Email.CreateAsEmpty() : Email.Create(email);
 
-    private Url SetSite(string? url)
+    private static Url SetSite(string? url)
         => url is null ? Url.CreateAsEmpty() : Url.Create(url);
 
-    private Url SetInstagram(string? instagram)
+    private static Url SetInstagram(string? instagram)
         => instagram is null ? Url.CreateAsEmpty() : Url.Create(instagram);
 
-    private Url SetLogo(string? logo)
+    private static Url SetLogo(string? logo)
         => logo is null ? Url.CreateAsEmpty() : Url.Create(logo);
 }

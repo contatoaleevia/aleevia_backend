@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Domain.Entities.Identities;
 
 namespace Application.DTOs.Addresses.CreateAddressDTOs;
 

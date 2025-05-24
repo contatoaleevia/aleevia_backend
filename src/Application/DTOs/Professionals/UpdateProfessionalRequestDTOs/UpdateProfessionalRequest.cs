@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using Domain.Contracts.Services.RegisterProfessionals;
-using Microsoft.AspNetCore.Http;
 
 namespace Application.DTOs.Professionals.UpdateProfessionalRequestDTOs;
 

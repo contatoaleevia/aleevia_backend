@@ -175,7 +175,7 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// </summary>
     /// <param name="id">ID do local de trabalho</param>
     /// <returns>Dados do local de trabalho</returns>
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(OfficeResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]
@@ -208,7 +208,7 @@ public class OfficeController(IOfficeService service, IUserSession session) : Co
     /// </summary>
     /// <param name="id">ID do local de trabalho</param>
     /// <returns>Lista de profissionais do local de trabalho</returns>
-    [HttpGet("{id}/professionals")]
+    [HttpGet("{id:guid}/professionals")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(GetOfficeProfessionalsResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status400BadRequest)]

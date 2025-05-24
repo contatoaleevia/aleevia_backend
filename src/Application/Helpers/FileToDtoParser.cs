@@ -2,7 +2,7 @@
 
 namespace Application.Helpers;
 
-public class FileToDtoParser
+public static class FileToDtoParser
 {
     public static List<T> ParseFile<T>(Stream fileStream, string fileName) where T : new()
     {

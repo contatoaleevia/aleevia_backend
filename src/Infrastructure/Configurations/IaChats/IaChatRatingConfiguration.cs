@@ -1,5 +1,4 @@
 using Domain.Entities.IaChats;
-using Domain.Entities.IaChats.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

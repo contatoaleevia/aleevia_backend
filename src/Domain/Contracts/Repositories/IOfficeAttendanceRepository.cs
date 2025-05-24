@@ -1,6 +1,5 @@
 using CrossCutting.Repositories;
 using Domain.Entities.OfficeAttendances;
-using Domain.Entities.Offices;
 
 namespace Domain.Contracts.Repositories;
 

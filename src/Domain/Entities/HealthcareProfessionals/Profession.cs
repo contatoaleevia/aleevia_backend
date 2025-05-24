@@ -1,6 +1,4 @@
 using CrossCutting.Entities;
-using System;
-using System.Collections.Generic;
 
 namespace Domain.Entities.HealthcareProfessionals;
 

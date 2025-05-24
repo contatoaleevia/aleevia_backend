@@ -1,4 +1,3 @@
-using Domain.Entities.Professionals;
 using Domain.Entities.HealthCares;
 using Domain.Entities.Offices;
 
@@ -26,11 +25,11 @@ public record OfficeResponse
                 Name = office.Name,
                 Cnpj = office.Cnpj.Value,
                 PhoneNumber = office.Phone.Value,
-                Whatsapp = office.Whatsapp?.Value,
-                Email = office.Email?.Value,
-                Site = office.Site?.Value,
-                Instagram = office.Instagram?.Value,
-                Logo = office.Logo?.Value,
+                Whatsapp = office.Whatsapp.Value,
+                Email = office.Email.Value,
+                Site = office.Site.Value,
+                Instagram = office.Instagram.Value,
+                Logo = office.Logo.Value,
                 Individual = office.Individual,
                 Addresses = [.. addresses.Select(a => new OfficeAddressResponse
                 {
@@ -38,7 +37,7 @@ public record OfficeResponse
                     AddressId = a.AddressId,
                     IsTeleconsultation = a.IsTeleconsultation,
                     IsActive = a.IsActive,
-                    Address = a.Address == null ? null : new AddressResponse
+                    Address = new AddressResponse
                     {
                         Id = a.Address.Id,
                         SourceId = a.Address.SourceId,
@@ -62,7 +61,7 @@ public record OfficeResponse
                     ProfessionalId = p.ProfessionalId,
                     IsPublic = p.IsPublic,
                     IsActive = p.IsActive,
-                    Professional = p.Professional == null ? null : new ProfessionalResponse
+                    Professional = new ProfessionalResponse
                     {
                         Id = p.Professional.Id,
                         Name = p.Professional.Name ?? string.Empty,
@@ -100,7 +99,7 @@ public record OfficeResponse
                 {
                     Id = s.Id,
                     SpecialtyId = s.SpecialtyId,
-                    Name = s.Speciality?.Name ?? string.Empty
+                    Name = s.Speciality.Name
                 })],
                 HealthCares = [.. healthCares.Select(h => new HealthCareData
                 {
@@ -208,27 +207,6 @@ public record ProfessionalDocumentResponse
     public required bool Validated { get; init; }
     public required DateTime CreatedAt { get; init; }
     public DateTime? RemovedAt { get; init; }
-}
-
-public record ProfessionResponse
-{
-    public required Guid Id { get; init; }
-    public required string Name { get; init; }
-    public required bool Active { get; init; }
-}
-
-public record SpecialtyResponse
-{
-    public required Guid Id { get; init; }
-    public required string Name { get; init; }
-    public required bool Active { get; init; }
-}
-
-public record SubspecialtyResponse
-{
-    public required Guid Id { get; init; }
-    public required string Name { get; init; }
-    public required bool Active { get; init; }
 }
 
 public record OfficeSpecialtyResponse

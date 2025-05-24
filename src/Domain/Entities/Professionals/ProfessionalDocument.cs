@@ -34,20 +34,4 @@ public class ProfessionalDocument : Entity
     }
 
     protected ProfessionalDocument() { }
-
-    public void UpdateUrls(string? frontUrl, string? backUrl)
-    {
-        FrontUrl = frontUrl;
-        BackUrl = backUrl;
-    }
-
-    public void Validate()
-    {
-        Validated = true;
-    }
-
-    public void Remove()
-    {
-        RemovedAt = DateTime.UtcNow;
-    }
 } 

@@ -1,5 +1,6 @@
 using CrossCutting.Entities;
 using Domain.Entities.IaChats.Enums;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.IaChats;
 
@@ -14,6 +15,7 @@ public class IaChatRating : AggregateRoot
     public DateTime CreatedAt { get; private set; }
     public IaChat Chat { get; private set; } = null!;
 
+    [UsedImplicitly]
     private IaChatRating() { }
 
     public IaChatRating(

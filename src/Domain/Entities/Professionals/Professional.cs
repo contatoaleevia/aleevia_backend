@@ -1,12 +1,13 @@
 ﻿using CrossCutting.Entities;
 using Domain.Entities.Identities;
-using Domain.Entities.Offices;
 using Domain.Entities.ValueObjects;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.Professionals;
 
 public class Professional : AggregateRoot
 {
+    [UsedImplicitly]
     private Professional()
     {
     }
@@ -60,16 +61,16 @@ public class Professional : AggregateRoot
         return ProfessionalRegisterStatus.CreateAsApproved();
     }
 
-    private Document SetDocument(string? document)
+    private static Document SetDocument(string? document)
         => string.IsNullOrEmpty(document) ? Document.CreateAsEmptyCnpj() : Document.CreateDocumentAsCnpj(document);
 
-    private Url SetWebsite(string? url)
+    private static Url SetWebsite(string? url)
         => url is null ? Url.CreateAsEmpty() : Url.Create(url);
 
-    private Url SetInstagram(string? instagram)
+    private static Url SetInstagram(string? instagram)
         => instagram is null ? Url.CreateAsEmpty() : Url.Create(instagram);
 
-    private Url SetBiography(string? biography)
+    private static Url SetBiography(string? biography)
         => biography is null ? Url.CreateAsEmpty() : Url.Create(biography);
 
     public void Register(string name, string preferredName, string email, string cnpj, string? webSite,

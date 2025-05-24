@@ -1,4 +1,5 @@
 using CrossCutting.Entities;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.IaChats;
 
@@ -11,6 +12,7 @@ public sealed class IaMessage : AggregateRoot
     public string Content { get; private set; } = string.Empty;
     public DateTime CreatedAt { get; private set; }
 
+    [UsedImplicitly]
     private IaMessage()
     {
     }

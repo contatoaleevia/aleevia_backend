@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories;
 public class ProfessionalRepository(ApiDbContext context) : Repository<Professional>(context), IProfessionalRepository
 {
-    private readonly DbSet<ProfessionalSpecialtyDetail> specialtyDetailsDB = context.Set<ProfessionalSpecialtyDetail>();
-    private readonly DbSet<ProfessionalDocument> documentsDB = context.Set<ProfessionalDocument>();
+    private readonly DbSet<ProfessionalSpecialtyDetail> _specialtyDetailsDb = context.Set<ProfessionalSpecialtyDetail>();
+    private readonly DbSet<ProfessionalDocument> _documentsDb = context.Set<ProfessionalDocument>();
 
     public async Task<Professional?> GetByCpfToRegisterAsync(string cpf)
         => await DbSet
@@ -22,21 +22,21 @@ public class ProfessionalRepository(ApiDbContext context) : Repository<Professio
 
     public async Task CreateSpecialtyDetailAsync(ProfessionalSpecialtyDetail specialtyDetail, bool saveChanges = true)
     {
-        await specialtyDetailsDB.AddAsync(specialtyDetail);
+        await _specialtyDetailsDb.AddAsync(specialtyDetail);
         if (saveChanges)
             await SaveChangesAsync();
     }
 
     public async Task UpdateSpecialtyDetailsAsync(ProfessionalSpecialtyDetail specialtyDetail, bool saveChanges = true)
     {
-        specialtyDetailsDB.Update(specialtyDetail);
+        _specialtyDetailsDb.Update(specialtyDetail);
         if (saveChanges)
             await SaveChangesAsync();
     }
 
     public async Task CreateDocumentAsync(ProfessionalDocument document, bool saveChanges = true)
     {
-        await documentsDB.AddAsync(document);
+        await _documentsDb.AddAsync(document);
         if(saveChanges)
             await SaveChangesAsync();
     }

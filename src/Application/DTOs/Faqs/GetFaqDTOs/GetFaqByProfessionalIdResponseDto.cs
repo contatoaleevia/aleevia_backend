@@ -1,7 +1,8 @@
 ﻿using Domain.Entities.Faqs;
-using Domain.Entities.Identities;
+using JetBrains.Annotations;
 
 namespace Application.DTOs.Faqs.GetFaqDTOs;
+
 public class GetFaqByProfessionalIdResponseDto(
     Guid id,
     Guid sourceId,
@@ -14,16 +15,16 @@ public class GetFaqByProfessionalIdResponseDto(
     DateTime? updatedAt,
     DateTime? deletedAt)
 {
-    public Guid Id { get; set; } = id;
-    public Guid SourceId { get; set; } = sourceId;
-    public FaqSourceType SourceType { get; set; } = sourceType;
-    public string Question { get; set; } = question;
-    public string Answer { get; set; } = answer;
-    public string? Link { get; set; } = link;
-    public FaqCategoryType FaqCategory { get; set; } = faqCategory;
-    public DateTime CreatedAt { get; set; } = createdAt;
-    public DateTime? UpdatedAt { get; set; } = updatedAt;
-    public DateTime? DeletedAt { get; set; } = deletedAt;
+    [UsedImplicitly] public Guid Id { get; set; } = id;
+    [UsedImplicitly] public Guid SourceId { get; set; } = sourceId;
+    [UsedImplicitly] public FaqSourceType SourceType { get; set; } = sourceType;
+    [UsedImplicitly] public string Question { get; set; } = question;
+    [UsedImplicitly] public string Answer { get; set; } = answer;
+    [UsedImplicitly] public string? Link { get; set; } = link;
+    [UsedImplicitly] public FaqCategoryType FaqCategory { get; set; } = faqCategory;
+    [UsedImplicitly] public DateTime CreatedAt { get; set; } = createdAt;
+    [UsedImplicitly] public DateTime? UpdatedAt { get; set; } = updatedAt;
+    [UsedImplicitly] public DateTime? DeletedAt { get; set; } = deletedAt;
 }
 
 public class GetFaqByProfessionalIdResponseDtoList

@@ -17,16 +17,6 @@ public class OfficeSpecialtyRepository(ApiDbContext context) : Repository<Office
             );
     }
 
-    public async Task<OfficeSpecialty?> GetActiveByOfficeAndSpecialty(Guid officeId, Guid specialtyId)
-    {
-        return await DbSet
-            .FirstOrDefaultAsync(
-                os => os.OfficeId == officeId && 
-                    os.SpecialtyId == specialtyId &&
-                    os.IsActive
-            );
-    }
-
     public async Task<List<OfficeSpecialty>> GetByOfficeIdWithDetailsAsync(Guid officeId)
     {
         return await DbSet

@@ -58,7 +58,7 @@ public class FaqPageService(
                                 ?? throw new ProfessionalIdNotFoundException(sourceId),
             FaqSourceEnum.Office => await officeRepository.GetByIdAsync(sourceId)
                                 ?? throw new OfficeNotFoundException(sourceId),
-            _ => throw new InvalidOperationException($"SourceType inválido: {sourceType}. Deve ser Professional (0) ou Office (1)"),
+            _ => throw new InvalidOperationException($"SourceType inválido: {sourceType}. Deve ser Professional (0) ou Office (1)")
         });
     }
 

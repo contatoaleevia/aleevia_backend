@@ -1,6 +1,4 @@
-using System.Threading.Tasks;
 using Application.DTOs.HealthcareProfessionals;
-using Application.DTOs.Professionals.UpdateProfessionalRequestDTOs;
 using Domain.Contracts.Repositories;
 
 namespace Application.Services.HealthcareProfessionals;
@@ -17,16 +15,16 @@ public class ProfessionService(IProfessionRepository professionRepository) : IPr
             {
                 Id = profession.Id,
                 Name = profession.Name,
-                Specialties = profession.Specialties?.Select(specialty => new SpecialtyDto
+                Specialties = profession.Specialties.Select(specialty => new SpecialtyDto
                 {
                     Id = specialty.Id,
                     Name = specialty.Name,
-                    Subspecialties = specialty.SubSpecialties?.Select(subSpecialty => new SubSpecialtyDto
+                    Subspecialties = specialty.SubSpecialties.Select(subSpecialty => new SubSpecialtyDto
                     {
                         Id = subSpecialty.Id,
                         Name = subSpecialty.Name
-                    }).ToList() ?? []
-                }).ToList() ?? []
+                    }).ToList()
+                }).ToList()
             })]
         };
 
@@ -40,7 +38,7 @@ public class ProfessionService(IProfessionRepository professionRepository) : IPr
         var result = new GetSpecialtiesResponseDto
         {
             Specialties = [.. professions
-                .SelectMany(p => p.Specialties ?? [])
+                .SelectMany(p => p.Specialties)
                 .Where(s => s.Active)
                 .Select(specialty => new SimpleSpecialtyDto
                 {

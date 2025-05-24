@@ -38,9 +38,4 @@ public class HealthCare : AggregateRoot
         IsActive = false;
         UpdatedAt = DateTime.UtcNow;
     }
-    public void Activate()
-    {
-        IsActive = true;
-        UpdatedAt = DateTime.UtcNow;
-    }
 }

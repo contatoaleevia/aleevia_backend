@@ -1,4 +1,6 @@
-﻿namespace Application.DTOs.Users.CreateAdminUserDTOs;
+﻿using JetBrains.Annotations;
+
+namespace Application.DTOs.Users.CreateAdminUserDTOs;
 
 public class CreateManagerUserRequest
 {
@@ -11,6 +13,7 @@ public class CreateManagerUserRequest
     public CreateManagerRequest Manager { get; set; } = null!;
 }
 
+[UsedImplicitly]
 public class CreateManagerRequest
 {
     public ushort TypeId { get; set; } 

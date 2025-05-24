@@ -16,11 +16,9 @@ public class UserSession : IUserSession
 
     public Guid UserId => IsAuthenticated() ? _claimRetriever.GetUserId() : Guid.Empty;
     public ushort? UserType => IsAuthenticated() ? _claimRetriever.GetUserType() : null;
-    public string Email => IsAuthenticated() ? _claimRetriever.GetEmail() : string.Empty;
-    public IEnumerable<string> Roles => IsAuthenticated() ? _claimRetriever.GetRoles() : [];
     public Guid? ManagerId => IsAuthenticated() ? _claimRetriever.GetManagerId() : null;
 
-    public bool IsAuthenticated()
+    private bool IsAuthenticated()
     {
         var httpContext = _contextAccessor.HttpContext;
         var identity = httpContext?.User.Identity;

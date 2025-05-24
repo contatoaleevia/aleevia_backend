@@ -1,7 +1,8 @@
 using Application.DTOs.Patients.CreatePatientDTOs;
 using Domain.Entities.Patients;
 using Domain.Contracts.Repositories;
-using Domain.Exceptions;
+using Domain.Exceptions.Patients;
+
 namespace Application.Services.Patients;
 
 public class PatientService(IPatientRepository patientRepository) : IPatientService

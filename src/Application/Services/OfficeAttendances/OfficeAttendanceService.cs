@@ -50,8 +50,9 @@ public class OfficeAttendanceService(
 
     public async Task<List<GetOfficeAttendanceResponseDto>> GetAllByOfficeIdAsync(Guid officeId)
     {
-        var office = await officeRepository.GetByIdAsync(officeId)
-                ?? throw new OfficeNotFoundException(officeId);
+        var office = await officeRepository.GetByIdAsync(officeId);
+        if(office is null)
+            throw new OfficeNotFoundException(officeId);
 
         var officeAttendances = await officeAttendanceRepository.GetAllByOfficeIdAsync(officeId);
         

@@ -52,41 +52,6 @@ public class FaqService(
         };
     }
 
-    public async Task<GetFaqWithPageResponseDto> GetFaqsByCustomUrlAsync(string customUrl)
-    {
-        var faqPage = await faqPageRepository.GetByCustomUrlAsync(customUrl) ??
-                      throw new NotFoundException($"Página de FAQ não encontrada para a URL: {customUrl}");
-        var faqs = await repository.GetAllAsync(faqPage.SourceId);
-
-        return new GetFaqWithPageResponseDto
-        {
-            FaqPage = faqPage is not null
-                ? new GetFaqPageResponseDto(
-                    faqPage.Id,
-                    faqPage.SourceId,
-                    faqPage.CustomUrl,
-                    faqPage.WelcomeMessage,
-                    faqPage.CreatedAt,
-                    faqPage.UpdatedAt)
-                : null,
-            Faqs =
-            [
-                .. faqs.Select(x => new GetFaqByProfessionalIdResponseDto(
-                    x.Id,
-                    x.SourceId,
-                    x.SourceType,
-                    x.Question,
-                    x.Answer,
-                    x.Link,
-                    x.FaqCategory,
-                    x.CreatedAt,
-                    x.UpdatedAt,
-                    x.DeletedAt
-                ))
-            ]
-        };
-    }
-
     public async Task<CreateFaqResponseDto> CreateFaqAsync(CreateFaqRequestDto request)
     {
         await ValidateSourceAsync(request.SourceId, request.SourceType);

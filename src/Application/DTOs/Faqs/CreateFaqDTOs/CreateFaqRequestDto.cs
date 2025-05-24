@@ -1,6 +1,4 @@
-﻿using Domain.Entities.Faqs;
-
-namespace Application.DTOs.Faqs.CreateFaqDTOs;
+﻿namespace Application.DTOs.Faqs.CreateFaqDTOs;
 public class CreateFaqRequestDto(Guid sourceId, ushort sourceType, string question, string answer, string? link, ushort faqCategory)
 {
     public Guid SourceId { get; set; } = sourceId;

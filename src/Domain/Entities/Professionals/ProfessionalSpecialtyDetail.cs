@@ -40,9 +40,4 @@ public class ProfessionalSpecialtyDetail : Entity
         VideoPresentation = videoPresentation;
         UpdatedAt = DateTime.UtcNow;
     }
-
-    public void Remove()
-    {
-        RemovedAt = DateTime.UtcNow;
-    }
 } 

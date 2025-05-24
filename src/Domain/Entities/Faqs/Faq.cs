@@ -1,5 +1,6 @@
 ﻿using CrossCutting.Entities;
 using Domain.Entities.Identities;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.Faqs;
 public sealed class Faq : AggregateRoot
@@ -16,6 +17,7 @@ public sealed class Faq : AggregateRoot
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? DeletedAt { get; private set; }
 
+    [UsedImplicitly]
     private Faq()
     {
     }
@@ -48,11 +50,5 @@ public sealed class Faq : AggregateRoot
     {
         IsActive = false;
         DeletedAt = DateTime.UtcNow;
-    }
-
-    public void SetSourceInfo(Guid sourceId, ushort sourceType)
-    {
-        SourceId = sourceId;
-        SourceType = new FaqSourceType(sourceType);
     }
 }

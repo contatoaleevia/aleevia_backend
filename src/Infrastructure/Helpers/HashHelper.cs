@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 
 namespace Infrastructure.Helpers;
@@ -9,7 +8,7 @@ public static class HashHelper
 
     public static string EncodeSourceInfo(Guid sourceId, ushort sourceType)
     {
-        var combined = $"{sourceId.ToString("D")}{Separator}{sourceType}";
+        var combined = $"{sourceId:D}{Separator}{sourceType}";
         var bytes = Encoding.UTF8.GetBytes(combined);
         var hash = Convert.ToBase64String(bytes);
         return hash;

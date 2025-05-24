@@ -1,7 +1,7 @@
 ﻿using Application.DTOs.Addresses.CreateAddressDTOs;
+using Application.DTOs.Addresses.GetAddressBySourceDTOs;
 using Application.DTOs.Addresses.GetAddressDTOs;
 using Application.DTOs.Addresses.UpdateAddressDTOs;
-using Application.DTOs.Adresses.GetAddressBySourceDTOs;
 using Domain.Contracts.Repositories;
 using Domain.Entities.Addresses;
 using Domain.Entities.Identities;

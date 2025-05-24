@@ -1,6 +1,4 @@
 using CrossCutting.Entities;
-using System;
-using System.Collections.Generic;
 
 namespace Domain.Entities.HealthcareProfessionals;
 
@@ -24,22 +22,4 @@ public class Speciality : AggregateRoot
     }
 
     protected Speciality() { }
-
-    public void Update(string name)
-    {
-        Name = name;
-        UpdatedAt = DateTime.UtcNow;
-    }
-
-    public void Deactivate()
-    {
-        Active = false;
-        UpdatedAt = DateTime.UtcNow;
-    }
-
-    public void Activate()
-    {
-        Active = true;
-        UpdatedAt = DateTime.UtcNow;
-    }
 } 

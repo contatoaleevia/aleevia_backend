@@ -1,5 +1,4 @@
 using CrossCutting.Entities;
-using System;
 
 namespace Domain.Entities.HealthcareProfessionals;
 
@@ -21,22 +20,4 @@ public class SubSpecialty : Entity
     }
 
     protected SubSpecialty() { }
-
-    public void Update(string name)
-    {
-        Name = name;
-        UpdatedAt = DateTime.UtcNow;
-    }
-
-    public void Deactivate()
-    {
-        Active = false;
-        UpdatedAt = DateTime.UtcNow;
-    }
-
-    public void Activate()
-    {
-        Active = true;
-        UpdatedAt = DateTime.UtcNow;
-    }
 } 

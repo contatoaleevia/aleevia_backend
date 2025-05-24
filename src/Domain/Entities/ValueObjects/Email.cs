@@ -5,7 +5,7 @@ namespace Domain.Entities.ValueObjects;
 
 public class Email
 {
-    public string Value { get; set; } = string.Empty;
+    public string Value { get; private set; } = string.Empty;
 
     private Email()
     {
@@ -19,7 +19,7 @@ public class Email
     public static Email Create(string email) => new(email);
     public static Email CreateAsEmpty() => new() { Value = string.Empty };
 
-    private string SetValue(string value)
+    private static string SetValue(string value)
     {
         if (!EmailValidator.IsValid(value))
             throw new EmailInvalidException(value);

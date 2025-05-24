@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 
 namespace Domain.Entities.Faqs;
+
 public enum FaqCategoryEnum
 {
     [Description("Orientações ao cliente")]

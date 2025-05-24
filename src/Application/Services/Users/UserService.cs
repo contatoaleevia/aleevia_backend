@@ -13,8 +13,6 @@ using Application.Services.Patients;
 using Application.DTOs.Patients.CreatePatientDTOs;
 using Application.DTOs.Users.RetrieveUserDTOs;
 using Application.Helpers;
-using Application.Services.Professionals;
-using Application.DTOs.Professionals;
 using Domain.Entities.Professionals;
 using Domain.Exceptions.Professionals;
 using Domain.Contracts.Repositories;
@@ -106,9 +104,9 @@ public class UserService(
         if (user is not null)
         {
             user.SetUserType(UserType.CreateAsHealthcareProfessional());
-            if (!user.UserRoles.Any(x => x.Role.Name == Role.Professional.Name))
+            if (user.UserRoles.All(x => x.Role.Name != Role.Professional.Name))
                 user.SetRole(Role.Professional);
-            if (!user.UserRoles.Any(x => x.Role.Name == Role.Admin.Name))
+            if (user.UserRoles.All(x => x.Role.Name != Role.Admin.Name))
                 user.SetRole(Role.Admin);
 
             var manager = await managerService.GetManagerByUserIdAsync(user.Id) ??

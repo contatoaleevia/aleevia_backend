@@ -29,7 +29,7 @@ public class GetOfficeAnalyticsResponse
         {
             Id = office.Id,
             Name = office.Name,
-            Logo = office.Logo?.Value,
+            Logo = office.Logo.Value,
             TotalProfessionals = totalProfessionals,
             TotalServices = totalServices,
             FaqStatistics = faqStatistics,
@@ -39,13 +39,3 @@ public class GetOfficeAnalyticsResponse
         };
     }
 }
-
-public record OfficeAnalyticsData
-{
-    public required Guid OfficeId { get; init; }
-    public required string OfficeName { get; init; }
-    public required int TotalProfessionals { get; init; }
-    public required int TotalServices { get; init; }
-    public required int TotalFaqs { get; init; }
-    public required int TotalHealthCares { get; init; }
-} 

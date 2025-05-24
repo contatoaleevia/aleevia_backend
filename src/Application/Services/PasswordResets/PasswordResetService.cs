@@ -21,7 +21,7 @@ public class PasswordResetService(
 {
     private readonly string _frontendUrl = configuration.GetValue<string>("FrontendUrl") ?? throw new InvalidOperationException("FrontendUrl não configurada no appsettings");
 
-    public async Task<RequestPasswordResetResponseDTO> RequestPasswordResetAsync(RequestPasswordResetDTO request)
+    public async Task<RequestPasswordResetResponseDto> RequestPasswordResetAsync(RequestPasswordResetDto request)
     {
         var user = await FindUserByDocumentAsync(request.Document) ?? throw new UserNotFoundByDocumentException(request.Document);
 
@@ -38,14 +38,14 @@ public class PasswordResetService(
             isHtml: true
         );
 
-        return new RequestPasswordResetResponseDTO
+        return new RequestPasswordResetResponseDto
         {
             Email = user.Email!,
             Message = "Um e-mail com instruções para redefinição de senha foi enviado para o endereço cadastrado."
         };
     }
 
-    public async Task ResetPasswordAsync(ResetPasswordDTO request)
+    public async Task ResetPasswordAsync(ResetPasswordDto request)
     {
         var decodedToken = HttpUtility.UrlDecode(request.Token);
         var documentBytes = Convert.FromBase64String(request.Document);

@@ -1,5 +1,6 @@
 using CrossCutting.Entities;
 using Domain.Entities.ValueObjects;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.Patients;
 
@@ -15,6 +16,7 @@ public class PatientLead : AggregateRoot
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? RemovedAt { get; private set; }
     
+    [UsedImplicitly]
     private PatientLead() { }
     
     public PatientLead(
@@ -34,29 +36,5 @@ public class PatientLead : AggregateRoot
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = null;
         RemovedAt = null;
-    }
-    
-    public void Approve()
-    {
-        Approved = true;
-        UpdatedAt = DateTime.UtcNow;
-    }
-    
-    public void Update(
-        string name,
-        string phone,
-        string email,
-        DateOnly? birthDate)
-    {
-        Name = name;
-        Phone = phone;
-        Email = email;
-        BirthDate = birthDate;
-        UpdatedAt = DateTime.UtcNow;
-    }
-    
-    public void Remove()
-    {
-        RemovedAt = DateTime.UtcNow;
     }
 } 

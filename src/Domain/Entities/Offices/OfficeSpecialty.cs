@@ -1,4 +1,3 @@
-using System;
 using CrossCutting.Entities;
 using Domain.Entities.HealthcareProfessionals;
 

@@ -106,9 +106,7 @@ public class ProfessionalService(
     private async Task<Professional> ValidateAndGetProfessionalAsync(RegisterProfessionalRequest request)
     {
         var professional = await professionalRepository.GetByCpfToRegisterAsync(request.Cpf);
-        if (professional is null)
-            throw new ProfessionalWithCpfNotFoundException(request.Cpf);
-        if (request.ProfessionData is null)
+        if (professional is null || request.ProfessionData is null)
             throw new ProfessionalWithCpfNotFoundException(request.Cpf);
 
         return professional;

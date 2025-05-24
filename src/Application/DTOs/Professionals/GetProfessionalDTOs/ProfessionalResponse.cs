@@ -24,15 +24,15 @@ public record ProfessionalResponse
                 Instagram = professional.Instagram?.Value,
                 Biography = professional.Biography?.Value,
                 IsRegistered = professional.IsRegistered,
-                SpecialtyDetails = professional.SpecialtyDetails?.Select(s => new ProfessionalSpecialtyDetailResponse
+                SpecialtyDetails = professional.SpecialtyDetails.Select(s => new ProfessionalSpecialtyDetailResponse
                 {
                     Id = s.Id,
                     ProfessionId = s.ProfessionId,
                     SpecialityId = s.SpecialityId,
                     SubspecialityId = s.SubSpecialityId,
                     VideoPresentation = s.VideoPresentation
-                }).ToList() ?? [],
-                Documents = professional.Documents?.Select(d => new ProfessionalDocumentResponse
+                }).ToList(),
+                Documents = professional.Documents.Select(d => new ProfessionalDocumentResponse
                 {
                     Id = d.Id,
                     DocumentType = d.DocumentType,
@@ -41,7 +41,7 @@ public record ProfessionalResponse
                     FrontUrl = d.FrontUrl,
                     BackUrl = d.BackUrl,
                     Validated = d.Validated
-                }).ToList() ?? []
+                }).ToList()
             }
         };
     }

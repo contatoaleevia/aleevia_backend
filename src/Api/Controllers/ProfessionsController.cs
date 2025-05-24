@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Api.ApiResponses;
 using Application.DTOs.HealthcareProfessionals;
 using Application.Services.HealthcareProfessionals;

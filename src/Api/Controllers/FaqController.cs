@@ -104,7 +104,7 @@ public class FaqController(IFaqService faqService, IFaqPageService faqPageServic
     public async Task<IActionResult> ImportFaqs([FromForm] ImportFaqsFile request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        using var stream = request.Archive.OpenReadStream();
+        await using var stream = request.Archive.OpenReadStream();
         var response = await faqService.ImportFaqs(stream, request.Archive.FileName, userSession.UserId);
         return Ok(response);
     }

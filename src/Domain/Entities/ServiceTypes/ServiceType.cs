@@ -1,4 +1,5 @@
 using CrossCutting.Entities;
+using JetBrains.Annotations;
 
 namespace Domain.Entities.ServiceTypes;
 
@@ -11,6 +12,7 @@ public class ServiceType : AggregateRoot
     public DateTime? UpdatedAt { get; private set; }
 
 
+    [UsedImplicitly]
     private ServiceType()
     {
     }

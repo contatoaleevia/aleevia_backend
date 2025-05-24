@@ -3,5 +3,4 @@
 public interface ITokenObtainHelperSettings
 {
     public string Secret { get; set; }
-    
 }
