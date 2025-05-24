@@ -20,6 +20,7 @@ public class ServiceProviderController(IServiceProviderService service) : Contro
     /// <summary/>Cnpj: CNPJ do prestador de serviço
     /// <summary/>Name: Nome do prestador de serviço
     /// <summary/>CorporateName: Razão social do prestador de serviço
+    /// <summary/>OfficeId: ID da unidade
     /// </param>
     /// <returns>Dados do prestador de serviço criado</returns>
     [HttpPost]
@@ -46,7 +47,6 @@ public class ServiceProviderController(IServiceProviderService service) : Contro
     [ProducesResponseType(typeof(ApiProblemDetails), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllServiceProviders([FromRoute] Guid officeId)
     {
-        Console.WriteLine(officeId);
         return Ok(await service.GetAllAsync(officeId));
     }
 
